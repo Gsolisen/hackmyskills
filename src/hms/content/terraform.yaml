@@ -1,0 +1,63 @@
+questions:
+  - id: tf-init-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [basics, workflow]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What does `terraform init` do?"
+    back: "Initializes the working directory: downloads providers, sets up backend, and prepares modules."
+
+  - id: tf-plan-apply-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [workflow]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What is the difference between `terraform plan` and `terraform apply`?"
+    back: "`plan` shows what changes will be made without making them. `apply` executes the changes."
+
+  - id: tf-state-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [state]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What does Terraform state track?"
+    back: "The mapping between your Terraform configuration and real-world infrastructure resources."
+
+  - id: tf-destroy-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L1
+    tags: [workflow, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "Destroy all Terraform-managed infrastructure without interactive confirmation"
+    command: "terraform destroy -auto-approve"
+    accept_partial: false
+
+  - id: tf-drift-scenario-001
+    type: scenario
+    topic: terraform
+    tier: L2
+    tags: [state, drift]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    situation: "A teammate manually changed an AWS security group that is managed by Terraform."
+    question: "What happens on the next `terraform plan` and how do you resolve it?"
+    answer: "terraform plan detects drift and shows the manual change as a diff. Run terraform apply to revert to declared state, or update the Terraform config to match the manual change and import if needed."
+    explanation: "Terraform compares the actual resource state (from AWS) against the state file. Manual changes create drift visible in plan output."
+
+  - id: tf-provider-concept-001
+    type: explain-concept
+    topic: terraform
+    tier: L1
+    tags: [providers, architecture]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    concept: "Terraform providers"
+    model_answer: "Providers are plugins that implement resource types for a specific platform (AWS, Azure, GCP, etc.). Each provider authenticates with its platform's API and translates Terraform resource definitions into API calls."

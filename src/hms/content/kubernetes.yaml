@@ -1,0 +1,63 @@
+questions:
+  - id: k8s-pod-lifecycle-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, lifecycle]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What are the five phases of a Kubernetes Pod lifecycle?"
+    back: "Pending -> Running -> Succeeded -> Failed -> Unknown"
+
+  - id: k8s-pod-restart-policy-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, policy]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What are the three Pod restart policy values?"
+    back: "Always (default), OnFailure, Never"
+
+  - id: k8s-deployment-scale-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [deployments]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What command scales a Deployment to 3 replicas?"
+    back: "kubectl scale deployment <name> --replicas=3"
+
+  - id: k8s-kubectl-get-pods-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, pods]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "List all pods in the 'production' namespace"
+    command: "kubectl get pods -n production"
+    accept_partial: true
+
+  - id: k8s-crashloop-scenario-001
+    type: scenario
+    topic: kubernetes
+    tier: L2
+    tags: [debugging, pods]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    situation: "A pod is stuck in CrashLoopBackOff. The image pulls successfully."
+    question: "What is your first diagnostic step?"
+    answer: "kubectl logs <pod-name> --previous"
+    explanation: "The --previous flag shows logs from the last crashed container, revealing why it exited."
+
+  - id: k8s-etcd-concept-001
+    type: explain-concept
+    topic: kubernetes
+    tier: L2
+    tags: [architecture, etcd]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    concept: "etcd in Kubernetes"
+    model_answer: "etcd is a distributed key-value store that serves as Kubernetes' backing store for all cluster state. All API server writes go to etcd; only the API server communicates with etcd directly."
