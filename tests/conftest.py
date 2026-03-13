@@ -12,12 +12,23 @@ def hms_home(tmp_path, monkeypatch):
     Monkeypatches HMS_HOME and CONFIG_PATH in hms.config so that tests
     never touch the real ~/.hackmyskills directory.
 
-    Note: db init/close will be added to this fixture in Plan 01-02
-    when hms.db exists. For now, the fixture provides isolation only.
+    Also initializes the Peewee DB with a fresh test.db in tmp_path,
+    creates Card and ReviewHistory tables, and closes the DB after each test.
     """
+    from hms.db import db
+    from hms.models import Card, ReviewHistory
+
     home = tmp_path / ".hackmyskills"
     home.mkdir()
     (home / "content").mkdir()
+
     monkeypatch.setattr("hms.config.HMS_HOME", home)
     monkeypatch.setattr("hms.config.CONFIG_PATH", home / "config.toml")
+    monkeypatch.setattr("hms.init.HMS_HOME", home)
+
+    db.init(str(home / "test.db"), pragmas={"foreign_keys": 1})
+    db.create_tables([Card, ReviewHistory], safe=True)
+
     yield home
+
+    db.close()

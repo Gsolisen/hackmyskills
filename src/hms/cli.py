@@ -19,10 +19,13 @@ console = Console()
 
 
 def _show_dashboard() -> None:
-    """Display the status dashboard stub."""
+    """Display the status dashboard."""
+    from hms.init import ensure_initialized
+    from hms.config import HMS_HOME
+    ensure_initialized()
     content = (
         f"[bold cyan]HackMySkills v{__version__}[/bold cyan]\n\n"
-        "[dim]Database not yet initialized.[/dim]\n\n"
+        f"[dim]Data home:[/dim] {HMS_HOME}\n\n"
         "Run [bold]hms quiz[/bold] to get started."
     )
     console.print(
