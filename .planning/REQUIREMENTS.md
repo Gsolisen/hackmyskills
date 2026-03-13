@@ -9,9 +9,9 @@
 
 - [x] **FOUND-01**: Project scaffolded as a Python 3.12 CLI package installable via `pip install -e .`
 - [x] **FOUND-02**: SQLite database initialized at `~/.hackmyskills/data.db` on first run
-- [ ] **FOUND-03**: Question bank loaded from YAML files in `~/.hackmyskills/content/` (or bundled)
-- [ ] **FOUND-04**: YAML question schema supports types: flashcard, scenario, command-fill, explain-concept
-- [ ] **FOUND-05**: Each question has: id, type, topic, difficulty_tier (L1/L2/L3), tags, version_tag, last_verified
+- [x] **FOUND-03**: Question bank loaded from YAML files in `~/.hackmyskills/content/` (or bundled)
+- [x] **FOUND-04**: YAML question schema supports types: flashcard, scenario, command-fill, explain-concept
+- [x] **FOUND-05**: Each question has: id, type, topic, difficulty_tier (L1/L2/L3), tags, version_tag, last_verified
 - [x] **FOUND-06**: FSRS v6 scheduling engine wraps `fsrs` library — cards scheduled by due date
 - [x] **FOUND-07**: Review history persisted per card (rating, timestamp, FSRS state fields)
 
@@ -104,9 +104,9 @@
 |-------------|-------|--------|
 | FOUND-01 | Phase 1: Foundation | Complete |
 | FOUND-02 | Phase 1: Foundation | Complete |
-| FOUND-03 | Phase 1: Foundation | Pending |
-| FOUND-04 | Phase 1: Foundation | Pending |
-| FOUND-05 | Phase 1: Foundation | Pending |
+| FOUND-03 | Phase 1: Foundation | Complete |
+| FOUND-04 | Phase 1: Foundation | Complete |
+| FOUND-05 | Phase 1: Foundation | Complete |
 | FOUND-06 | Phase 1: Foundation | Complete |
 | FOUND-07 | Phase 1: Foundation | Complete |
 | QUIZ-01 | Phase 2: Core Quiz | Pending |

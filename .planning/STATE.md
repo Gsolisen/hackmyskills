@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-foundation/01-02-PLAN.md
-last_updated: "2026-03-13T21:20:31.650Z"
+stopped_at: Completed 01-foundation/01-03-PLAN.md
+last_updated: "2026-03-13T21:24:58.245Z"
 last_activity: 2026-03-13 — Completed 01-02 (data model, FSRS scheduler, first-run init)
 progress:
   total_phases: 6
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
-  percent: 33
+  completed_plans: 3
+  percent: 67
 ---
 
 # Project State
@@ -51,6 +51,7 @@ Progress: [███████░░░] 67%
 
 *Updated after each plan completion*
 | Phase 01-foundation P02 | 3 | 2 tasks | 9 files |
+| Phase 01-foundation P03 | 8 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -66,6 +67,8 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: FSRS Card has no reps/lapses in v6 — tracked as manually-incremented IntegerField(default=0) in Card model for future stats
 - [Phase 01-foundation]: UTC-aware due from fsrs stripped to naive via .replace(tzinfo=None) before Peewee DateTimeField storage to avoid offset-naive/aware TypeError
 - [Phase 01-foundation]: ensure_initialized() re-reads hms.config.HMS_HOME at call time (not at import) so monkeypatching in tests propagates correctly
+- [Phase 01-foundation]: load_questions() uses duck-typing hasattr(path, 'read_bytes') to accept both Path and importlib.resources Traversable
+- [Phase 01-foundation]: Both YAML bundles include all four question types so a single file validates full schema coverage in tests
 
 ### Pending Todos
 
@@ -78,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T21:20:31.647Z
-Stopped at: Completed 01-foundation/01-02-PLAN.md
+Last session: 2026-03-13T21:24:58.243Z
+Stopped at: Completed 01-foundation/01-03-PLAN.md
 Resume file: None

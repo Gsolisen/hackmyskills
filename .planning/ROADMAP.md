@@ -12,7 +12,7 @@ HackMySkills is built in six phases that mirror its natural dependency structure
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Project scaffold, SQLite data model, FSRS scheduling engine, YAML question loading
+- [x] **Phase 1: Foundation** - Project scaffold, SQLite data model, FSRS scheduling engine, YAML question loading (completed 2026-03-13)
 - [ ] **Phase 2: Core Quiz** - `hms quiz` command, all four content types, session flow, Rich terminal output
 - [ ] **Phase 3: Gamification + Adaptive Difficulty** - XP, streaks, levels, topic unlock progression, `hms stats`
 - [ ] **Phase 4: Interrupt Daemon** - APScheduler background daemon, Windows desktop notifications, startup registration
@@ -128,7 +128,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 2/3 | In Progress|  |
+| 1. Foundation | 3/3 | Complete   | 2026-03-13 |
 | 2. Core Quiz | 0/4 | Not started | - |
 | 3. Gamification + Adaptive Difficulty | 0/3 | Not started | - |
 | 4. Interrupt Daemon | 0/3 | Not started | - |
