@@ -102,14 +102,50 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 to FOUND-07 | Phase 1 | Pending |
-| QUIZ-01 to QUIZ-09 | Phase 2 | Pending |
-| GAME-01 to GAME-05 | Phase 3 | Pending |
-| ADAPT-01 to ADAPT-04 | Phase 3 | Pending |
-| INT-01 to INT-06 | Phase 4 | Pending |
-| AI-01 to AI-05 | Phase 5 | Pending |
-| CONT-01 to CONT-05 | Phase 6 | Pending |
-| EXT-01 to EXT-03 | Phase 6 | Pending |
+| FOUND-01 | Phase 1: Foundation | Pending |
+| FOUND-02 | Phase 1: Foundation | Pending |
+| FOUND-03 | Phase 1: Foundation | Pending |
+| FOUND-04 | Phase 1: Foundation | Pending |
+| FOUND-05 | Phase 1: Foundation | Pending |
+| FOUND-06 | Phase 1: Foundation | Pending |
+| FOUND-07 | Phase 1: Foundation | Pending |
+| QUIZ-01 | Phase 2: Core Quiz | Pending |
+| QUIZ-02 | Phase 2: Core Quiz | Pending |
+| QUIZ-03 | Phase 2: Core Quiz | Pending |
+| QUIZ-04 | Phase 2: Core Quiz | Pending |
+| QUIZ-05 | Phase 2: Core Quiz | Pending |
+| QUIZ-06 | Phase 2: Core Quiz | Pending |
+| QUIZ-07 | Phase 2: Core Quiz | Pending |
+| QUIZ-08 | Phase 2: Core Quiz | Pending |
+| QUIZ-09 | Phase 2: Core Quiz | Pending |
+| GAME-01 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| GAME-02 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| GAME-03 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| GAME-04 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| GAME-05 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| ADAPT-01 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| ADAPT-02 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| ADAPT-03 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| ADAPT-04 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| INT-01 | Phase 4: Interrupt Daemon | Pending |
+| INT-02 | Phase 4: Interrupt Daemon | Pending |
+| INT-03 | Phase 4: Interrupt Daemon | Pending |
+| INT-04 | Phase 4: Interrupt Daemon | Pending |
+| INT-05 | Phase 4: Interrupt Daemon | Pending |
+| INT-06 | Phase 4: Interrupt Daemon | Pending |
+| AI-01 | Phase 5: AI Content Generation | Pending |
+| AI-02 | Phase 5: AI Content Generation | Pending |
+| AI-03 | Phase 5: AI Content Generation | Pending |
+| AI-04 | Phase 5: AI Content Generation | Pending |
+| AI-05 | Phase 5: AI Content Generation | Pending |
+| CONT-01 | Phase 6: Content Bank + Polish | Pending |
+| CONT-02 | Phase 6: Content Bank + Polish | Pending |
+| CONT-03 | Phase 6: Content Bank + Polish | Pending |
+| CONT-04 | Phase 6: Content Bank + Polish | Pending |
+| CONT-05 | Phase 6: Content Bank + Polish | Pending |
+| EXT-01 | Phase 6: Content Bank + Polish | Pending |
+| EXT-02 | Phase 6: Content Bank + Polish | Pending |
+| EXT-03 | Phase 6: Content Bank + Polish | Pending |
 
 **Coverage:**
 - v1 requirements: 43 total
@@ -118,4 +154,4 @@
 
 ---
 *Requirements defined: 2026-03-13*
-*Last updated: 2026-03-13 after initial definition*
+*Last updated: 2026-03-13 after roadmap creation — individual requirement traceability expanded*
