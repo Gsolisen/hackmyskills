@@ -7,7 +7,7 @@
 
 ### Foundation
 
-- [ ] **FOUND-01**: Project scaffolded as a Python 3.12 CLI package installable via `pip install -e .`
+- [x] **FOUND-01**: Project scaffolded as a Python 3.12 CLI package installable via `pip install -e .`
 - [ ] **FOUND-02**: SQLite database initialized at `~/.hackmyskills/data.db` on first run
 - [ ] **FOUND-03**: Question bank loaded from YAML files in `~/.hackmyskills/content/` (or bundled)
 - [ ] **FOUND-04**: YAML question schema supports types: flashcard, scenario, command-fill, explain-concept
@@ -102,7 +102,7 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | Phase 1: Foundation | Pending |
+| FOUND-01 | Phase 1: Foundation | Complete |
 | FOUND-02 | Phase 1: Foundation | Pending |
 | FOUND-03 | Phase 1: Foundation | Pending |
 | FOUND-04 | Phase 1: Foundation | Pending |

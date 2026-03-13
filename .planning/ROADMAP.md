@@ -30,12 +30,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. First run creates `~/.hackmyskills/data.db` and loads questions from YAML files without errors
   3. A YAML question file with all four types (flashcard, scenario, command-fill, explain-concept) passes validation
   4. FSRS scheduling calculates a next due date for a card after a review rating is recorded and persists it in SQLite
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Project scaffold, packaging, and CLI entry point
-- [ ] 01-02: SQLite data model with Peewee ORM and FSRS integration
-- [ ] 01-03: YAML question loader and schema validation
+- [ ] 01-01-PLAN.md — Project scaffold, pyproject.toml, Typer CLI entry point, and test scaffold (Wave 0)
+- [ ] 01-02-PLAN.md — SQLite data model (Peewee deferred init), FSRS scheduler wrapper, first-run init
+- [ ] 01-03-PLAN.md — YAML question loader, bundled kubernetes.yaml + terraform.yaml, schema validation
 
 ### Phase 2: Core Quiz
 **Goal**: Users can run a focused quiz session that serves due cards across all four question types with a polished terminal experience
@@ -128,7 +128,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/3 | Not started | - |
+| 1. Foundation | 1/3 | In Progress|  |
 | 2. Core Quiz | 0/4 | Not started | - |
 | 3. Gamification + Adaptive Difficulty | 0/3 | Not started | - |
 | 4. Interrupt Daemon | 0/3 | Not started | - |
