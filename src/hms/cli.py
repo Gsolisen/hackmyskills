@@ -58,10 +58,14 @@ def default(
 
 
 @app.command()
-def quiz() -> None:
+def quiz(
+    topic: Optional[str] = typer.Option(None, "--topic", "-t", help="Filter by topic"),
+) -> None:
     """Start a focused quiz session."""
-    console.print("[yellow]Not yet implemented.[/yellow]")
-    raise typer.Exit(0)
+    from hms.init import ensure_initialized
+    from hms import quiz as quiz_module
+    ensure_initialized()
+    quiz_module.run_session(topic=topic)
 
 
 @app.command()
