@@ -44,16 +44,16 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. `hms quiz` starts a session, serves due cards first then new cards, and stops at the daily cap (default 25)
   2. Flashcard questions display prompt, reveal answer on keypress, and record a self-rating (Again / Hard / Good / Easy) that updates FSRS state
-  3. Command fill-in questions accept typed input, evaluate it with fuzzy match, and show the correct answer
+  3. Command fill-in questions accept typed input, evaluate with case-insensitive exact match, and show the correct answer
   4. Session ends with a summary showing cards reviewed, accuracy, XP earned, and current streak
   5. `hms quiz --topic kubernetes` limits the session to Kubernetes cards only
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 02-01: Session engine — card selection, daily cap, topic filtering
-- [ ] 02-02: Flashcard and command-fill question renderers
-- [ ] 02-03: Scenario and explain-concept question renderers
-- [ ] 02-04: Session summary display
+- [ ] 02-01-PLAN.md — Session engine skeleton: readchar dependency, quiz.py module, build_queue, SessionResult, CLI wiring, xfail test stubs (Wave 1)
+- [ ] 02-02-PLAN.md — Flashcard and command-fill question handlers (Wave 2, parallel with 02-03)
+- [ ] 02-03-PLAN.md — Scenario and explain-concept question handlers (Wave 2, parallel with 02-02)
+- [ ] 02-04-PLAN.md — Session loop assembly, _show_summary, session summary test, human verification (Wave 3)
 
 ### Phase 3: Gamification + Adaptive Difficulty
 **Goal**: Users accumulate XP and streaks that reflect real progress, and harder cards unlock automatically as topics are mastered
