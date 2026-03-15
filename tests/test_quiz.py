@@ -15,7 +15,9 @@ from rich.console import Console
 from hms.quiz import (
     SessionResult,
     _handle_command_fill,
+    _handle_explain_concept,
     _handle_flashcard,
+    _handle_scenario,
     build_queue,
     run_session,
 )
@@ -244,16 +246,150 @@ def test_command_fill_incorrect(hms_home):
 
 
 # ---------------------------------------------------------------------------
-# Handler stubs: scenario and explain-concept (Wave 2 implements these)
+# Handler tests: scenario flow
 # ---------------------------------------------------------------------------
 
-@pytest.mark.xfail(strict=False, reason="Wave 2 implements scenario handler")
-def test_scenario_flow(hms_home):
-    """Scenario question display and keypress flow."""
-    raise NotImplementedError
+def test_scenario_flow_correct(hms_home):
+    """Scenario: correct A/B/C/D keypress is rated Good, reps incremented."""
+    from hms.models import Card
+    import hms.quiz as quiz_mod
+
+    card = Card.create(
+        question_id="tf-scen-001",
+        question_type="scenario",
+        topic="terraform",
+        tier="L2",
+    )
+    q_data = {
+        "id": "tf-scen-001",
+        "type": "scenario",
+        "topic": "terraform",
+        "difficulty_tier": "L2",
+        "situation": "Your Terraform apply fails with a state lock error.",
+        "choices": {
+            "A": "Delete the state file",
+            "B": "Run terraform force-unlock",
+            "C": "Re-run terraform apply",
+            "D": "Run terraform init",
+        },
+        "correct": "B",
+        "explanation": "terraform force-unlock removes a stuck state lock safely.",
+    }
+    session = SessionResult()
+
+    # Sequence: 'b' selects correct answer, then any key to continue
+    keys = iter(["b", " "])
+
+    def mock_readkey():
+        return next(keys)
+
+    captured = io.StringIO()
+    original_console = quiz_mod.console
+    quiz_mod.console = Console(file=captured, highlight=False)
+    try:
+        _handle_scenario(card, q_data, session, _readkey=mock_readkey)
+    finally:
+        quiz_mod.console = original_console
+
+    card = Card.get_by_id(card.id)
+    assert card.reps == 1
+    assert session.total == 1
+    assert session.correct == 1  # Good (rating 3) >= 3
 
 
-@pytest.mark.xfail(strict=False, reason="Wave 2 implements explain-concept handler")
+def test_scenario_flow_wrong(hms_home):
+    """Scenario: wrong keypress is rated Again, lapses incremented."""
+    from hms.models import Card
+    import hms.quiz as quiz_mod
+
+    card = Card.create(
+        question_id="tf-scen-002",
+        question_type="scenario",
+        topic="terraform",
+        tier="L2",
+    )
+    q_data = {
+        "id": "tf-scen-002",
+        "type": "scenario",
+        "topic": "terraform",
+        "difficulty_tier": "L2",
+        "situation": "Your Terraform apply fails with a state lock error.",
+        "choices": {
+            "A": "Delete the state file",
+            "B": "Run terraform force-unlock",
+            "C": "Re-run terraform apply",
+            "D": "Run terraform init",
+        },
+        "correct": "B",
+        "explanation": "terraform force-unlock removes a stuck state lock safely.",
+    }
+    session = SessionResult()
+
+    # Sequence: 'a' selects wrong answer, then any key to continue
+    keys = iter(["a", " "])
+
+    def mock_readkey():
+        return next(keys)
+
+    captured = io.StringIO()
+    original_console = quiz_mod.console
+    quiz_mod.console = Console(file=captured, highlight=False)
+    try:
+        _handle_scenario(card, q_data, session, _readkey=mock_readkey)
+    finally:
+        quiz_mod.console = original_console
+
+    card = Card.get_by_id(card.id)
+    assert card.lapses == 1
+    assert session.total == 1
+    assert session.correct == 0  # Again (rating 1) < 3
+
+
+# Keep the original test name for backward compatibility with plan references
+test_scenario_flow = test_scenario_flow_correct
+
+
+# ---------------------------------------------------------------------------
+# Handler tests: explain-concept flow
+# ---------------------------------------------------------------------------
+
 def test_explain_concept_flow(hms_home):
-    """Explain-concept display and keypress flow."""
-    raise NotImplementedError
+    """Explain-concept: free-text accepted, model answer shown, 1-4 rating persists."""
+    from hms.models import Card
+    import hms.quiz as quiz_mod
+
+    card = Card.create(
+        question_id="k8s-exp-001",
+        question_type="explain-concept",
+        topic="kubernetes",
+        tier="L1",
+    )
+    q_data = {
+        "id": "k8s-exp-001",
+        "type": "explain-concept",
+        "topic": "kubernetes",
+        "difficulty_tier": "L1",
+        "prompt": "Explain what a ConfigMap is and when you'd use it.",
+        "model_answer": "A ConfigMap stores non-sensitive configuration data as key-value pairs.",
+    }
+    session = SessionResult()
+
+    # Mock: '3' = Good rating
+    keys = iter(["3"])
+
+    def mock_readkey():
+        return next(keys)
+
+    captured = io.StringIO()
+    original_console = quiz_mod.console
+    quiz_mod.console = Console(file=captured, highlight=False)
+    try:
+        with patch("builtins.input", return_value="my explanation"):
+            _handle_explain_concept(card, q_data, session, _readkey=mock_readkey)
+    finally:
+        quiz_mod.console = original_console
+
+    card = Card.get_by_id(card.id)
+    assert card.reps == 1
+    assert session.total == 1
+    assert session.correct == 1  # Good (rating 3) >= 3
