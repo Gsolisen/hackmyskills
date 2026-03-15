@@ -20,8 +20,8 @@
 - [x] **QUIZ-01**: `hms quiz` command starts a focused session
 - [x] **QUIZ-02**: Session serves due cards first, then new cards up to daily cap (default: 25 cards)
 - [x] **QUIZ-03**: Daily cap is configurable in `~/.hackmyskills/config.toml`
-- [ ] **QUIZ-04**: Flashcard questions display prompt, wait for keypress, then reveal answer with self-rating (Again / Hard / Good / Easy)
-- [ ] **QUIZ-05**: Command fill-in questions accept typed answer, check with fuzzy match (Levenshtein), show correct answer
+- [x] **QUIZ-04**: Flashcard questions display prompt, wait for keypress, then reveal answer with self-rating (Again / Hard / Good / Easy)
+- [x] **QUIZ-05**: Command fill-in questions accept typed answer, check with fuzzy match (Levenshtein), show correct answer
 - [ ] **QUIZ-06**: Scenario questions display situation, accept free-text or multiple-choice answer, show explanation
 - [ ] **QUIZ-07**: Explain-concept questions prompt user to type explanation, then show model answer for self-rating
 - [ ] **QUIZ-08**: Session summary shown at end: cards reviewed, accuracy, XP earned, current streak
@@ -112,8 +112,8 @@
 | QUIZ-01 | Phase 2: Core Quiz | Complete |
 | QUIZ-02 | Phase 2: Core Quiz | Complete |
 | QUIZ-03 | Phase 2: Core Quiz | Complete |
-| QUIZ-04 | Phase 2: Core Quiz | Pending |
-| QUIZ-05 | Phase 2: Core Quiz | Pending |
+| QUIZ-04 | Phase 2: Core Quiz | Complete |
+| QUIZ-05 | Phase 2: Core Quiz | Complete |
 | QUIZ-06 | Phase 2: Core Quiz | Pending |
 | QUIZ-07 | Phase 2: Core Quiz | Pending |
 | QUIZ-08 | Phase 2: Core Quiz | Pending |
