@@ -13,6 +13,7 @@ dependencies = [
     "peewee>=4.0.1",
     "fsrs>=6.3.1",
     "pyyaml>=6.0",
+    "readchar>=4.0",
 ]
 
 [project.scripts]
