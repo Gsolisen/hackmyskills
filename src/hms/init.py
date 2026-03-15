@@ -46,6 +46,32 @@ def ensure_initialized() -> None:
 
     _copy_bundled_content(home / "content")
     _write_default_config(home / "config.toml")
+    _sync_cards_from_yaml(home / "content")
+
+
+def _sync_cards_from_yaml(content_dir: Path) -> None:
+    """Create Card rows for any questions not yet in the database.
+
+    Idempotent — uses get_or_create so existing cards are never overwritten.
+    New cards have due=NULL so they appear as 'new' in the quiz queue.
+    """
+    from hms.loader import load_all_questions
+    try:
+        questions = load_all_questions(content_dir)
+    except Exception:
+        return
+    for q in questions:
+        Card.get_or_create(
+            question_id=q["id"],
+            defaults={
+                "question_type": q.get("type", ""),
+                "topic": q.get("topic", ""),
+                "tier": q.get("tier", "L1"),
+                "tags": ",".join(q.get("tags", [])) if isinstance(q.get("tags"), list) else str(q.get("tags", "")),
+                "version_tag": q.get("version_tag", ""),
+                "last_verified": q.get("last_verified", ""),
+            },
+        )
 
 
 def _copy_bundled_content(content_dir: Path) -> None:

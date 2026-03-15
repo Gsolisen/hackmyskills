@@ -63,6 +63,29 @@ def load_questions(path) -> list[dict]:
     return validated
 
 
+def load_all_questions(content_dir: "Path | None" = None) -> list[dict]:
+    """Load and validate all YAML question files from a directory.
+
+    If content_dir is None, loads from the user's HMS_HOME/content directory.
+    Falls back to bundled content if the directory is empty or missing.
+    """
+    import hms.config as _cfg
+    if content_dir is None:
+        content_dir = _cfg.HMS_HOME / "content"
+
+    all_questions: list[dict] = []
+    yaml_files = sorted(content_dir.glob("*.yaml")) if content_dir.is_dir() else []
+
+    if yaml_files:
+        for yaml_path in yaml_files:
+            all_questions.extend(load_questions(yaml_path))
+    else:
+        for resource in get_bundled_content_files():
+            all_questions.extend(load_questions(resource))
+
+    return all_questions
+
+
 def get_bundled_content_files():
     """Yield importlib.resources Traversable objects for bundled YAML files."""
     content_pkg = files("hms.content")

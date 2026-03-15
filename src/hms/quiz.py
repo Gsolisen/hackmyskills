@@ -16,7 +16,7 @@ from rich.table import Table
 
 from hms.config import load_config
 from hms.db import db
-from hms.loader import load_questions
+from hms.loader import load_all_questions
 from hms.models import Card, ReviewHistory
 from hms.scheduler import review_card
 
@@ -436,7 +436,7 @@ def run_session(topic: Optional[str] = None, _readkey=None) -> None:
         console.print("Nothing to review right now — come back tomorrow!")
         return
 
-    all_questions = load_questions()
+    all_questions = load_all_questions()
     questions_by_id = {q["id"]: q for q in all_questions}
 
     session = SessionResult()
