@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-foundation/01-03-PLAN.md
-last_updated: "2026-03-13T21:29:03.827Z"
+stopped_at: Completed 02-core-quiz/02-01-PLAN.md
+last_updated: "2026-03-15T20:53:36.616Z"
 last_activity: 2026-03-13 — Completed 01-02 (data model, FSRS scheduler, first-run init)
 progress:
   total_phases: 6
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 7
+  completed_plans: 4
   percent: 67
 ---
 
@@ -52,6 +52,7 @@ Progress: [███████░░░] 67%
 *Updated after each plan completion*
 | Phase 01-foundation P02 | 3 | 2 tasks | 9 files |
 | Phase 01-foundation P03 | 8 | 2 tasks | 4 files |
+| Phase 02-core-quiz P01 | 2 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: ensure_initialized() re-reads hms.config.HMS_HOME at call time (not at import) so monkeypatching in tests propagates correctly
 - [Phase 01-foundation]: load_questions() uses duck-typing hasattr(path, 'read_bytes') to accept both Path and importlib.resources Traversable
 - [Phase 01-foundation]: Both YAML bundles include all four question types so a single file validates full schema coverage in tests
+- [Phase 02-core-quiz]: readchar imported lazily inside _wait_for_key to avoid ImportError in test environments lacking a TTY
+- [Phase 02-core-quiz]: quiz.py uses its own Console() instance (not imported from cli.py) to prevent circular imports
+- [Phase 02-core-quiz]: Handler stubs raise NotImplementedError(question_type) — Wave 2 plans replace them; xfail test stubs become passing tests
 
 ### Pending Todos
 
@@ -81,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-13T21:24:58.243Z
-Stopped at: Completed 01-foundation/01-03-PLAN.md
+Last session: 2026-03-15T20:53:36.614Z
+Stopped at: Completed 02-core-quiz/02-01-PLAN.md
 Resume file: None
