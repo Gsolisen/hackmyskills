@@ -12,6 +12,7 @@ from typing import Optional
 import fsrs
 from rich.console import Console
 from rich.panel import Panel
+from rich.table import Table
 
 from hms.config import load_config
 from hms.db import db
@@ -67,25 +68,17 @@ def build_queue(daily_cap: int, topic: Optional[str] = None) -> list[Card]:
 
     Due cards appear first (ordered by due date ascending), followed by new
     cards (due IS NULL, ordered by topic then id).  If topic is specified,
-    only cards for that topic are included; if the topic has zero cards a
-    ValueError is raised so the caller can display an error panel.
+    only cards for that topic are included.
 
     Args:
         daily_cap: Maximum number of cards to return.
         topic: Optional topic slug to restrict the queue.
 
     Returns:
-        List of Card ORM objects, len <= daily_cap.
-
-    Raises:
-        ValueError: If topic is given but no cards exist for it.
+        List of Card ORM objects, len <= daily_cap.  Returns [] if topic has
+        no cards (topic existence check is the caller's responsibility).
     """
     now = datetime.now(timezone.utc).replace(tzinfo=None)  # naive UTC
-
-    if topic is not None:
-        count = Card.select().where(Card.topic == topic).count()
-        if count == 0:
-            raise ValueError(f"No cards found for topic '{topic}'")
 
     base_due = Card.select()
     base_new = Card.select()
@@ -341,11 +334,59 @@ def _handle_explain_concept(card: Card, q_data: dict, session: SessionResult, _r
 
 
 # ---------------------------------------------------------------------------
-# Summary stub (Wave 3 implements full summary)
+# Session summary
 # ---------------------------------------------------------------------------
 
 def _show_summary(session: SessionResult, is_partial: bool = False) -> None:
-    raise NotImplementedError("_show_summary")
+    """Print a Rich Panel summarising the session.
+
+    Shows cards reviewed, accuracy, XP (bold yellow), streak, and due-tomorrow
+    count.  A per-topic breakdown table is appended only when the session
+    spanned more than one topic *and* is not partial.
+
+    Args:
+        session: Accumulated session statistics.
+        is_partial: True when the session was interrupted (Ctrl-C); shows a
+            condensed mini-summary without the due-tomorrow count or per-topic
+            table.
+    """
+    if session.total == 0:
+        return  # no summary for zero-card sessions
+
+    streak = compute_streak()
+
+    # Due-tomorrow count
+    tomorrow = date.today() + timedelta(days=1)
+    tom_start = datetime(tomorrow.year, tomorrow.month, tomorrow.day)
+    tom_end = datetime(tomorrow.year, tomorrow.month, tomorrow.day, 23, 59, 59)
+    due_tomorrow = Card.select().where(Card.due.between(tom_start, tom_end)).count()
+
+    title = "Session Paused" if is_partial else "Session Complete"
+    xp_display = f"[bold yellow]+{session.xp} XP[/bold yellow]"
+    streak_display = f"\U0001f525 {streak} day streak" if streak > 0 else "Start a streak today!"
+
+    lines = [
+        f"[bold]{session.total}[/bold] cards reviewed",
+        f"Accuracy: [bold]{session.accuracy_pct}%[/bold]",
+        f"XP earned: {xp_display}",
+        f"Streak: {streak_display}",
+    ]
+    if not is_partial:
+        lines.append(f"Next session: [dim]{due_tomorrow} cards due tomorrow[/dim]")
+
+    content = "\n".join(lines)
+    console.print(Panel(content, title=f"[bold]{title}[/bold]", border_style="cyan"))
+
+    # Per-topic breakdown — only for multi-topic full sessions
+    if not is_partial and len(session.topic_stats) > 1:
+        table = Table(title="By Topic", show_header=True, header_style="bold")
+        table.add_column("Topic")
+        table.add_column("Cards", justify="right")
+        table.add_column("Accuracy", justify="right")
+        for topic_name, stats in session.topic_stats.items():
+            acc = round(100 * stats["correct"] / stats["total"]) if stats["total"] else 0
+            table.add_row(topic_name, str(stats["total"]), f"{acc}%")
+        console.print(table)
 
 
 # ---------------------------------------------------------------------------
@@ -368,7 +409,9 @@ def run_session(topic: Optional[str] = None, _readkey=None) -> None:
     cleanly and still shows the summary for any already-reviewed cards.
 
     All question dicts are loaded once at session start and stored in a lookup
-    dict keyed by question_id to avoid per-card YAML re-reads.
+    dict keyed by question_id to avoid per-card YAML re-reads.  Cards whose
+    question_id is not present in the loader output are skipped with a dim
+    warning.
 
     Args:
         topic: Optional topic slug to restrict the session queue.
@@ -377,12 +420,18 @@ def run_session(topic: Optional[str] = None, _readkey=None) -> None:
     config = load_config()
     daily_cap: int = config["daily_cap"]
 
-    try:
-        queue = build_queue(daily_cap, topic)
-    except ValueError as exc:
-        console.print(Panel(str(exc), title="[red]Error[/red]", border_style="red"))
-        return
+    # Topic existence check — display a friendly error panel instead of raising
+    if topic is not None:
+        topic_count = Card.select().where(Card.topic == topic).count()
+        if topic_count == 0:
+            console.print(Panel(
+                f"No cards found for topic '[bold]{topic}[/bold]'.\n"
+                "Run [bold]hms topics[/bold] to see available topics.",
+                border_style="red",
+            ))
+            return
 
+    queue = build_queue(daily_cap, topic)
     if not queue:
         console.print("Nothing to review right now — come back tomorrow!")
         return
@@ -392,18 +441,24 @@ def run_session(topic: Optional[str] = None, _readkey=None) -> None:
 
     session = SessionResult()
     total = len(queue)
-    is_partial = False
 
     try:
         for idx, card in enumerate(queue, start=1):
             _render_progress(console, idx, total)
+            q_data = questions_by_id.get(card.question_id)
+            if q_data is None:
+                console.print(
+                    f"[dim]Skipping {card.question_id} — question data not found in loader.[/dim]"
+                )
+                continue
             handler = _HANDLER_DISPATCH.get(card.question_type)
             if handler is None:
-                raise NotImplementedError(card.question_type)
-            q_data = questions_by_id.get(card.question_id, {})
+                console.print(f"[dim]Unknown question type: {card.question_type} — skipping.[/dim]")
+                continue
             handler(card, q_data, session, _readkey)
     except KeyboardInterrupt:
-        is_partial = True
+        console.print()  # newline after ^C
+        _show_summary(session, is_partial=True)
+        return
 
-    if session.total >= 1:
-        _show_summary(session, is_partial=is_partial)
+    _show_summary(session, is_partial=False)
