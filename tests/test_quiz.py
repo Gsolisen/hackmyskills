@@ -1,17 +1,21 @@
 """Tests for the quiz session engine (hms.quiz).
 
 Non-xfail tests cover SessionResult, build_queue, and basic run_session behavior.
-Handler-dependent tests are marked xfail(strict=False) until Wave 2 implements them.
+Handler tests cover flashcard and command-fill flows with mock input injection.
 """
 from __future__ import annotations
 
 import io
 from datetime import datetime, timedelta, timezone
+from unittest.mock import patch
 
 import pytest
+from rich.console import Console
 
 from hms.quiz import (
     SessionResult,
+    _handle_command_fill,
+    _handle_flashcard,
     build_queue,
     run_session,
 )
@@ -116,26 +120,132 @@ def test_quiz_empty_queue(hms_home):
 
 
 # ---------------------------------------------------------------------------
-# Handler-dependent tests (Wave 2 implements these)
+# Handler tests: flashcard flow
 # ---------------------------------------------------------------------------
 
-@pytest.mark.xfail(strict=False, reason="Wave 2 implements flashcard handler")
 def test_flashcard_flow(hms_home):
-    """Full flashcard display and keypress flow."""
-    raise NotImplementedError
+    """Full flashcard display and keypress flow.
+
+    Sequence: any key (flip) then '3' (Good). Asserts reps==1, session stats.
+    """
+    from hms.models import Card
+    import hms.quiz as quiz_mod
+
+    # Create a card in the test DB
+    card = Card.create(
+        question_id="k8s-pod-001",
+        question_type="flashcard",
+        topic="kubernetes",
+        tier="L1",
+    )
+    q_data = {
+        "id": "k8s-pod-001",
+        "type": "flashcard",
+        "topic": "kubernetes",
+        "difficulty_tier": "L1",
+        "prompt": "What is a Pod?",
+        "answer": "The smallest deployable unit in Kubernetes.",
+    }
+    session = SessionResult()
+
+    # Build a mock_readkey that yields space (flip), then '3' (Good)
+    keys = iter([" ", "3"])
+
+    def mock_readkey():
+        return next(keys)
+
+    # Suppress console output
+    captured = io.StringIO()
+    original_console = quiz_mod.console
+    quiz_mod.console = Console(file=captured, highlight=False)
+    try:
+        _handle_flashcard(card, q_data, session, _readkey=mock_readkey)
+    finally:
+        quiz_mod.console = original_console
+
+    # Verify DB state: reps incremented
+    card = Card.get_by_id(card.id)
+    assert card.reps == 1
+    # Verify session: total == 1, correct == 1 (rating 3 = Good >= 3)
+    assert session.total == 1
+    assert session.correct == 1
 
 
-@pytest.mark.xfail(strict=False, reason="Wave 2 implements command-fill handler")
+# ---------------------------------------------------------------------------
+# Handler tests: command-fill flow
+# ---------------------------------------------------------------------------
+
 def test_command_fill_correct(hms_home):
-    """command-fill: correct answer accepted, rating recorded."""
-    raise NotImplementedError
+    """command-fill: correct answer (exact, case-insensitive) is accepted, rated Good."""
+    from hms.models import Card
+    import hms.quiz as quiz_mod
+
+    card = Card.create(
+        question_id="k8s-cmd-001",
+        question_type="command-fill",
+        topic="kubernetes",
+        tier="L1",
+    )
+    q_data = {
+        "id": "k8s-cmd-001",
+        "type": "command-fill",
+        "prompt": "List all pods in all namespaces:",
+        "command": "kubectl get pods --all-namespaces",
+    }
+    session = SessionResult()
+
+    captured = io.StringIO()
+    original_console = quiz_mod.console
+    quiz_mod.console = Console(file=captured, highlight=False)
+    try:
+        with patch("builtins.input", return_value="kubectl get pods --all-namespaces"):
+            _handle_command_fill(card, q_data, session, _readkey=None)
+    finally:
+        quiz_mod.console = original_console
+
+    card = Card.get_by_id(card.id)
+    assert card.reps == 1
+    assert session.correct == 1
+    assert session.total == 1
 
 
-@pytest.mark.xfail(strict=False, reason="Wave 2 implements command-fill handler")
 def test_command_fill_incorrect(hms_home):
-    """command-fill: incorrect answer recorded as Again."""
-    raise NotImplementedError
+    """command-fill: wrong answer is rated Again, lapses incremented."""
+    from hms.models import Card
+    import hms.quiz as quiz_mod
 
+    card = Card.create(
+        question_id="k8s-cmd-002",
+        question_type="command-fill",
+        topic="kubernetes",
+        tier="L1",
+    )
+    q_data = {
+        "id": "k8s-cmd-002",
+        "type": "command-fill",
+        "prompt": "List all pods in all namespaces:",
+        "command": "kubectl get pods --all-namespaces",
+    }
+    session = SessionResult()
+
+    captured = io.StringIO()
+    original_console = quiz_mod.console
+    quiz_mod.console = Console(file=captured, highlight=False)
+    try:
+        with patch("builtins.input", return_value="kubectl pods"):
+            _handle_command_fill(card, q_data, session, _readkey=None)
+    finally:
+        quiz_mod.console = original_console
+
+    card = Card.get_by_id(card.id)
+    assert card.lapses == 1
+    assert session.correct == 0
+    assert session.total == 1
+
+
+# ---------------------------------------------------------------------------
+# Handler stubs: scenario and explain-concept (Wave 2 implements these)
+# ---------------------------------------------------------------------------
 
 @pytest.mark.xfail(strict=False, reason="Wave 2 implements scenario handler")
 def test_scenario_flow(hms_home):
