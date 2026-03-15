@@ -22,8 +22,8 @@
 - [x] **QUIZ-03**: Daily cap is configurable in `~/.hackmyskills/config.toml`
 - [x] **QUIZ-04**: Flashcard questions display prompt, wait for keypress, then reveal answer with self-rating (Again / Hard / Good / Easy)
 - [x] **QUIZ-05**: Command fill-in questions accept typed answer, check with fuzzy match (Levenshtein), show correct answer
-- [ ] **QUIZ-06**: Scenario questions display situation, accept free-text or multiple-choice answer, show explanation
-- [ ] **QUIZ-07**: Explain-concept questions prompt user to type explanation, then show model answer for self-rating
+- [x] **QUIZ-06**: Scenario questions display situation, accept free-text or multiple-choice answer, show explanation
+- [x] **QUIZ-07**: Explain-concept questions prompt user to type explanation, then show model answer for self-rating
 - [ ] **QUIZ-08**: Session summary shown at end: cards reviewed, accuracy, XP earned, current streak
 - [x] **QUIZ-09**: `hms quiz --topic kubernetes` filters session to a specific topic
 
@@ -114,8 +114,8 @@
 | QUIZ-03 | Phase 2: Core Quiz | Complete |
 | QUIZ-04 | Phase 2: Core Quiz | Complete |
 | QUIZ-05 | Phase 2: Core Quiz | Complete |
-| QUIZ-06 | Phase 2: Core Quiz | Pending |
-| QUIZ-07 | Phase 2: Core Quiz | Pending |
+| QUIZ-06 | Phase 2: Core Quiz | Complete |
+| QUIZ-07 | Phase 2: Core Quiz | Complete |
 | QUIZ-08 | Phase 2: Core Quiz | Pending |
 | QUIZ-09 | Phase 2: Core Quiz | Complete |
 | GAME-01 | Phase 3: Gamification + Adaptive Difficulty | Pending |

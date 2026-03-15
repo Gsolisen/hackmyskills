@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-core-quiz/02-02-PLAN.md
-last_updated: "2026-03-15T20:57:31.669Z"
-last_activity: 2026-03-13 — Completed 01-02 (data model, FSRS scheduler, first-run init)
+stopped_at: Completed 02-core-quiz/02-03-PLAN.md
+last_updated: "2026-03-15T21:37:11Z"
+last_activity: 2026-03-15 — Completed 02-03 (scenario and explain-concept handlers)
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 7
-  completed_plans: 5
-  percent: 67
+  completed_plans: 6
+  percent: 86
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-13)
 
 ## Current Position
 
-Phase: 1 of 6 (Foundation)
-Plan: 2 of 3 in current phase
+Phase: 2 of 6 (Core Quiz)
+Plan: 3 of 4 in current phase
 Status: In progress
-Last activity: 2026-03-13 — Completed 01-02 (data model, FSRS scheduler, first-run init)
+Last activity: 2026-03-15 — Completed 02-03 (scenario and explain-concept handlers)
 
-Progress: [███████░░░] 67%
+Progress: [████████░░] 86%
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Progress: [███████░░░] 67%
 | Phase 01-foundation P03 | 8 | 2 tasks | 4 files |
 | Phase 02-core-quiz P01 | 2 | 2 tasks | 4 files |
 | Phase 02-core-quiz P02 | 2 | 2 tasks | 2 files |
+| Phase 02-core-quiz P03 | 3 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,8 @@ Recent decisions affecting current work:
 - [Phase 02-core-quiz]: q_data loaded once at run_session start (questions_by_id dict) and passed to handlers — avoids repeated YAML reads
 - [Phase 02-core-quiz]: Handler signatures shifted to (card, q_data, session, _readkey=None) — q_data is second positional arg, consistent across all four handler types
 - [Phase 02-core-quiz]: _handle_command_fill uses case-insensitive exact match only (no fuzzy matching)
+- [Phase 02-core-quiz]: xfail stubs converted to real tests; test_scenario_flow alias points to test_scenario_flow_correct for backward compatibility
+- [Phase 02-core-quiz]: explain-concept uses input() for free-text (unevaluated); monkeypatched via builtins.input in tests
 
 ### Pending Todos
 
@@ -89,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-15T20:57:31.667Z
-Stopped at: Completed 02-core-quiz/02-02-PLAN.md
+Last session: 2026-03-15T21:37:11Z
+Stopped at: Completed 02-core-quiz/02-03-PLAN.md
 Resume file: None

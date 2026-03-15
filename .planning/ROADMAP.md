@@ -129,7 +129,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-03-13 |
-| 2. Core Quiz | 1/4 | In Progress|  |
+| 2. Core Quiz | 3/4 | In Progress|  |
 | 3. Gamification + Adaptive Difficulty | 0/3 | Not started | - |
 | 4. Interrupt Daemon | 0/3 | Not started | - |
 | 5. AI Content Generation | 0/3 | Not started | - |
