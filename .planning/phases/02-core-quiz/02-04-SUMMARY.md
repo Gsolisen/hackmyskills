@@ -18,7 +18,7 @@ provides:
   - Per-topic Rich Table for multi-topic full sessions only
   - Fully functional run_session() loop with all four handler dispatches
   - topic existence check in run_session() with red Panel (no ValueError)
-  - hms quiz end-to-end functional (pending human-verify checkpoint)
+  - hms quiz end-to-end verified and functional
 affects:
   - 03-stats
   - 04-interrupt-daemon
@@ -63,7 +63,7 @@ completed: 2026-03-15
 - **Duration:** 3 min
 - **Started:** 2026-03-15T20:59:59Z
 - **Completed:** 2026-03-15T21:02:58Z
-- **Tasks:** 2/3 (Task 3 is human-verify checkpoint)
+- **Tasks:** 3/3
 - **Files modified:** 2
 
 ## Accomplishments
@@ -79,7 +79,7 @@ Each task was committed atomically:
 
 1. **Task 1: Implement _show_summary and complete run_session loop** - `5463725` (feat)
 2. **Task 2: Add session summary test and verify full suite green** - `23e0e92` (feat)
-3. **Task 3: Verify end-to-end quiz session in real terminal** - awaiting human verify
+3. **Task 3: Verify end-to-end quiz session in real terminal** - approved by user (human-verify checkpoint)
 
 ## Files Created/Modified
 - `src/hms/quiz.py` - _show_summary() implemented; build_queue() ValueError removed; run_session() topic existence check via red Panel; missing q_data skip with dim warning
@@ -101,9 +101,9 @@ None.
 None - no external service configuration required.
 
 ## Next Phase Readiness
-- hms quiz end-to-end functional — pending human verification of terminal rendering (Task 3 checkpoint)
+- hms quiz fully verified and functional end-to-end
 - All four question types dispatched correctly; session summary renders; Ctrl-C mini-summary works
-- Phase 3 (Stats) can begin after human verify approval
+- Phase 3 (Stats) is ready to begin
 
 ---
 *Phase: 02-core-quiz*
