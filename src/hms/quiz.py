@@ -265,11 +265,79 @@ def _handle_command_fill(card: Card, q_data: dict, session: SessionResult, _read
 
 
 def _handle_scenario(card: Card, q_data: dict, session: SessionResult, _readkey=None) -> None:
-    raise NotImplementedError("scenario")
+    """Display a scenario question, accept A/B/C/D keypress, show result and explanation.
+
+    Shows the situation in a blue Panel, lists the four choices, waits for a
+    single keypress in {a,b,c,d,A,B,C,D}, immediately renders correct/incorrect
+    feedback, shows the explanation panel, waits for any key to continue, then
+    persists the FSRS rating and records to the session.
+
+    Args:
+        card: ORM Card whose FSRS state will be updated.
+        q_data: Question dict with keys: situation, choices, correct, explanation.
+        session: Accumulates per-session statistics.
+        _readkey: Injectable key-reader for testing (defaults to readchar.readkey).
+    """
+    console.print(f"[dim][{card.topic} · {card.tier}][/dim]")
+    console.print(Panel(q_data["situation"], border_style="blue", title="[dim]Scenario[/dim]"))
+    for letter, text in q_data["choices"].items():
+        console.print(f"  [bold]{letter})[/bold] {text}")
+    console.print()
+    console.print("[dim]Select A, B, C, or D:[/dim]")
+
+    valid = {"a", "b", "c", "d", "A", "B", "C", "D"}
+    key = _wait_for_key(valid_keys=valid, _readkey=_readkey)
+    chosen = key.upper()
+    correct_key = q_data["correct"].upper()
+
+    if chosen == correct_key:
+        console.print(f"[bold green]Correct! ({correct_key})[/bold green]")
+        rating = fsrs.Rating.Good
+    else:
+        console.print(
+            f"[bold red]Incorrect. You chose {chosen}; correct answer: {correct_key}[/bold red]"
+        )
+        rating = fsrs.Rating.Again
+
+    console.print(Panel(q_data["explanation"], border_style="dim", title="[dim]Explanation[/dim]"))
+    console.print("[dim]Press any key to continue...[/dim]")
+    _wait_for_key(_readkey=_readkey)
+
+    persist_rating(card, rating)
+    session.record(card.topic, rating.value)
 
 
 def _handle_explain_concept(card: Card, q_data: dict, session: SessionResult, _readkey=None) -> None:
-    raise NotImplementedError("explain-concept")
+    """Display an explain-concept question, accept free-text, show model answer, record self-rating.
+
+    Shows the prompt in a blue Panel, accepts free-text via input() (not evaluated —
+    pure self-reflection), shows the model answer in a green Panel, waits for a 1-4
+    keypress for self-rating (Again/Hard/Good/Easy), then persists FSRS state and
+    records to the session.
+
+    Args:
+        card: ORM Card whose FSRS state will be updated.
+        q_data: Question dict with keys: prompt, model_answer.
+        session: Accumulates per-session statistics.
+        _readkey: Injectable key-reader for testing (defaults to readchar.readkey).
+    """
+    console.print(f"[dim][{card.topic} · {card.tier}][/dim]")
+    console.print(Panel(q_data["prompt"], border_style="blue", title="[dim]Explain[/dim]"))
+    input("Your explanation: ")  # not evaluated — shown for self-reflection only
+    console.print(Panel(q_data["model_answer"], border_style="green", title="[dim]Model Answer[/dim]"))
+    console.print("[dim]How well did you do?  1=Again  2=Hard  3=Good  4=Easy[/dim]")
+
+    key = _wait_for_key(valid_keys={"1", "2", "3", "4"}, _readkey=_readkey)
+    rating_map = {
+        "1": fsrs.Rating.Again,
+        "2": fsrs.Rating.Hard,
+        "3": fsrs.Rating.Good,
+        "4": fsrs.Rating.Easy,
+    }
+    rating = rating_map[key]
+
+    persist_rating(card, rating)
+    session.record(card.topic, rating.value)
 
 
 # ---------------------------------------------------------------------------
