@@ -2,6 +2,7 @@
 
 Non-xfail tests cover SessionResult, build_queue, and basic run_session behavior.
 Handler tests cover flashcard and command-fill flows with mock input injection.
+Summary tests cover _show_summary for single-topic, multi-topic, and empty sessions.
 """
 from __future__ import annotations
 
@@ -18,6 +19,7 @@ from hms.quiz import (
     _handle_explain_concept,
     _handle_flashcard,
     _handle_scenario,
+    _show_summary,
     build_queue,
     run_session,
 )
@@ -91,9 +93,12 @@ def test_build_queue_topic_filter(hms_home):
 
 
 def test_no_cards_for_topic(hms_home):
-    """build_queue raises ValueError when the requested topic has no cards."""
-    with pytest.raises(ValueError, match="missing"):
-        build_queue(25, topic="missing")
+    """build_queue returns [] for an unknown topic (no ValueError raised).
+
+    Topic existence check moved to run_session() which displays a red Panel.
+    """
+    result = build_queue(25, topic="missing")
+    assert result == []
 
 
 # ---------------------------------------------------------------------------
@@ -107,7 +112,6 @@ def test_quiz_empty_queue(hms_home):
 
     captured = io.StringIO()
     test_console = Console(file=captured, highlight=False)
-    monkeypatched_console = test_console
 
     # Replace the module-level console so run_session uses our StringIO console
     original_console = quiz_mod.console
@@ -119,6 +123,64 @@ def test_quiz_empty_queue(hms_home):
 
     output = captured.getvalue()
     assert "Nothing to review" in output
+
+
+def test_run_session_unknown_topic(hms_home, monkeypatch):
+    """run_session(topic='missing') prints a red Panel and returns without raising."""
+    import hms.quiz as quiz_mod
+
+    captured = io.StringIO()
+    monkeypatch.setattr("hms.quiz.console", Console(file=captured, highlight=False))
+    run_session(topic="missing")  # must not raise
+    output = captured.getvalue()
+    assert "No cards found" in output
+
+
+# ---------------------------------------------------------------------------
+# _show_summary tests
+# ---------------------------------------------------------------------------
+
+def test_show_summary_single_topic(hms_home, monkeypatch):
+    """Single-topic session: summary shows cards/XP but NO per-topic table."""
+    import hms.quiz as quiz_mod
+
+    captured = io.StringIO()
+    monkeypatch.setattr("hms.quiz.console", Console(file=captured, highlight=False))
+    session = SessionResult()
+    session.record("kubernetes", 3)
+    session.record("kubernetes", 4)
+    session.record("kubernetes", 1)
+    _show_summary(session, is_partial=False)
+    output = captured.getvalue()
+    assert "3" in output          # cards reviewed count
+    assert "XP" in output
+    assert "By Topic" not in output  # single topic — no breakdown table
+
+
+def test_show_summary_multi_topic(hms_home, monkeypatch):
+    """Multi-topic session: summary includes per-topic breakdown table."""
+    import hms.quiz as quiz_mod
+
+    captured = io.StringIO()
+    monkeypatch.setattr("hms.quiz.console", Console(file=captured, highlight=False))
+    session = SessionResult()
+    session.record("kubernetes", 3)
+    session.record("terraform", 1)
+    _show_summary(session, is_partial=False)
+    output = captured.getvalue()
+    assert "By Topic" in output
+    assert "kubernetes" in output
+    assert "terraform" in output
+
+
+def test_show_summary_empty(hms_home, monkeypatch):
+    """Zero-card session produces no output (early return)."""
+    captured = io.StringIO()
+    monkeypatch.setattr("hms.quiz.console", Console(file=captured, highlight=False))
+    session = SessionResult()  # total = 0
+    _show_summary(session)
+    output = captured.getvalue()
+    assert output.strip() == ""  # nothing printed
 
 
 # ---------------------------------------------------------------------------
