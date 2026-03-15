@@ -15,6 +15,7 @@ from rich.panel import Panel
 
 from hms.config import load_config
 from hms.db import db
+from hms.loader import load_questions
 from hms.models import Card, ReviewHistory
 from hms.scheduler import review_card
 
@@ -202,22 +203,72 @@ def _wait_for_key(valid_keys: set[str] | None = None, _readkey=None) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Question-type handler stubs (Wave 2 plans implement these)
+# Question-type handlers
 # ---------------------------------------------------------------------------
 
-def _handle_flashcard(card: Card, session: SessionResult, _readkey=None) -> None:
-    raise NotImplementedError("flashcard")
+def _handle_flashcard(card: Card, q_data: dict, session: SessionResult, _readkey=None) -> None:
+    """Display a flashcard question, wait for flip keypress, then collect 1-4 rating.
+
+    Args:
+        card: The ORM Card object (scheduling state is updated via persist_rating).
+        q_data: The question dict from the YAML bank (prompt, answer, topic, etc.).
+        session: The current SessionResult accumulator.
+        _readkey: Injectable readkey function for tests; defaults to readchar.readkey.
+    """
+    rating_map = {
+        "1": fsrs.Rating.Again,
+        "2": fsrs.Rating.Hard,
+        "3": fsrs.Rating.Good,
+        "4": fsrs.Rating.Easy,
+    }
+
+    console.print(f"[dim][{card.topic} · {card.tier}][/dim]")
+    console.print(Panel(q_data["prompt"], border_style="blue", title="[dim]Question[/dim]"))
+    console.print("[dim]Press any key to reveal answer...[/dim]")
+    _wait_for_key(_readkey=_readkey)  # any keypress flips
+    console.print(Panel(q_data["answer"], border_style="green", title="[dim]Answer[/dim]"))
+    console.print("[dim]Rate your recall:  1=Again  2=Hard  3=Good  4=Easy[/dim]")
+    key = _wait_for_key(valid_keys={"1", "2", "3", "4"}, _readkey=_readkey)
+    rating = rating_map[key]
+    persist_rating(card, rating)
+    session.record(card.topic, rating.value)
 
 
-def _handle_command_fill(card: Card, session: SessionResult, _readkey=None) -> None:
-    raise NotImplementedError("command-fill")
+def _handle_command_fill(card: Card, q_data: dict, session: SessionResult, _readkey=None) -> None:
+    """Display a command-fill prompt, accept typed answer, report correct/incorrect.
+
+    Uses case-insensitive exact match only (no fuzzy matching).
+
+    Args:
+        card: The ORM Card object.
+        q_data: The question dict from the YAML bank (prompt, command, etc.).
+        session: The current SessionResult accumulator.
+        _readkey: Unused for command-fill (kept for consistent handler signature).
+    """
+    console.print(f"[dim][{card.topic} · {card.tier}][/dim]")
+    console.print(Panel(q_data["prompt"], border_style="blue", title="[dim]Fill in the command[/dim]"))
+    user_answer = input("$ ").strip()
+    canonical = q_data["command"].strip()
+    correct = user_answer.lower() == canonical.lower()
+
+    if correct:
+        console.print("[bold green]\u2713 Correct![/bold green]")
+        rating = fsrs.Rating.Good
+    else:
+        console.print(
+            f"[bold red]\u2717 Incorrect.[/bold red]  Correct answer: [cyan]{canonical}[/cyan]"
+        )
+        rating = fsrs.Rating.Again
+
+    persist_rating(card, rating)
+    session.record(card.topic, rating.value)
 
 
-def _handle_scenario(card: Card, session: SessionResult, _readkey=None) -> None:
+def _handle_scenario(card: Card, q_data: dict, session: SessionResult, _readkey=None) -> None:
     raise NotImplementedError("scenario")
 
 
-def _handle_explain_concept(card: Card, session: SessionResult, _readkey=None) -> None:
+def _handle_explain_concept(card: Card, q_data: dict, session: SessionResult, _readkey=None) -> None:
     raise NotImplementedError("explain-concept")
 
 
@@ -248,6 +299,9 @@ def run_session(topic: Optional[str] = None, _readkey=None) -> None:
     dispatching to the appropriate handler by question_type.  Ctrl-C exits
     cleanly and still shows the summary for any already-reviewed cards.
 
+    All question dicts are loaded once at session start and stored in a lookup
+    dict keyed by question_id to avoid per-card YAML re-reads.
+
     Args:
         topic: Optional topic slug to restrict the session queue.
         _readkey: Injectable readkey function forwarded to handlers (for tests).
@@ -265,6 +319,9 @@ def run_session(topic: Optional[str] = None, _readkey=None) -> None:
         console.print("Nothing to review right now — come back tomorrow!")
         return
 
+    all_questions = load_questions()
+    questions_by_id = {q["id"]: q for q in all_questions}
+
     session = SessionResult()
     total = len(queue)
     is_partial = False
@@ -275,7 +332,8 @@ def run_session(topic: Optional[str] = None, _readkey=None) -> None:
             handler = _HANDLER_DISPATCH.get(card.question_type)
             if handler is None:
                 raise NotImplementedError(card.question_type)
-            handler(card, session, _readkey)
+            q_data = questions_by_id.get(card.question_id, {})
+            handler(card, q_data, session, _readkey)
     except KeyboardInterrupt:
         is_partial = True
 
