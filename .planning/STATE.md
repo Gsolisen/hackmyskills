@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-core-quiz/02-03-PLAN.md
-last_updated: "2026-03-15T21:37:11Z"
+stopped_at: "Checkpoint: 02-04 Task 3 human-verify — hms quiz end-to-end terminal verification"
+last_updated: "2026-03-15T21:03:44.069Z"
 last_activity: 2026-03-15 — Completed 02-03 (scenario and explain-concept handlers)
 progress:
   total_phases: 6
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
   percent: 86
 ---
 
@@ -55,6 +55,7 @@ Progress: [████████░░] 86%
 | Phase 02-core-quiz P01 | 2 | 2 tasks | 4 files |
 | Phase 02-core-quiz P02 | 2 | 2 tasks | 2 files |
 | Phase 02-core-quiz P03 | 3 | 2 tasks | 2 files |
+| Phase 02-core-quiz P04 | 3 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,8 @@ Recent decisions affecting current work:
 - [Phase 02-core-quiz]: _handle_command_fill uses case-insensitive exact match only (no fuzzy matching)
 - [Phase 02-core-quiz]: xfail stubs converted to real tests; test_scenario_flow alias points to test_scenario_flow_correct for backward compatibility
 - [Phase 02-core-quiz]: explain-concept uses input() for free-text (unevaluated); monkeypatched via builtins.input in tests
+- [Phase 02-core-quiz]: Topic existence check moved from build_queue (ValueError) to run_session (red Panel) — avoids exception-as-control-flow for a non-exceptional user action
+- [Phase 02-core-quiz]: Per-topic breakdown table shown only for multi-topic full sessions, not partial/mini-summaries
 
 ### Pending Todos
 
@@ -92,6 +95,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-15T21:37:11Z
-Stopped at: Completed 02-core-quiz/02-03-PLAN.md
+Last session: 2026-03-15T21:03:44.067Z
+Stopped at: Checkpoint: 02-04 Task 3 human-verify — hms quiz end-to-end terminal verification
 Resume file: None

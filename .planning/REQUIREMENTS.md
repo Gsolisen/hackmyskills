@@ -24,7 +24,7 @@
 - [x] **QUIZ-05**: Command fill-in questions accept typed answer, check with fuzzy match (Levenshtein), show correct answer
 - [x] **QUIZ-06**: Scenario questions display situation, accept free-text or multiple-choice answer, show explanation
 - [x] **QUIZ-07**: Explain-concept questions prompt user to type explanation, then show model answer for self-rating
-- [ ] **QUIZ-08**: Session summary shown at end: cards reviewed, accuracy, XP earned, current streak
+- [x] **QUIZ-08**: Session summary shown at end: cards reviewed, accuracy, XP earned, current streak
 - [x] **QUIZ-09**: `hms quiz --topic kubernetes` filters session to a specific topic
 
 ### Gamification
@@ -116,7 +116,7 @@
 | QUIZ-05 | Phase 2: Core Quiz | Complete |
 | QUIZ-06 | Phase 2: Core Quiz | Complete |
 | QUIZ-07 | Phase 2: Core Quiz | Complete |
-| QUIZ-08 | Phase 2: Core Quiz | Pending |
+| QUIZ-08 | Phase 2: Core Quiz | Complete |
 | QUIZ-09 | Phase 2: Core Quiz | Complete |
 | GAME-01 | Phase 3: Gamification + Adaptive Difficulty | Pending |
 | GAME-02 | Phase 3: Gamification + Adaptive Difficulty | Pending |
