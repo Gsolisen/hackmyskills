@@ -207,8 +207,8 @@ def test_flashcard_flow(hms_home):
         "type": "flashcard",
         "topic": "kubernetes",
         "difficulty_tier": "L1",
-        "prompt": "What is a Pod?",
-        "answer": "The smallest deployable unit in Kubernetes.",
+        "front": "What is a Pod?",
+        "back": "The smallest deployable unit in Kubernetes.",
     }
     session = SessionResult()
 
@@ -328,19 +328,14 @@ def test_scenario_flow_correct(hms_home):
         "topic": "terraform",
         "difficulty_tier": "L2",
         "situation": "Your Terraform apply fails with a state lock error.",
-        "choices": {
-            "A": "Delete the state file",
-            "B": "Run terraform force-unlock",
-            "C": "Re-run terraform apply",
-            "D": "Run terraform init",
-        },
-        "correct": "B",
+        "question": "What is the correct action to resolve a stuck state lock?",
+        "answer": "Run terraform force-unlock",
         "explanation": "terraform force-unlock removes a stuck state lock safely.",
     }
     session = SessionResult()
 
     # Sequence: 'b' selects correct answer, then any key to continue
-    keys = iter(["b", " "])
+    keys = iter([" ", "3"])
 
     def mock_readkey():
         return next(keys)
@@ -376,19 +371,14 @@ def test_scenario_flow_wrong(hms_home):
         "topic": "terraform",
         "difficulty_tier": "L2",
         "situation": "Your Terraform apply fails with a state lock error.",
-        "choices": {
-            "A": "Delete the state file",
-            "B": "Run terraform force-unlock",
-            "C": "Re-run terraform apply",
-            "D": "Run terraform init",
-        },
-        "correct": "B",
+        "question": "What is the correct action to resolve a stuck state lock?",
+        "answer": "Run terraform force-unlock",
         "explanation": "terraform force-unlock removes a stuck state lock safely.",
     }
     session = SessionResult()
 
     # Sequence: 'a' selects wrong answer, then any key to continue
-    keys = iter(["a", " "])
+    keys = iter([" ", "1"])
 
     def mock_readkey():
         return next(keys)
@@ -431,13 +421,13 @@ def test_explain_concept_flow(hms_home):
         "type": "explain-concept",
         "topic": "kubernetes",
         "difficulty_tier": "L1",
-        "prompt": "Explain what a ConfigMap is and when you'd use it.",
+        "concept": "Explain what a ConfigMap is and when you'd use it.",
         "model_answer": "A ConfigMap stores non-sensitive configuration data as key-value pairs.",
     }
     session = SessionResult()
 
     # Mock: '3' = Good rating
-    keys = iter(["3"])
+    keys = iter([" ", "3"])
 
     def mock_readkey():
         return next(keys)

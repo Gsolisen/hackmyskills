@@ -216,10 +216,10 @@ def _handle_flashcard(card: Card, q_data: dict, session: SessionResult, _readkey
     }
 
     console.print(f"[dim][{card.topic} · {card.tier}][/dim]")
-    console.print(Panel(q_data["prompt"], border_style="blue", title="[dim]Question[/dim]"))
+    console.print(Panel(q_data["front"], border_style="blue", title="[dim]Question[/dim]"))
     console.print("[dim]Press any key to reveal answer...[/dim]")
     _wait_for_key(_readkey=_readkey)  # any keypress flips
-    console.print(Panel(q_data["answer"], border_style="green", title="[dim]Answer[/dim]"))
+    console.print(Panel(q_data["back"], border_style="green", title="[dim]Answer[/dim]"))
     console.print("[dim]Rate your recall:  1=Again  2=Hard  3=Good  4=Easy[/dim]")
     key = _wait_for_key(valid_keys={"1", "2", "3", "4"}, _readkey=_readkey)
     rating = rating_map[key]
@@ -271,31 +271,23 @@ def _handle_scenario(card: Card, q_data: dict, session: SessionResult, _readkey=
         session: Accumulates per-session statistics.
         _readkey: Injectable key-reader for testing (defaults to readchar.readkey).
     """
+    rating_map = {
+        "1": fsrs.Rating.Again,
+        "2": fsrs.Rating.Hard,
+        "3": fsrs.Rating.Good,
+        "4": fsrs.Rating.Easy,
+    }
+
     console.print(f"[dim][{card.topic} · {card.tier}][/dim]")
     console.print(Panel(q_data["situation"], border_style="blue", title="[dim]Scenario[/dim]"))
-    for letter, text in q_data["choices"].items():
-        console.print(f"  [bold]{letter})[/bold] {text}")
-    console.print()
-    console.print("[dim]Select A, B, C, or D:[/dim]")
-
-    valid = {"a", "b", "c", "d", "A", "B", "C", "D"}
-    key = _wait_for_key(valid_keys=valid, _readkey=_readkey)
-    chosen = key.upper()
-    correct_key = q_data["correct"].upper()
-
-    if chosen == correct_key:
-        console.print(f"[bold green]Correct! ({correct_key})[/bold green]")
-        rating = fsrs.Rating.Good
-    else:
-        console.print(
-            f"[bold red]Incorrect. You chose {chosen}; correct answer: {correct_key}[/bold red]"
-        )
-        rating = fsrs.Rating.Again
-
-    console.print(Panel(q_data["explanation"], border_style="dim", title="[dim]Explanation[/dim]"))
-    console.print("[dim]Press any key to continue...[/dim]")
+    console.print(f"\n[bold]{q_data['question']}[/bold]\n")
+    console.print("[dim]Press any key to reveal answer...[/dim]")
     _wait_for_key(_readkey=_readkey)
-
+    console.print(Panel(q_data["answer"], border_style="green", title="[dim]Answer[/dim]"))
+    console.print(Panel(q_data["explanation"], border_style="dim", title="[dim]Explanation[/dim]"))
+    console.print("[dim]Rate your recall:  1=Again  2=Hard  3=Good  4=Easy[/dim]")
+    key = _wait_for_key(valid_keys={"1", "2", "3", "4"}, _readkey=_readkey)
+    rating = rating_map[key]
     persist_rating(card, rating)
     session.record(card.topic, rating.value)
 
@@ -315,7 +307,7 @@ def _handle_explain_concept(card: Card, q_data: dict, session: SessionResult, _r
         _readkey: Injectable key-reader for testing (defaults to readchar.readkey).
     """
     console.print(f"[dim][{card.topic} · {card.tier}][/dim]")
-    console.print(Panel(q_data["prompt"], border_style="blue", title="[dim]Explain[/dim]"))
+    console.print(Panel(q_data["concept"], border_style="blue", title="[dim]Explain[/dim]"))
     input("Your explanation: ")  # not evaluated — shown for self-reflection only
     console.print(Panel(q_data["model_answer"], border_style="green", title="[dim]Model Answer[/dim]"))
     console.print("[dim]How well did you do?  1=Again  2=Hard  3=Good  4=Easy[/dim]")
