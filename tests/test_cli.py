@@ -1,4 +1,6 @@
 """Tests for the hms CLI entry point (FOUND-01)."""
+from unittest.mock import patch
+
 from typer.testing import CliRunner
 from hms.cli import app
 
@@ -69,3 +71,13 @@ def test_dashboard_updated(hms_home):
     assert "Data home:" not in result.output
     # Must contain the welcome or streak prompt
     assert ("Welcome!" in result.output) or ("Run" in result.output)
+
+
+def test_interrupt_command(hms_home):
+    """hms interrupt invokes run_session with max_cards=1."""
+    with patch("hms.quiz.run_session") as mock_run, \
+         patch("hms.init.ensure_initialized"):
+        result = runner.invoke(app, ["interrupt"])
+
+    assert result.exit_code == 0
+    mock_run.assert_called_once_with(max_cards=1)
