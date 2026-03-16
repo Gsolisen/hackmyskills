@@ -1,7 +1,7 @@
 """Deferred SQLite database object and base model for HackMySkills."""
 from peewee import SqliteDatabase, Model
 
-db = SqliteDatabase(None)
+db = SqliteDatabase(None, pragmas={"journal_mode": "wal", "foreign_keys": 1})
 
 
 class BaseModel(Model):
