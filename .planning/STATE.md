@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-01 platform layer and cross-cutting changes
-last_updated: "2026-03-16T03:03:00.467Z"
+stopped_at: Completed 04-02 daemon runtime (controller, scheduler, notifier, runner)
+last_updated: "2026-03-16T03:07:47.226Z"
 last_activity: "2026-03-15 — Completed 03-01 (gamification module: XP, streak, freeze, levels, mastery/unlock)"
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 14
-  completed_plans: 12
+  completed_plans: 13
   percent: 86
 ---
 
@@ -61,6 +61,7 @@ Progress: [████████░░] 86%
 | Phase 03-gamification-adaptive-difficulty P03 | 15 | 2 tasks | 2 files |
 | Phase 04-interrupt-daemon P00 | 2 | 3 tasks | 5 files |
 | Phase 04-interrupt-daemon P01 | 2 | 2 tasks | 5 files |
+| Phase 04-interrupt-daemon P02 | 10 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -101,6 +102,7 @@ Recent decisions affecting current work:
 - [Phase 04-interrupt-daemon]: winreg imported lazily inside WindowsPlatform methods to avoid ImportError on non-Windows
 - [Phase 04-interrupt-daemon]: interval_minutes kept at DEFAULT_CONFIG top level for backward compatibility alongside new daemon sub-dict
 - [Phase 04-interrupt-daemon]: daemon.daily_cap=10 — interrupt sessions intentionally shorter than full 25-card daily sessions
+- [Phase 04-interrupt-daemon]: WAL pragma at SqliteDatabase constructor for defense-in-depth concurrent access; notify_job calls ensure_initialized(); PID written in both controller.start() and daemon_main()
 
 ### Pending Todos
 
@@ -113,6 +115,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-16T03:03:00.465Z
-Stopped at: Completed 04-01 platform layer and cross-cutting changes
+Last session: 2026-03-16T03:07:47.224Z
+Stopped at: Completed 04-02 daemon runtime (controller, scheduler, notifier, runner)
 Resume file: None
