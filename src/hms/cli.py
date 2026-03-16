@@ -189,16 +189,16 @@ def validate_content() -> None:
     if result.errors:
         console.print(f"\n[bold red]Schema Errors ({len(result.errors)}):[/bold red]")
         for err in result.errors:
-            console.print(f"  [red]\u2717[/red] {err.file} :: {err.question_id} -- {err.message}")
+            console.print(f"  [red]X[/red] {err.file} :: {err.question_id} -- {err.message}")
 
     if result.duplicates:
         console.print(f"\n[bold yellow]Duplicates ({len(result.duplicates)}):[/bold yellow]")
         for dup in result.duplicates:
             if dup.reason == "exact_id":
-                console.print(f"  [yellow]\u26a0[/yellow] ID '{dup.id_a}' appears in {dup.file_a} and {dup.file_b}")
+                console.print(f"  [yellow]![/yellow] ID '{dup.id_a}' appears in {dup.file_a} and {dup.file_b}")
             else:
                 console.print(
-                    f"  [yellow]\u26a0[/yellow] {dup.id_a} \u2194 {dup.id_b}: {dup.similarity:.0%} overlap"
+                    f"  [yellow]![/yellow] {dup.id_a} <-> {dup.id_b}: {dup.similarity:.0%} overlap"
                     f" ({dup.file_a}, {dup.file_b})"
                 )
 
@@ -208,7 +208,7 @@ def validate_content() -> None:
 
     if not result.ok:
         raise typer.Exit(1)
-    console.print("[green]\u2713 All content valid.[/green]")
+    console.print("[green]OK[/green] All content valid.")
 
 
 daemon_app = typer.Typer(help="Manage the background interrupt daemon.")

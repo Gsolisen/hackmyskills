@@ -25,7 +25,7 @@ jobs:
         run: pip install -e .
 
       - name: Validate content
-        run: python -m hms validate-content
+        run: hms validate-content
 
       - name: Run content tests
         run: python -m pytest tests/test_validation.py tests/test_loader.py -x -q
