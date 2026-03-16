@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-16T15:28:24.463Z"
-last_activity: 2026-03-16 -- Completed 04-03 CLI wiring, tests, human verification; Phase 4 fully done
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-03-16T18:51:41.129Z"
+last_activity: 2026-03-16 -- Completed 05-02 CI workflow + content generation guide; Phase 5 fully done
 progress:
   total_phases: 6
-  completed_phases: 4
-  total_plans: 14
-  completed_plans: 14
+  completed_phases: 5
+  total_plans: 16
+  completed_plans: 16
   percent: 100
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** The habit forms — consistent, non-annoying quizzing that makes a DevOps engineer measurably faster and more confident over time.
-**Current focus:** Phase 1: Foundation
+**Current focus:** Phase 6: Content Bank + Polish
 
 ## Current Position
 
-Phase: 5 of 6 (AI Content Generation) -- IN PROGRESS
-Plan: 1 of 2 complete (05-01 done, 05-02 pending)
-Status: Wave 1 complete, executing Wave 2
-Last activity: 2026-03-16 -- Completed 05-01 validation library, CLI command, generate stub removed
+Phase: 5 of 6 (AI Content Generation) -- COMPLETE
+Plan: 2 of 2 complete (05-01 done, 05-02 done)
+Status: Phase 5 complete, ready for Phase 6
+Last activity: 2026-03-16 -- Completed 05-02 CI workflow + content generation guide; Phase 5 fully done
 
 Progress: [██████████] 100%
 
@@ -64,6 +64,8 @@ Progress: [██████████] 100%
 | Phase 04-interrupt-daemon P02 | 10 | 2 tasks | 5 files |
 | Phase 04-interrupt-daemon P03 | 15 | 2 tasks | 3 files |
 | Phase 04-interrupt-daemon P03 | 20 | 3 tasks | 6 files |
+| Phase 05-ai-content-generation P01 | 15 | 3 tasks | 6 files |
+| Phase 05-ai-content-generation P02 | 5 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -108,6 +110,9 @@ Recent decisions affecting current work:
 - [Phase 04-interrupt-daemon]: Patch Card.select not Card class — patching the whole model makes Card.due a MagicMock breaking <= comparison with datetime in scheduler.py
 - [Phase 04-interrupt-daemon]: Typer sub-app pattern established: daemon_app = typer.Typer(); app.add_typer(daemon_app, name='daemon') for grouped CLI commands
 - [Phase 04-interrupt-daemon]: Replaced desktop-notifier with winotify -- WinRT click callbacks don't fire for unpackaged Python apps; winotify uses bat-file launch target; notify_job became sync; runner simplified to BackgroundScheduler
+- [Phase 05-ai-content-generation]: CI workflow triggers on both PR and push for content paths
+- [Phase 05-ai-content-generation]: Content generation guide structured around Claude Code session workflow
+- [Phase 05-ai-content-generation]: CLI validate-content uses ASCII symbols for cross-platform compatibility
 
 ### Pending Todos
 
@@ -120,6 +125,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-16T15:28:24.461Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-ai-content-generation/05-CONTEXT.md
+Last session: 2026-03-16T18:51:41.127Z
+Stopped at: Completed 05-02-PLAN.md
+Resume file: None

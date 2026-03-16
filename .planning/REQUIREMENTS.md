@@ -53,9 +53,9 @@
 
 ### AI Content Generation
 
-- [ ] **AI-01**: `hms generate --topic <topic> --count <n>` generates n new questions via Claude API
-- [ ] **AI-02**: Generated questions written to a staging YAML file for user review before entering the active bank
-- [ ] **AI-03**: Each AI-generated question tagged with `generated_at` timestamp and `source: ai`
+- [x] **AI-01**: `hms generate --topic <topic> --count <n>` generates n new questions via Claude API
+- [x] **AI-02**: Generated questions written to a staging YAML file for user review before entering the active bank
+- [x] **AI-03**: Each AI-generated question tagged with `generated_at` timestamp and `source: ai`
 - [ ] **AI-04**: `hms review-generated` CLI command to approve/reject staged questions one by one
 - [ ] **AI-05**: Duplicate detection before staging (checks existing question IDs and similar phrasing)
 
@@ -133,9 +133,9 @@
 | INT-04 | Phase 4: Interrupt Daemon | Complete |
 | INT-05 | Phase 4: Interrupt Daemon | Complete |
 | INT-06 | Phase 4: Interrupt Daemon | Complete |
-| AI-01 | Phase 5: AI Content Generation | Pending |
-| AI-02 | Phase 5: AI Content Generation | Pending |
-| AI-03 | Phase 5: AI Content Generation | Pending |
+| AI-01 | Phase 5: AI Content Generation | Complete |
+| AI-02 | Phase 5: AI Content Generation | Complete |
+| AI-03 | Phase 5: AI Content Generation | Complete |
 | AI-04 | Phase 5: AI Content Generation | Pending |
 | AI-05 | Phase 5: AI Content Generation | Pending |
 | CONT-01 | Phase 6: Content Bank + Polish | Pending |
