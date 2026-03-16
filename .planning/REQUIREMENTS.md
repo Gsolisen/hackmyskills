@@ -33,7 +33,7 @@
 - [x] **GAME-02**: Daily streak tracked — increments when at least 1 card reviewed per calendar day
 - [x] **GAME-03**: Streak freeze earned every 7 days — protects streak on one missed day (prevents quit trigger)
 - [x] **GAME-04**: Level system based on total XP with visible level name (e.g. "Pipeline Rookie → Container Captain")
-- [ ] **GAME-05**: `hms stats` shows: current streak, streak freezes, level, XP to next level, cards due, performance by topic
+- [x] **GAME-05**: `hms stats` shows: current streak, streak freezes, level, XP to next level, cards due, performance by topic
 
 ### Adaptive Difficulty
 
@@ -44,12 +44,12 @@
 
 ### Interrupt Mode
 
-- [ ] **INT-01**: `hms daemon start` launches background APScheduler process and registers it in Windows Startup folder
-- [ ] **INT-02**: `hms daemon stop` cleanly stops the daemon and removes from Startup folder
-- [ ] **INT-03**: Daemon sends a desktop notification at configurable intervals (default: every 90 minutes during work hours)
-- [ ] **INT-04**: Notification shows a single question — clicking it (or running `hms interrupt`) opens a 1-question mini-session in terminal
-- [ ] **INT-05**: Quiet hours configurable in config.toml (default: no notifications before 09:00 or after 21:00)
-- [ ] **INT-06**: Daemon respects daily card cap — stops sending interrupts once daily cap is hit
+- [x] **INT-01**: `hms daemon start` launches background APScheduler process and registers it in Windows Startup folder
+- [x] **INT-02**: `hms daemon stop` cleanly stops the daemon and removes from Startup folder
+- [x] **INT-03**: Daemon sends a desktop notification at configurable intervals (default: every 90 minutes during work hours)
+- [x] **INT-04**: Notification shows a single question — clicking it (or running `hms interrupt`) opens a 1-question mini-session in terminal
+- [x] **INT-05**: Quiet hours configurable in config.toml (default: no notifications before 09:00 or after 21:00)
+- [x] **INT-06**: Daemon respects daily card cap — stops sending interrupts once daily cap is hit
 
 ### AI Content Generation
 
@@ -122,17 +122,17 @@
 | GAME-02 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | GAME-03 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | GAME-04 | Phase 3: Gamification + Adaptive Difficulty | Complete |
-| GAME-05 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| GAME-05 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | ADAPT-01 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | ADAPT-02 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | ADAPT-03 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | ADAPT-04 | Phase 3: Gamification + Adaptive Difficulty | Complete |
-| INT-01 | Phase 4: Interrupt Daemon | Pending |
-| INT-02 | Phase 4: Interrupt Daemon | Pending |
-| INT-03 | Phase 4: Interrupt Daemon | Pending |
-| INT-04 | Phase 4: Interrupt Daemon | Pending |
-| INT-05 | Phase 4: Interrupt Daemon | Pending |
-| INT-06 | Phase 4: Interrupt Daemon | Pending |
+| INT-01 | Phase 4: Interrupt Daemon | Complete |
+| INT-02 | Phase 4: Interrupt Daemon | Complete |
+| INT-03 | Phase 4: Interrupt Daemon | Complete |
+| INT-04 | Phase 4: Interrupt Daemon | Complete |
+| INT-05 | Phase 4: Interrupt Daemon | Complete |
+| INT-06 | Phase 4: Interrupt Daemon | Complete |
 | AI-01 | Phase 5: AI Content Generation | Pending |
 | AI-02 | Phase 5: AI Content Generation | Pending |
 | AI-03 | Phase 5: AI Content Generation | Pending |
