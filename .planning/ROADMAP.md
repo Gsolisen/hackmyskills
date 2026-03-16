@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Project scaffold, SQLite data model, FSRS scheduling engine, YAML question loading (completed 2026-03-13)
 - [x] **Phase 2: Core Quiz** - `hms quiz` command, all four content types, session flow, Rich terminal output (completed 2026-03-15)
-- [ ] **Phase 3: Gamification + Adaptive Difficulty** - XP, streaks, levels, topic unlock progression, `hms stats`
+- [x] **Phase 3: Gamification + Adaptive Difficulty** - XP, streaks, levels, topic unlock progression, `hms stats` (completed 2026-03-16)
 - [ ] **Phase 4: Interrupt Daemon** - APScheduler background daemon, Windows desktop notifications, startup registration
 - [ ] **Phase 5: AI Content Generation** - Claude API integration, question staging, duplicate detection, review workflow
 - [ ] **Phase 6: Content Bank + Polish** - Curated DevOps question bank, extensibility commands, config documentation
@@ -130,7 +130,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-03-13 |
 | 2. Core Quiz | 4/4 | Complete   | 2026-03-15 |
-| 3. Gamification + Adaptive Difficulty | 2/3 | In Progress|  |
+| 3. Gamification + Adaptive Difficulty | 3/3 | Complete   | 2026-03-16 |
 | 4. Interrupt Daemon | 0/3 | Not started | - |
 | 5. AI Content Generation | 0/3 | Not started | - |
 | 6. Content Bank + Polish | 0/3 | Not started | - |
