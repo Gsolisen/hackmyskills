@@ -5,9 +5,8 @@ All external I/O is mocked — no real OS calls are made.
 """
 from __future__ import annotations
 
-import asyncio
 import sys
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -102,28 +101,27 @@ def test_stop_removes_pid(hms_home, monkeypatch):
 # ---------------------------------------------------------------------------
 
 def test_notify_job_fires(hms_home):
-    """notify_job() calls notifier.send() when within work hours and cap not reached."""
+    """notify_job() calls send_notification() when within work hours and cap not reached."""
     from hms.daemon.scheduler import notify_job
 
     with patch("hms.daemon.scheduler._is_within_work_hours", return_value=True), \
          patch("hms.daemon.scheduler._daily_reviews_today", return_value=0), \
          patch("hms.init.ensure_initialized"), \
          patch("hms.config.load_config", return_value={"daemon": {"daily_cap": 10}}), \
-         patch("hms.daemon.notifier.send_notification", new_callable=AsyncMock) as mock_notify, \
+         patch("hms.daemon.notifier.send_notification") as mock_notify, \
          patch("hms.models.Card.select") as mock_select:
-        # Build a query chain that returns None (no due cards)
         mock_select.return_value.where.return_value.order_by.return_value.first.return_value = None
-        asyncio.run(notify_job())
+        notify_job()
 
     mock_notify.assert_called_once()
 
 
 def test_scheduler_fires(hms_home):
-    """AsyncIOScheduler is configured with interval trigger id=hms_interrupt replace_existing=True."""
-    from apscheduler.schedulers.asyncio import AsyncIOScheduler
+    """BackgroundScheduler is configured with interval trigger id=hms_interrupt replace_existing=True."""
+    from apscheduler.schedulers.background import BackgroundScheduler
     from hms.daemon.scheduler import notify_job
 
-    scheduler = AsyncIOScheduler()
+    scheduler = BackgroundScheduler()
     scheduler.add_job(
         notify_job,
         "interval",
@@ -140,28 +138,31 @@ def test_scheduler_fires(hms_home):
 # INT-04: notification click spawns terminal; hms interrupt runs 1-card session
 # ---------------------------------------------------------------------------
 
-def test_interrupt_terminal_spawn(hms_home):
-    """_open_interrupt_terminal() calls subprocess.Popen with cmd.exe /k hms interrupt."""
-    import subprocess
-    from hms.daemon.notifier import _open_interrupt_terminal
+def test_notification_creates_bat_and_sends(hms_home, monkeypatch):
+    """send_notification() creates interrupt.bat and calls winotify toast.show()."""
+    from hms.daemon.notifier import send_notification, _INTERRUPT_BAT
 
-    with patch("subprocess.Popen") as mock_popen:
-        _open_interrupt_terminal()
+    bat_path = hms_home / "interrupt.bat"
+    monkeypatch.setattr("hms.daemon.notifier._INTERRUPT_BAT", bat_path)
 
-    mock_popen.assert_called_once()
-    args = mock_popen.call_args[0][0]
-    assert args == ["cmd.exe", "/k", "hms", "interrupt"]
-    kwargs = mock_popen.call_args[1]
-    assert kwargs.get("creationflags") == subprocess.CREATE_NEW_CONSOLE
+    mock_toast = MagicMock()
+    with patch("winotify.Notification", return_value=mock_toast) as mock_cls:
+        send_notification("Test preview")
+
+    # bat file was created
+    assert bat_path.exists()
+    assert "hms interrupt" in bat_path.read_text()
+    # toast was shown
+    mock_toast.show.assert_called_once()
+    mock_toast.add_actions.assert_called_once()
 
 
 def test_interrupt_session(hms_home):
     """run_session is called with max_cards=1 when notify_job triggers."""
     # This is verified via test_interrupt_command in test_cli.py using Typer CliRunner.
     # Here we verify it from the scheduler side: notify_job sends notification which
-    # triggers _open_interrupt_terminal -> hms interrupt -> run_session(max_cards=1).
-    # We validate that the notify_job path leads to send_notification being called,
-    # which in turn would trigger the interrupt terminal. The full loop is integration-level.
+    # triggers click -> interrupt.bat -> hms interrupt -> run_session(max_cards=1).
+    # We validate that the notify_job path leads to send_notification being called.
     from hms.daemon.scheduler import notify_job
 
     with patch("hms.daemon.scheduler._is_within_work_hours", return_value=True), \
@@ -169,9 +170,9 @@ def test_interrupt_session(hms_home):
          patch("hms.init.ensure_initialized"), \
          patch("hms.config.load_config", return_value={"daemon": {"daily_cap": 10}}), \
          patch("hms.models.Card.select") as mock_select, \
-         patch("hms.daemon.notifier.send_notification", new_callable=AsyncMock) as mock_notify:
+         patch("hms.daemon.notifier.send_notification") as mock_notify:
         mock_select.return_value.where.return_value.order_by.return_value.first.return_value = None
-        asyncio.run(notify_job())
+        notify_job()
 
     mock_notify.assert_called_once()
 
@@ -215,15 +216,15 @@ def test_quiet_hours(hms_home):
 # ---------------------------------------------------------------------------
 
 def test_cap_respected(hms_home):
-    """notify_job() does not call notifier.send() when today's review count >= daily_cap."""
+    """notify_job() does not call send_notification() when today's review count >= daily_cap."""
     from hms.daemon.scheduler import notify_job
 
     with patch("hms.daemon.scheduler._is_within_work_hours", return_value=True), \
          patch("hms.daemon.scheduler._daily_reviews_today", return_value=10), \
-         patch("hms.daemon.notifier.notifier.send", new_callable=AsyncMock) as mock_send, \
+         patch("hms.daemon.notifier.send_notification") as mock_send, \
          patch("hms.init.ensure_initialized"), \
          patch("hms.config.load_config", return_value={"daemon": {"daily_cap": 10}}):
-        asyncio.run(notify_job())
+        notify_job()
 
     mock_send.assert_not_called()
 

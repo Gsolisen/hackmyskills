@@ -36,7 +36,7 @@ def _daily_reviews_today(cfg: dict) -> int:
     )
 
 
-async def notify_job() -> None:
+def notify_job() -> None:
     """APScheduler job: send a desktop notification if guards pass.
 
     Guards (evaluated in order -- return early if any fails):
@@ -72,4 +72,4 @@ async def notify_job() -> None:
         .first()
     )
     preview = next_card.question_id if next_card else "Time for a quick review!"
-    await send_notification(preview)
+    send_notification(preview)
