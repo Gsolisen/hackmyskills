@@ -29,13 +29,13 @@ from hms.quiz import (
 # SessionResult unit tests
 # ---------------------------------------------------------------------------
 
-def test_session_result_accuracy():
-    """accuracy_pct rounds to nearest integer; xp = total * 15."""
+def test_session_result_accuracy(hms_home):
+    """accuracy_pct rounds; xp uses per-card formula (L1 Good=5, L1 Again=0)."""
     s = SessionResult()
-    s.record("k8s", 3)   # Good — correct
-    s.record("k8s", 1)   # Again — incorrect
+    s.record("k8s", 3, tier="L1")   # Good — correct; XP = 5
+    s.record("k8s", 1, tier="L1")   # Again — incorrect; XP = 0
     assert s.accuracy_pct == 50
-    assert s.xp == 30
+    assert s.xp == 5   # 5 + 0 = 5 (no streak yet, streak=0)
     assert s.total == 2
 
 
@@ -445,3 +445,35 @@ def test_explain_concept_flow(hms_home):
     assert card.reps == 1
     assert session.total == 1
     assert session.correct == 1  # Good (rating 3) >= 3
+
+
+# ---------------------------------------------------------------------------
+# build_queue: unlock-aware tests
+# ---------------------------------------------------------------------------
+
+def test_build_queue_respects_unlock(hms_home):
+    """build_queue with unlocked_tiers excludes locked-tier cards."""
+    from hms.models import Card
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    Card.create(question_id="k-l1", question_type="flashcard", topic="kubernetes",
+                tier="L1", due=now - timedelta(hours=1))
+    Card.create(question_id="k-l2", question_type="flashcard", topic="kubernetes",
+                tier="L2", due=now - timedelta(hours=1))
+    queue = build_queue(10, unlocked_tiers={"kubernetes": ["L1"]})
+    qids = [c.question_id for c in queue]
+    assert "k-l1" in qids
+    assert "k-l2" not in qids
+
+
+def test_build_queue_serves_unlocked_tiers(hms_home):
+    """build_queue with unlocked L1+L2 serves both tiers."""
+    from hms.models import Card
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    Card.create(question_id="k-l1", question_type="flashcard", topic="kubernetes",
+                tier="L1", due=now - timedelta(hours=1))
+    Card.create(question_id="k-l2", question_type="flashcard", topic="kubernetes",
+                tier="L2", due=now - timedelta(hours=1))
+    queue = build_queue(10, unlocked_tiers={"kubernetes": ["L1", "L2"]})
+    qids = [c.question_id for c in queue]
+    assert "k-l1" in qids
+    assert "k-l2" in qids
