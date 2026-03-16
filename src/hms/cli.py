@@ -171,17 +171,58 @@ def _render_stats_panel() -> None:
 
 
 @app.command()
+def interrupt() -> None:
+    """Run a single-question interrupt session."""
+    from hms.init import ensure_initialized
+    from hms import quiz as quiz_module
+    ensure_initialized()
+    quiz_module.run_session(max_cards=1)
+
+
+@app.command()
 def generate() -> None:
     """Generate new questions via AI."""
     console.print("[yellow]Not yet implemented.[/yellow]")
     raise typer.Exit(0)
 
 
-@app.command()
-def daemon() -> None:
-    """Manage the background interrupt daemon."""
-    console.print("[yellow]Not yet implemented.[/yellow]")
-    raise typer.Exit(0)
+daemon_app = typer.Typer(help="Manage the background interrupt daemon.")
+
+
+@daemon_app.command()
+def start() -> None:
+    """Launch the daemon and register it for startup."""
+    from hms.daemon.controller import DaemonController
+    ctrl = DaemonController()
+    ctrl.start()
+    console.print("[green]Daemon started.[/green] Registered for Windows startup.")
+
+
+@daemon_app.command()
+def stop() -> None:
+    """Stop the daemon and remove it from startup."""
+    from hms.daemon.controller import DaemonController
+    ctrl = DaemonController()
+    was_running = ctrl.stop()
+    if was_running:
+        console.print("[yellow]Daemon stopped.[/yellow]")
+    else:
+        console.print("[dim]Daemon was not running.[/dim]")
+
+
+@daemon_app.command()
+def status() -> None:
+    """Check whether the daemon is currently running."""
+    from hms.daemon.controller import DaemonController
+    ctrl = DaemonController()
+    state = ctrl.status()
+    if state == "running":
+        console.print("[green]Daemon is running.[/green]")
+    else:
+        console.print("[dim]Daemon is stopped.[/dim]")
+
+
+app.add_typer(daemon_app, name="daemon")
 
 
 if __name__ == "__main__":
