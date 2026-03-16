@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-02 daemon runtime (controller, scheduler, notifier, runner)
-last_updated: "2026-03-16T03:07:47.226Z"
+stopped_at: "Completed 04-03 CLI wiring and test conversion (checkpoint: awaiting human verify)"
+last_updated: "2026-03-16T03:13:02.091Z"
 last_activity: "2026-03-15 — Completed 03-01 (gamification module: XP, streak, freeze, levels, mastery/unlock)"
 progress:
   total_phases: 6
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 14
-  completed_plans: 13
+  completed_plans: 14
   percent: 86
 ---
 
@@ -62,6 +62,7 @@ Progress: [████████░░] 86%
 | Phase 04-interrupt-daemon P00 | 2 | 3 tasks | 5 files |
 | Phase 04-interrupt-daemon P01 | 2 | 2 tasks | 5 files |
 | Phase 04-interrupt-daemon P02 | 10 | 2 tasks | 5 files |
+| Phase 04-interrupt-daemon P03 | 15 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -103,6 +104,8 @@ Recent decisions affecting current work:
 - [Phase 04-interrupt-daemon]: interval_minutes kept at DEFAULT_CONFIG top level for backward compatibility alongside new daemon sub-dict
 - [Phase 04-interrupt-daemon]: daemon.daily_cap=10 — interrupt sessions intentionally shorter than full 25-card daily sessions
 - [Phase 04-interrupt-daemon]: WAL pragma at SqliteDatabase constructor for defense-in-depth concurrent access; notify_job calls ensure_initialized(); PID written in both controller.start() and daemon_main()
+- [Phase 04-interrupt-daemon]: Patch Card.select not Card class — patching the whole model makes Card.due a MagicMock breaking <= comparison with datetime in scheduler.py
+- [Phase 04-interrupt-daemon]: Typer sub-app pattern established: daemon_app = typer.Typer(); app.add_typer(daemon_app, name='daemon') for grouped CLI commands
 
 ### Pending Todos
 
@@ -115,6 +118,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-16T03:07:47.224Z
-Stopped at: Completed 04-02 daemon runtime (controller, scheduler, notifier, runner)
+Last session: 2026-03-16T03:13:02.089Z
+Stopped at: Completed 04-03 CLI wiring and test conversion (checkpoint: awaiting human verify)
 Resume file: None
