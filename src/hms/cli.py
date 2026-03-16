@@ -179,11 +179,36 @@ def interrupt() -> None:
     quiz_module.run_session(max_cards=1)
 
 
-@app.command()
-def generate() -> None:
-    """Generate new questions via AI."""
-    console.print("[yellow]Not yet implemented.[/yellow]")
-    raise typer.Exit(0)
+@app.command("validate-content")
+def validate_content() -> None:
+    """Validate all content YAML files: schema checks and duplicate detection."""
+    from hms.validation import validate_content_dir
+
+    result = validate_content_dir()
+
+    if result.errors:
+        console.print(f"\n[bold red]Schema Errors ({len(result.errors)}):[/bold red]")
+        for err in result.errors:
+            console.print(f"  [red]\u2717[/red] {err.file} :: {err.question_id} -- {err.message}")
+
+    if result.duplicates:
+        console.print(f"\n[bold yellow]Duplicates ({len(result.duplicates)}):[/bold yellow]")
+        for dup in result.duplicates:
+            if dup.reason == "exact_id":
+                console.print(f"  [yellow]\u26a0[/yellow] ID '{dup.id_a}' appears in {dup.file_a} and {dup.file_b}")
+            else:
+                console.print(
+                    f"  [yellow]\u26a0[/yellow] {dup.id_a} \u2194 {dup.id_b}: {dup.similarity:.0%} overlap"
+                    f" ({dup.file_a}, {dup.file_b})"
+                )
+
+    console.print(
+        f"\n[dim]Checked {result.questions_checked} questions in {result.files_checked} files.[/dim]"
+    )
+
+    if not result.ok:
+        raise typer.Exit(1)
+    console.print("[green]\u2713 All content valid.[/green]")
 
 
 daemon_app = typer.Typer(help="Manage the background interrupt daemon.")

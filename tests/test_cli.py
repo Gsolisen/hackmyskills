@@ -81,3 +81,28 @@ def test_interrupt_command(hms_home):
 
     assert result.exit_code == 0
     mock_run.assert_called_once_with(max_cards=1)
+
+
+def test_validate_content_clean(hms_home):
+    """hms validate-content exits 0 on valid content."""
+    from hms.init import ensure_initialized
+    ensure_initialized()
+    result = runner.invoke(app, ["validate-content"])
+    assert result.exit_code == 0
+    assert "All content valid" in result.output
+
+
+def test_validate_content_shows_count(hms_home):
+    """hms validate-content reports files and questions checked."""
+    from hms.init import ensure_initialized
+    ensure_initialized()
+    result = runner.invoke(app, ["validate-content"])
+    assert result.exit_code == 0
+    assert "questions" in result.output
+    assert "files" in result.output
+
+
+def test_generate_command_removed():
+    """The generate stub no longer appears in CLI."""
+    result = runner.invoke(app, ["--help"])
+    assert "generate" not in result.output.lower() or "validate-content" in result.output
