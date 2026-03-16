@@ -12,7 +12,7 @@ from pathlib import Path
 # Import from hms.config so monkeypatch in tests overrides HMS_HOME here too.
 from hms.config import HMS_HOME
 from hms.db import db, initialize_db
-from hms.models import Card, ReviewHistory
+from hms.models import Card, ReviewHistory, UserStat
 
 _DEFAULT_CONFIG_TOML = """\
 # HackMySkills configuration
@@ -42,7 +42,7 @@ def ensure_initialized() -> None:
 
     db_path = home / "data.db"
     initialize_db(str(db_path))
-    db.create_tables([Card, ReviewHistory], safe=True)
+    db.create_tables([Card, ReviewHistory, UserStat], safe=True)
 
     _copy_bundled_content(home / "content")
     _write_default_config(home / "config.toml")

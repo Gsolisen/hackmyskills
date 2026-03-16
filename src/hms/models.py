@@ -49,3 +49,20 @@ class ReviewHistory(BaseModel):
 
     class Meta:
         table_name = "reviewhistory"
+
+
+class UserStat(BaseModel):
+    """Single-row table for persistent gamification state (id=1 always).
+
+    streak_freezes: count of available streak freezes
+    last_freeze_awarded_streak: streak value when the last freeze was awarded
+                                (prevents double-awarding at same milestone)
+    last_freeze_used_day: ISO date "YYYY-MM-DD" of the last day a freeze was
+                          consumed; empty string if never used
+    """
+    streak_freezes = IntegerField(default=0)
+    last_freeze_awarded_streak = IntegerField(default=0)
+    last_freeze_used_day = CharField(default="")
+
+    class Meta:
+        table_name = "userstat"

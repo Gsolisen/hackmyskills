@@ -16,7 +16,7 @@ def hms_home(tmp_path, monkeypatch):
     creates Card and ReviewHistory tables, and closes the DB after each test.
     """
     from hms.db import db
-    from hms.models import Card, ReviewHistory
+    from hms.models import Card, ReviewHistory, UserStat
 
     home = tmp_path / ".hackmyskills"
     home.mkdir()
@@ -27,7 +27,7 @@ def hms_home(tmp_path, monkeypatch):
     monkeypatch.setattr("hms.init.HMS_HOME", home)
 
     db.init(str(home / "test.db"), pragmas={"foreign_keys": 1})
-    db.create_tables([Card, ReviewHistory], safe=True)
+    db.create_tables([Card, ReviewHistory, UserStat], safe=True)
 
     yield home
 
