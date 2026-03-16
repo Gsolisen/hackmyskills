@@ -82,12 +82,13 @@ Plans:
   3. A desktop notification appears at the configured interval during work hours; clicking it or running `hms interrupt` opens a one-question terminal session
   4. No notifications appear outside the quiet hours window configured in `config.toml`
   5. Interrupts stop firing once the daily card cap has been reached for the day
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 04-01: APScheduler daemon process and Windows Startup registration
-- [ ] 04-02: desktop-notifier integration and `hms interrupt` mini-session
-- [ ] 04-03: Quiet hours, daily cap respect, and daemon lifecycle commands
+- [ ] 04-00-PLAN.md — Wave 0: test stubs, daemon package skeleton, DaemonPlatform ABC, pyproject.toml deps
+- [ ] 04-01-PLAN.md — Platform layer (WindowsPlatform + stubs), run_session max_cards param, config [daemon] defaults
+- [ ] 04-02-PLAN.md — DaemonController (PID + spawn/stop), scheduler (quiet hours + cap), notifier, runner (asyncio + APScheduler), WAL mode
+- [ ] 04-03-PLAN.md — CLI wiring (hms daemon start/stop/status, hms interrupt), unit tests converted from xfail, human verification
 
 ### Phase 5: AI Content Generation
 **Goal**: Users can generate new questions via Claude API, review them in a staging area, and promote approved questions into the active bank
@@ -131,6 +132,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundation | 3/3 | Complete   | 2026-03-13 |
 | 2. Core Quiz | 4/4 | Complete   | 2026-03-15 |
 | 3. Gamification + Adaptive Difficulty | 3/3 | Complete   | 2026-03-16 |
-| 4. Interrupt Daemon | 0/3 | Not started | - |
+| 4. Interrupt Daemon | 0/4 | Not started | - |
 | 5. AI Content Generation | 0/3 | Not started | - |
 | 6. Content Bank + Polish | 0/3 | Not started | - |
