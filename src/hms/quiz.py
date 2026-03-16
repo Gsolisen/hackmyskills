@@ -363,23 +363,30 @@ def _handle_explain_concept(card: Card, q_data: dict, session: SessionResult, _r
 # Session summary
 # ---------------------------------------------------------------------------
 
-def _show_summary(session: SessionResult, is_partial: bool = False) -> None:
+def _show_summary(
+    session: SessionResult,
+    is_partial: bool = False,
+    new_unlocks: Optional[list] = None,
+) -> None:
     """Print a Rich Panel summarising the session.
 
     Shows cards reviewed, accuracy, XP (bold yellow), streak, and due-tomorrow
     count.  A per-topic breakdown table is appended only when the session
-    spanned more than one topic *and* is not partial.
+    spanned more than one topic *and* is not partial.  Unlock notifications are
+    shown after the main panel when new_unlocks is non-empty.
 
     Args:
         session: Accumulated session statistics.
         is_partial: True when the session was interrupted (Ctrl-C); shows a
             condensed mini-summary without the due-tomorrow count or per-topic
             table.
+        new_unlocks: Optional list of (topic, tier) tuples for tiers that
+            newly unlocked during this session.
     """
     if session.total == 0:
         return  # no summary for zero-card sessions
 
-    streak = compute_streak()
+    streak, freeze_count = compute_streak_with_freeze()
 
     # Due-tomorrow count
     tomorrow = date.today() + timedelta(days=1)
@@ -390,6 +397,8 @@ def _show_summary(session: SessionResult, is_partial: bool = False) -> None:
     title = "Session Paused" if is_partial else "Session Complete"
     xp_display = f"[bold yellow]+{session.xp} XP[/bold yellow]"
     streak_display = f"\U0001f525 {streak} day streak" if streak > 0 else "Start a streak today!"
+    if freeze_count > 0:
+        streak_display += f"  (Freezes: {freeze_count})"
 
     lines = [
         f"[bold]{session.total}[/bold] cards reviewed",
@@ -402,6 +411,13 @@ def _show_summary(session: SessionResult, is_partial: bool = False) -> None:
 
     content = "\n".join(lines)
     console.print(Panel(content, title=f"[bold]{title}[/bold]", border_style="cyan"))
+
+    # Unlock notifications
+    if new_unlocks:
+        for t, tier in new_unlocks:
+            console.print(
+                f"[bold green]\U0001f513 {tier} {t} unlocked! Harder cards are now available.[/bold green]"
+            )
 
     # Per-topic breakdown — only for multi-topic full sessions
     if not is_partial and len(session.topic_stats) > 1:
@@ -457,7 +473,12 @@ def run_session(topic: Optional[str] = None, _readkey=None) -> None:
             ))
             return
 
-    queue = build_queue(daily_cap, topic)
+    # Snapshot unlock status before session for post-session diff
+    unlocks_before = get_unlocked_tiers_per_topic() if topic is None else {}
+
+    # For no-topic sessions: pass unlock status to queue builder
+    unlocked_tiers = unlocks_before if topic is None else None
+    queue = build_queue(daily_cap, topic, unlocked_tiers=unlocked_tiers)
     if not queue:
         console.print("Nothing to review right now — come back tomorrow!")
         return
@@ -484,7 +505,21 @@ def run_session(topic: Optional[str] = None, _readkey=None) -> None:
             handler(card, q_data, session, _readkey)
     except KeyboardInterrupt:
         console.print()  # newline after ^C
-        _show_summary(session, is_partial=True)
+        _show_summary(session, is_partial=True, new_unlocks=[])
         return
 
-    _show_summary(session, is_partial=False)
+    # Award freeze if streak milestone reached
+    streak, _ = compute_streak_with_freeze()
+    stat, _ = UserStat.get_or_create(id=1)
+    award_freeze_if_due(streak, stat)
+
+    # Compute newly unlocked tiers
+    unlocks_after = get_unlocked_tiers_per_topic() if topic is None else {}
+    new_unlocks: list = []  # [(topic, tier), ...]
+    for t, tiers in unlocks_after.items():
+        before_tiers = unlocks_before.get(t, [])
+        for tier in tiers:
+            if tier not in before_tiers:
+                new_unlocks.append((t, tier))
+
+    _show_summary(session, is_partial=False, new_unlocks=new_unlocks)

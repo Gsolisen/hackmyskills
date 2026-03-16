@@ -477,3 +477,29 @@ def test_build_queue_serves_unlocked_tiers(hms_home):
     qids = [c.question_id for c in queue]
     assert "k-l1" in qids
     assert "k-l2" in qids
+
+
+# ---------------------------------------------------------------------------
+# _show_summary: unlock notification test
+# ---------------------------------------------------------------------------
+
+def test_unlock_notification_shown(hms_home):
+    """_show_summary displays unlock notification when new_unlocks is non-empty."""
+    import hms.quiz as q_mod
+
+    s = SessionResult()
+    s.record("kubernetes", 3, tier="L1")
+
+    # Capture console output
+    buf = io.StringIO()
+    old_console = q_mod.console
+    q_mod.console = Console(file=buf, highlight=False)
+    try:
+        q_mod._show_summary(s, is_partial=False, new_unlocks=[("kubernetes", "L2")])
+    finally:
+        q_mod.console = old_console
+
+    output = buf.getvalue()
+    assert "L2" in output
+    assert "kubernetes" in output
+    assert "unlocked" in output
