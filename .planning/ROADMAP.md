@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Core Quiz** - `hms quiz` command, all four content types, session flow, Rich terminal output (completed 2026-03-15)
 - [x] **Phase 3: Gamification + Adaptive Difficulty** - XP, streaks, levels, topic unlock progression, `hms stats` (completed 2026-03-16)
 - [x] **Phase 4: Interrupt Daemon** - APScheduler background daemon, Windows desktop notifications, startup registration (completed 2026-03-16)
-- [ ] **Phase 5: AI Content Generation** - Claude API integration, question staging, duplicate detection, review workflow
+- [ ] **Phase 5: AI Content Generation** - Content validation, duplicate detection, generation guide, CI workflow
 - [ ] **Phase 6: Content Bank + Polish** - Curated DevOps question bank, extensibility commands, config documentation
 
 ## Phase Details
@@ -91,20 +91,20 @@ Plans:
 - [ ] 04-03-PLAN.md — CLI wiring (hms daemon start/stop/status, hms interrupt), unit tests converted from xfail, human verification
 
 ### Phase 5: AI Content Generation
-**Goal**: Users can generate new questions via Claude API, review them in a staging area, and promote approved questions into the active bank
+**Goal**: Content validation, duplicate detection, and generation tooling enable the maintainer to produce and validate AI-generated questions through Claude Code sessions, with CI-enforced quality gates
 **Depends on**: Phase 1
 **Requirements**: AI-01, AI-02, AI-03, AI-04, AI-05
 **Success Criteria** (what must be TRUE):
-  1. `hms generate --topic kubernetes --count 5` produces 5 valid questions and writes them to a staging YAML file
-  2. Generated questions are tagged with `generated_at` timestamp and `source: ai` and conform to the existing question schema
-  3. `hms review-generated` presents each staged question one by one and approves or rejects it; approved questions enter the active bank
-  4. Running `hms generate` a second time on the same topic does not produce duplicate questions (detected by ID and similar phrasing)
-**Plans**: TBD
+  1. `hms validate-content` validates all YAML content files against the question schema and reports errors
+  2. Generated questions are tagged with optional `source: ai` field and conform to the existing question schema
+  3. `hms validate-content` detects duplicate questions by exact ID match and >70% token overlap, exiting non-zero on findings
+  4. A content generation guide defines quality standards for all four question types and three difficulty tiers
+  5. A CI workflow automatically validates content on pull requests touching YAML files
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: Claude API client, prompt engineering, and structured JSON output parsing
-- [ ] 05-02: Staging file management and `hms review-generated` command
-- [ ] 05-03: Duplicate detection logic
+- [ ] 05-01-PLAN.md — Validation module (schema + duplicate detection), source field in loader, validate-content CLI command, remove generate stub (Wave 1)
+- [ ] 05-02-PLAN.md — CI workflow for content validation, content generation guide, human verification (Wave 2)
 
 ### Phase 6: Content Bank + Polish
 **Goal**: The tool ships with a complete curated DevOps question bank and is fully extensible without code changes
@@ -133,5 +133,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Core Quiz | 4/4 | Complete   | 2026-03-15 |
 | 3. Gamification + Adaptive Difficulty | 3/3 | Complete   | 2026-03-16 |
 | 4. Interrupt Daemon | 4/4 | Complete   | 2026-03-16 |
-| 5. AI Content Generation | 0/3 | Not started | - |
+| 5. AI Content Generation | 0/2 | Not started | - |
 | 6. Content Bank + Polish | 0/3 | Not started | - |
