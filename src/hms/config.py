@@ -14,6 +14,12 @@ DEFAULT_CONFIG: dict = {
         "end": "21:00",
     },
     "interval_minutes": 90,
+    "daemon": {
+        "interval_minutes": 90,
+        "work_hours_start": "09:00",
+        "work_hours_end": "21:00",
+        "daily_cap": 10,
+    },
 }
 
 

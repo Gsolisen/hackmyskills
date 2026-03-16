@@ -443,7 +443,7 @@ _HANDLER_DISPATCH = {
 }
 
 
-def run_session(topic: Optional[str] = None, _readkey=None) -> None:
+def run_session(topic: Optional[str] = None, _readkey=None, max_cards: Optional[int] = None) -> None:
     """Run a full (or partial) quiz session.
 
     Loads config for daily_cap, builds the queue, then iterates cards
@@ -461,6 +461,8 @@ def run_session(topic: Optional[str] = None, _readkey=None) -> None:
     """
     config = load_config()
     daily_cap: int = config["daily_cap"]
+    if max_cards is not None:
+        daily_cap = min(daily_cap, max_cards)
 
     # Topic existence check — display a friendly error panel instead of raising
     if topic is not None:
