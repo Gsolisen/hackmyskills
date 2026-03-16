@@ -13,6 +13,7 @@ from importlib.resources import files
 REQUIRED_BASE_FIELDS = {"id", "type", "topic", "tier", "tags", "version_tag", "last_verified"}
 VALID_TYPES = {"flashcard", "scenario", "command-fill", "explain-concept"}
 VALID_TIERS = {"L1", "L2", "L3"}
+VALID_SOURCES = {"curated", "ai"}
 
 TYPE_REQUIRED_FIELDS = {
     "flashcard": {"front", "back"},
@@ -40,6 +41,13 @@ def validate_question(q: dict) -> None:
             f"Question {q.get('id', '?')} has invalid tier '{q['tier']}'. "
             f"Valid tiers: {sorted(VALID_TIERS)}"
         )
+    source = q.get("source")
+    if source is not None and source not in VALID_SOURCES:
+        raise ValueError(
+            f"Question {q.get('id', '?')} has invalid source '{source}'. "
+            f"Valid sources: {sorted(VALID_SOURCES)}"
+        )
+
     missing_type = TYPE_REQUIRED_FIELDS[qtype] - q.keys()
     if missing_type:
         raise ValueError(
