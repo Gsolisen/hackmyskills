@@ -1,0 +1,31 @@
+name: Validate Content
+
+on:
+  pull_request:
+    paths:
+      - "src/hms/content/**"
+      - "docs/content-generation-guide.md"
+  push:
+    branches: [main, master]
+    paths:
+      - "src/hms/content/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Validate content
+        run: python -m hms validate-content
+
+      - name: Run content tests
+        run: python -m pytest tests/test_validation.py tests/test_loader.py -x -q
