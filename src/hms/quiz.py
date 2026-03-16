@@ -16,8 +16,14 @@ from rich.table import Table
 
 from hms.config import load_config
 from hms.db import db
+from hms.gamification import (
+    award_freeze_if_due,
+    compute_streak_with_freeze,
+    compute_xp_for_review,
+    get_unlocked_tiers_per_topic,
+)
 from hms.loader import load_all_questions
-from hms.models import Card, ReviewHistory
+from hms.models import Card, ReviewHistory, UserStat
 from hms.scheduler import review_card
 
 console = Console()
@@ -34,15 +40,17 @@ class SessionResult:
     total: int = 0
     correct: int = 0  # Good(3) or Easy(4)
     topic_stats: dict[str, dict] = field(default_factory=dict)
-    ratings: list[int] = field(default_factory=list)
+    ratings: list[int] = field(default_factory=list)         # kept for backward compat
+    cards_reviewed: list[tuple] = field(default_factory=list)  # (tier, rating_value)
 
-    def record(self, topic: str, rating_value: int) -> None:
-        """Record a single card review."""
+    def record(self, topic: str, rating_value: int, tier: str = "L1") -> None:
+        """Record a single card review with its tier for XP calculation."""
         self.total += 1
         is_correct = rating_value >= 3
         if is_correct:
             self.correct += 1
         self.ratings.append(rating_value)
+        self.cards_reviewed.append((tier, rating_value))
         ts = self.topic_stats.setdefault(topic, {"total": 0, "correct": 0})
         ts["total"] += 1
         if is_correct:
@@ -55,29 +63,45 @@ class SessionResult:
 
     @property
     def xp(self) -> int:
-        """XP earned this session. Phase 3 replaces with tier-weighted formula."""
-        return self.total * 15
+        """XP earned this session. Computed from per-card tier+rating+streak formula."""
+        if not self.cards_reviewed:
+            return 0
+        streak, _ = compute_streak_with_freeze()
+        return sum(
+            compute_xp_for_review(tier, rating_value, streak)
+            for tier, rating_value in self.cards_reviewed
+        )
 
 
 # ---------------------------------------------------------------------------
 # Queue building
 # ---------------------------------------------------------------------------
 
-def build_queue(daily_cap: int, topic: Optional[str] = None) -> list[Card]:
+def build_queue(
+    daily_cap: int,
+    topic: Optional[str] = None,
+    unlocked_tiers: Optional[dict] = None,
+) -> list[Card]:
     """Build an ordered review queue capped at daily_cap.
 
     Due cards appear first (ordered by due date ascending), followed by new
     cards (due IS NULL, ordered by topic then id).  If topic is specified,
-    only cards for that topic are included.
+    only cards for that topic are included.  If unlocked_tiers is provided,
+    only cards whose tier is in the unlocked list for that topic are included.
 
     Args:
         daily_cap: Maximum number of cards to return.
         topic: Optional topic slug to restrict the queue.
+        unlocked_tiers: Optional dict mapping topic -> list of unlocked tier strings.
+            When provided, cards for locked tiers are excluded from the queue.
 
     Returns:
         List of Card ORM objects, len <= daily_cap.  Returns [] if topic has
         no cards (topic existence check is the caller's responsibility).
     """
+    from functools import reduce
+    import operator
+
     now = datetime.now(timezone.utc).replace(tzinfo=None)  # naive UTC
 
     base_due = Card.select()
@@ -86,6 +110,16 @@ def build_queue(daily_cap: int, topic: Optional[str] = None) -> list[Card]:
     if topic is not None:
         base_due = base_due.where(Card.topic == topic)
         base_new = base_new.where(Card.topic == topic)
+
+    if unlocked_tiers is not None:
+        conditions = [
+            (Card.topic == t) & (Card.tier.in_(tiers))
+            for t, tiers in unlocked_tiers.items()
+        ]
+        if conditions:
+            unlock_filter = reduce(operator.or_, conditions)
+            base_due = base_due.where(unlock_filter)
+            base_new = base_new.where(unlock_filter)
 
     due_cards = list(
         base_due.where(Card.due.is_null(False) & (Card.due <= now))
@@ -224,7 +258,7 @@ def _handle_flashcard(card: Card, q_data: dict, session: SessionResult, _readkey
     key = _wait_for_key(valid_keys={"1", "2", "3", "4"}, _readkey=_readkey)
     rating = rating_map[key]
     persist_rating(card, rating)
-    session.record(card.topic, rating.value)
+    session.record(card.topic, rating.value, tier=card.tier)
 
 
 def _handle_command_fill(card: Card, q_data: dict, session: SessionResult, _readkey=None) -> None:
@@ -254,7 +288,7 @@ def _handle_command_fill(card: Card, q_data: dict, session: SessionResult, _read
         rating = fsrs.Rating.Again
 
     persist_rating(card, rating)
-    session.record(card.topic, rating.value)
+    session.record(card.topic, rating.value, tier=card.tier)
 
 
 def _handle_scenario(card: Card, q_data: dict, session: SessionResult, _readkey=None) -> None:
@@ -289,7 +323,7 @@ def _handle_scenario(card: Card, q_data: dict, session: SessionResult, _readkey=
     key = _wait_for_key(valid_keys={"1", "2", "3", "4"}, _readkey=_readkey)
     rating = rating_map[key]
     persist_rating(card, rating)
-    session.record(card.topic, rating.value)
+    session.record(card.topic, rating.value, tier=card.tier)
 
 
 def _handle_explain_concept(card: Card, q_data: dict, session: SessionResult, _readkey=None) -> None:
@@ -322,7 +356,7 @@ def _handle_explain_concept(card: Card, q_data: dict, session: SessionResult, _r
     rating = rating_map[key]
 
     persist_rating(card, rating)
-    session.record(card.topic, rating.value)
+    session.record(card.topic, rating.value, tier=card.tier)
 
 
 # ---------------------------------------------------------------------------
