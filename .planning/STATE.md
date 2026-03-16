@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-16T00:02:06.079Z"
-last_activity: 2026-03-15 — Completed 02-04 (session summary, run_session loop, human-verified)
+stopped_at: Completed 03-01 gamification module
+last_updated: "2026-03-15T00:00:00Z"
+last_activity: 2026-03-15 — Completed 03-01 (gamification module: XP, streak, freeze, levels, mastery/unlock)
 progress:
   total_phases: 6
   completed_phases: 2
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-13)
 
 ## Current Position
 
-Phase: 2 of 6 (Core Quiz)
-Plan: 3 of 4 in current phase
+Phase: 3 of 6 (Gamification + Adaptive Difficulty)
+Plan: 1 of 3 in current phase
 Status: In progress
-Last activity: 2026-03-15 — Completed 02-04 (session summary, run_session loop, human-verified)
+Last activity: 2026-03-15 — Completed 03-01 (gamification module: XP, streak, freeze, levels, mastery/unlock)
 
 Progress: [████████░░] 86%
 
@@ -56,6 +56,7 @@ Progress: [████████░░] 86%
 | Phase 02-core-quiz P02 | 2 | 2 tasks | 2 files |
 | Phase 02-core-quiz P03 | 3 | 2 tasks | 2 files |
 | Phase 02-core-quiz P04 | 3 | 2 tasks | 2 files |
+| Phase 03-gamification P01 | 3 | 4 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,9 @@ Recent decisions affecting current work:
 - [Phase 02-core-quiz]: explain-concept uses input() for free-text (unevaluated); monkeypatched via builtins.input in tests
 - [Phase 02-core-quiz]: Topic existence check moved from build_queue (ValueError) to run_session (red Panel) — avoids exception-as-control-flow for a non-exceptional user action
 - [Phase 02-core-quiz]: Per-topic breakdown table shown only for multi-topic full sessions, not partial/mini-summaries
+- [Phase 03-gamification]: Use datetime.utcnow().date() for streak walk to match UTC-stored review timestamps (avoids local/UTC date mismatch)
+- [Phase 03-gamification]: UserStat is a single-row table (id=1 always) for persistent freeze/streak state
+- [Phase 03-gamification]: mastery_ratio returns 1.0 (unlocked) when prereq tier has 0 cards — avoids ZeroDivisionError
 
 ### Pending Todos
 

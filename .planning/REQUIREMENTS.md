@@ -29,17 +29,17 @@
 
 ### Gamification
 
-- [ ] **GAME-01**: XP awarded per review — formula tied to recall quality (Easy > Good > Hard > Again) and card difficulty tier
-- [ ] **GAME-02**: Daily streak tracked — increments when at least 1 card reviewed per calendar day
-- [ ] **GAME-03**: Streak freeze earned every 7 days — protects streak on one missed day (prevents quit trigger)
-- [ ] **GAME-04**: Level system based on total XP with visible level name (e.g. "Pipeline Rookie → Container Captain")
+- [x] **GAME-01**: XP awarded per review — formula tied to recall quality (Easy > Good > Hard > Again) and card difficulty tier
+- [x] **GAME-02**: Daily streak tracked — increments when at least 1 card reviewed per calendar day
+- [x] **GAME-03**: Streak freeze earned every 7 days — protects streak on one missed day (prevents quit trigger)
+- [x] **GAME-04**: Level system based on total XP with visible level name (e.g. "Pipeline Rookie → Container Captain")
 - [ ] **GAME-05**: `hms stats` shows: current streak, streak freezes, level, XP to next level, cards due, performance by topic
 
 ### Adaptive Difficulty
 
 - [ ] **ADAPT-01**: Cards tagged L1 (recall), L2 (application), L3 (scenario) — difficulty tier shown during session
-- [ ] **ADAPT-02**: New cards start at L1; unlock L2 for a topic after mastering ≥80% of L1 cards in that topic
-- [ ] **ADAPT-03**: L3 cards unlock after mastering ≥80% of L2 cards in a topic
+- [x] **ADAPT-02**: New cards start at L1; unlock L2 for a topic after mastering ≥80% of L1 cards in that topic
+- [x] **ADAPT-03**: L3 cards unlock after mastering ≥80% of L2 cards in a topic
 - [ ] **ADAPT-04**: `hms quiz` defaults to serving mixed tiers based on unlock status — not just easy cards forever
 
 ### Interrupt Mode
@@ -118,14 +118,14 @@
 | QUIZ-07 | Phase 2: Core Quiz | Complete |
 | QUIZ-08 | Phase 2: Core Quiz | Complete |
 | QUIZ-09 | Phase 2: Core Quiz | Complete |
-| GAME-01 | Phase 3: Gamification + Adaptive Difficulty | Pending |
-| GAME-02 | Phase 3: Gamification + Adaptive Difficulty | Pending |
-| GAME-03 | Phase 3: Gamification + Adaptive Difficulty | Pending |
-| GAME-04 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| GAME-01 | Phase 3: Gamification + Adaptive Difficulty | Complete |
+| GAME-02 | Phase 3: Gamification + Adaptive Difficulty | Complete |
+| GAME-03 | Phase 3: Gamification + Adaptive Difficulty | Complete |
+| GAME-04 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | GAME-05 | Phase 3: Gamification + Adaptive Difficulty | Pending |
 | ADAPT-01 | Phase 3: Gamification + Adaptive Difficulty | Pending |
-| ADAPT-02 | Phase 3: Gamification + Adaptive Difficulty | Pending |
-| ADAPT-03 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| ADAPT-02 | Phase 3: Gamification + Adaptive Difficulty | Complete |
+| ADAPT-03 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | ADAPT-04 | Phase 3: Gamification + Adaptive Difficulty | Pending |
 | INT-01 | Phase 4: Interrupt Daemon | Pending |
 | INT-02 | Phase 4: Interrupt Daemon | Pending |
