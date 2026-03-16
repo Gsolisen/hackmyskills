@@ -65,12 +65,12 @@ Plans:
   3. `hms stats` shows streak, freeze count, current level, XP to next level, cards due, and per-topic performance in a single view
   4. L2 cards for a topic become available only after ≥80% of that topic's L1 cards are mastered; L3 cards unlock after ≥80% of L2
   5. `hms quiz` with no arguments serves a mixed-tier selection matching current unlock status (not only L1 cards)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: XP, streak, freeze, and level system
-- [ ] 03-02: Adaptive difficulty unlock logic and tier-aware card selection
-- [ ] 03-03: `hms stats` display
+- [ ] 03-01-PLAN.md — gamification.py module (XP formula, streak+freeze, level system, mastery queries, unlock logic) + UserStat model + TDD test suite (Wave 1)
+- [ ] 03-02-PLAN.md — quiz.py wiring: per-card XP in SessionResult, tier-aware build_queue, unlock notifications in session summary (Wave 2)
+- [ ] 03-03-PLAN.md — `hms stats` command + updated no-args dashboard + human verification (Wave 2, parallel with 03-02)
 
 ### Phase 4: Interrupt Daemon
 **Goal**: A background daemon sends desktop notifications at scheduled intervals and opens a one-question mini-session on demand
