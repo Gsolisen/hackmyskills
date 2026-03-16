@@ -25,6 +25,8 @@ def test_hms_no_args_shows_dashboard():
 
 def test_stats_empty(hms_home):
     """hms stats renders without crash on empty DB."""
+    from hms.init import ensure_initialized
+    ensure_initialized()
     result = runner.invoke(app, ["stats"])
     assert result.exit_code == 0
     assert "Pipeline Rookie" in result.output
@@ -34,10 +36,13 @@ def test_stats_empty(hms_home):
 def test_stats_with_data(hms_home):
     """hms stats shows streak, level, XP bar when review data exists."""
     from datetime import datetime
+    from hms.init import ensure_initialized
     from hms.models import Card, ReviewHistory
+    # Ensure DB is initialized to tmp data.db before inserting test data
+    ensure_initialized()
     card = Card.create(
-        question_id="k-001", question_type="flashcard",
-        topic="kubernetes", tier="L1", state="Review",
+        question_id="test-stats-k-001", question_type="flashcard",
+        topic="test_stats_topic", tier="L1", state="Review",
     )
     ReviewHistory.create(
         card=card, rating=3,
@@ -56,6 +61,8 @@ def test_stats_with_data(hms_home):
 
 def test_dashboard_updated(hms_home):
     """hms with no args shows updated dashboard (not static placeholder)."""
+    from hms.init import ensure_initialized
+    ensure_initialized()
     result = runner.invoke(app, [])
     assert result.exit_code == 0
     # Must not contain the old static Phase 1 placeholder text
