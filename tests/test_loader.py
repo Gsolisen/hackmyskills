@@ -98,3 +98,43 @@ def test_valid_tiers():
     valid = {"L1", "L2", "L3"}
     for q in questions:
         assert q["tier"] in valid, f"Invalid tier '{q['tier']}' in question '{q['id']}'"
+
+
+# --- Source field validation (AI-01) ---
+
+
+def _valid_flashcard(**overrides):
+    """Helper: minimal valid flashcard dict with optional overrides."""
+    base = {
+        "id": "test-src-001",
+        "type": "flashcard",
+        "topic": "test",
+        "tier": "L1",
+        "tags": ["test"],
+        "version_tag": "v1.0",
+        "last_verified": "2026-01-01",
+        "front": "What is X?",
+        "back": "X is Y.",
+    }
+    base.update(overrides)
+    return base
+
+
+def test_source_field_optional():
+    """validate_question() passes when source field is missing."""
+    q = _valid_flashcard()
+    assert "source" not in q
+    validate_question(q)  # should not raise
+
+
+def test_source_field_ai_valid():
+    """validate_question() passes with source='ai'."""
+    q = _valid_flashcard(source="ai")
+    validate_question(q)  # should not raise
+
+
+def test_source_field_invalid_raises():
+    """validate_question() raises ValueError for source='unknown'."""
+    q = _valid_flashcard(source="unknown")
+    with pytest.raises(ValueError, match="invalid source"):
+        validate_question(q)
