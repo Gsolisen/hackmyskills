@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-00 interrupt daemon Wave 0 scaffolding
-last_updated: "2026-03-16T02:59:02.964Z"
+stopped_at: Completed 04-01 platform layer and cross-cutting changes
+last_updated: "2026-03-16T03:03:00.467Z"
 last_activity: "2026-03-15 — Completed 03-01 (gamification module: XP, streak, freeze, levels, mastery/unlock)"
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 14
-  completed_plans: 11
+  completed_plans: 12
   percent: 86
 ---
 
@@ -60,6 +60,7 @@ Progress: [████████░░] 86%
 | Phase 03-gamification-adaptive-difficulty P02 | 3 | 2 tasks | 2 files |
 | Phase 03-gamification-adaptive-difficulty P03 | 15 | 2 tasks | 2 files |
 | Phase 04-interrupt-daemon P00 | 2 | 3 tasks | 5 files |
+| Phase 04-interrupt-daemon P01 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -97,6 +98,9 @@ Recent decisions affecting current work:
 - [Phase 04-interrupt-daemon]: apscheduler pinned to >=3.11,<4 to avoid APScheduler 4.x breaking API changes
 - [Phase 04-interrupt-daemon]: get_platform() uses lazy imports per platform branch to avoid ImportError when winreg/WinRT absent
 - [Phase 04-interrupt-daemon]: DaemonPlatform ABC has 4 abstract methods: register_startup, unregister_startup, spawn_detached, is_running
+- [Phase 04-interrupt-daemon]: winreg imported lazily inside WindowsPlatform methods to avoid ImportError on non-Windows
+- [Phase 04-interrupt-daemon]: interval_minutes kept at DEFAULT_CONFIG top level for backward compatibility alongside new daemon sub-dict
+- [Phase 04-interrupt-daemon]: daemon.daily_cap=10 — interrupt sessions intentionally shorter than full 25-card daily sessions
 
 ### Pending Todos
 
@@ -109,6 +113,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-16T02:59:02.963Z
-Stopped at: Completed 04-00 interrupt daemon Wave 0 scaffolding
+Last session: 2026-03-16T03:03:00.465Z
+Stopped at: Completed 04-01 platform layer and cross-cutting changes
 Resume file: None
