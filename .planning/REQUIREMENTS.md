@@ -37,10 +37,10 @@
 
 ### Adaptive Difficulty
 
-- [ ] **ADAPT-01**: Cards tagged L1 (recall), L2 (application), L3 (scenario) — difficulty tier shown during session
+- [x] **ADAPT-01**: Cards tagged L1 (recall), L2 (application), L3 (scenario) — difficulty tier shown during session
 - [x] **ADAPT-02**: New cards start at L1; unlock L2 for a topic after mastering ≥80% of L1 cards in that topic
 - [x] **ADAPT-03**: L3 cards unlock after mastering ≥80% of L2 cards in a topic
-- [ ] **ADAPT-04**: `hms quiz` defaults to serving mixed tiers based on unlock status — not just easy cards forever
+- [x] **ADAPT-04**: `hms quiz` defaults to serving mixed tiers based on unlock status — not just easy cards forever
 
 ### Interrupt Mode
 
@@ -123,10 +123,10 @@
 | GAME-03 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | GAME-04 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | GAME-05 | Phase 3: Gamification + Adaptive Difficulty | Pending |
-| ADAPT-01 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| ADAPT-01 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | ADAPT-02 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | ADAPT-03 | Phase 3: Gamification + Adaptive Difficulty | Complete |
-| ADAPT-04 | Phase 3: Gamification + Adaptive Difficulty | Pending |
+| ADAPT-04 | Phase 3: Gamification + Adaptive Difficulty | Complete |
 | INT-01 | Phase 4: Interrupt Daemon | Pending |
 | INT-02 | Phase 4: Interrupt Daemon | Pending |
 | INT-03 | Phase 4: Interrupt Daemon | Pending |

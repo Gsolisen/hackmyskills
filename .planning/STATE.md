@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 03-01 gamification module
-last_updated: "2026-03-15T00:00:00Z"
-last_activity: 2026-03-15 — Completed 03-01 (gamification module: XP, streak, freeze, levels, mastery/unlock)
+stopped_at: Completed 03-02 quiz-gamification integration
+last_updated: "2026-03-16T01:16:00.248Z"
+last_activity: "2026-03-15 — Completed 03-01 (gamification module: XP, streak, freeze, levels, mastery/unlock)"
 progress:
   total_phases: 6
   completed_phases: 2
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 10
+  completed_plans: 9
   percent: 86
 ---
 
@@ -57,6 +57,7 @@ Progress: [████████░░] 86%
 | Phase 02-core-quiz P03 | 3 | 2 tasks | 2 files |
 | Phase 02-core-quiz P04 | 3 | 2 tasks | 2 files |
 | Phase 03-gamification P01 | 3 | 4 tasks | 5 files |
+| Phase 03-gamification-adaptive-difficulty P02 | 3 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,8 @@ Recent decisions affecting current work:
 - [Phase 03-gamification]: Use datetime.utcnow().date() for streak walk to match UTC-stored review timestamps (avoids local/UTC date mismatch)
 - [Phase 03-gamification]: UserStat is a single-row table (id=1 always) for persistent freeze/streak state
 - [Phase 03-gamification]: mastery_ratio returns 1.0 (unlocked) when prereq tier has 0 cards — avoids ZeroDivisionError
+- [Phase 03-gamification]: SessionResult.xp computes lazily using compute_streak_with_freeze() snapshot at property call time
+- [Phase 03-gamification]: build_queue unlocked_tiers filter uses functools.reduce(operator.or_) for Peewee OR conditions across topics
 
 ### Pending Todos
 
@@ -99,6 +102,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-16T00:02:06.077Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-gamification-adaptive-difficulty/03-CONTEXT.md
+Last session: 2026-03-16T01:16:00.246Z
+Stopped at: Completed 03-02 quiz-gamification integration
+Resume file: None
