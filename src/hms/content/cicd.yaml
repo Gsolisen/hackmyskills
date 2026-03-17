@@ -1,0 +1,541 @@
+questions:
+  # ============================================================
+  # L1 — GitHub Actions Basics (8 cards)
+  # ============================================================
+  - id: cicd-gh-actions-trigger-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [github-actions, triggers]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "Name three event types that can trigger a GitHub Actions workflow."
+    back: "push, pull_request, and schedule (cron). Others include workflow_dispatch, release, and issue events."
+
+  - id: cicd-gh-actions-runner-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [github-actions, runners]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "What is a GitHub Actions runner?"
+    back: "A server (GitHub-hosted or self-hosted) that executes the jobs defined in a workflow. GitHub-hosted runners are ephemeral VMs with pre-installed toolchains."
+
+  - id: cicd-gh-actions-marketplace-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [github-actions, marketplace]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "Where do you find pre-built GitHub Actions to use in workflows?"
+    back: "The GitHub Actions Marketplace at github.com/marketplace. Actions are referenced in workflows using the uses: keyword with owner/repo@version syntax."
+
+  - id: cicd-gh-actions-env-vars-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [github-actions, environment]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "How do you set an environment variable for all steps in a GitHub Actions job?"
+    back: "Use the env: key at the job level. For a single step, set env: under that step. For the entire workflow, set env: at the workflow top level."
+
+  - id: cicd-gh-actions-secrets-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [github-actions, secrets]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "How do you reference a repository secret in a GitHub Actions workflow step?"
+    back: "Use the expression ${{ secrets.SECRET_NAME }}. Secrets are configured in the repository Settings > Secrets and variables > Actions."
+
+  - id: cicd-gh-actions-yaml-syntax-001
+    type: command-fill
+    topic: cicd
+    tier: L1
+    tags: [github-actions, yaml]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    prompt: "Write the minimal YAML to define a GitHub Actions workflow named 'CI' that triggers on push to main and runs a single job called 'build' on ubuntu-latest with one step that echoes 'hello'"
+    command: |
+      name: CI
+      on:
+        push:
+          branches: [main]
+      jobs:
+        build:
+          runs-on: ubuntu-latest
+          steps:
+            - run: echo hello
+    accept_partial: true
+
+  - id: cicd-gh-actions-checkout-001
+    type: command-fill
+    topic: cicd
+    tier: L1
+    tags: [github-actions, checkout]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    prompt: "In a GitHub Actions step, use the official checkout action (v4) to clone the repository"
+    command: "uses: actions/checkout@v4"
+    accept_partial: true
+
+  - id: cicd-gh-actions-steps-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [github-actions, structure]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "What is the hierarchy of a GitHub Actions workflow file?"
+    back: "Workflow > Jobs > Steps. A workflow defines one or more jobs that run on runners. Each job contains a sequence of steps that either run shell commands or invoke actions."
+
+  # ============================================================
+  # L1 — Workflow Syntax (6 cards)
+  # ============================================================
+  - id: cicd-wf-matrix-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [github-actions, matrix]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "What does the matrix strategy do in a GitHub Actions workflow?"
+    back: "It creates multiple job runs by expanding a set of variables. For example, matrix with node-version: [16, 18, 20] runs the job three times, once for each Node.js version."
+
+  - id: cicd-wf-needs-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [github-actions, dependencies]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "How do you make one GitHub Actions job depend on another?"
+    back: "Use the needs: keyword. Example: needs: build makes the job wait for the 'build' job to complete successfully before starting."
+
+  - id: cicd-wf-if-cond-001
+    type: command-fill
+    topic: cicd
+    tier: L1
+    tags: [github-actions, conditionals]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    prompt: "In a GitHub Actions workflow, add a conditional so a step only runs when the branch is 'main'"
+    command: "if: github.ref == 'refs/heads/main'"
+    accept_partial: true
+
+  - id: cicd-wf-timeout-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [github-actions, timeout]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "How do you set a maximum runtime for a GitHub Actions job?"
+    back: "Use timeout-minutes at the job level. Example: timeout-minutes: 30 kills the job after 30 minutes. The default timeout is 360 minutes (6 hours)."
+
+  - id: cicd-wf-concurrency-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [github-actions, concurrency]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "What does the concurrency key do in a GitHub Actions workflow?"
+    back: "It ensures only one workflow run (or job) in a concurrency group runs at a time. New runs either queue or cancel the in-progress run using cancel-in-progress: true."
+
+  - id: cicd-wf-events-001
+    type: command-fill
+    topic: cicd
+    tier: L1
+    tags: [github-actions, triggers]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    prompt: "Configure a GitHub Actions workflow to trigger both on push to main and on a manual dispatch"
+    command: |
+      on:
+        push:
+          branches: [main]
+        workflow_dispatch:
+    accept_partial: true
+
+  # ============================================================
+  # L1 — CI Concepts (6 cards)
+  # ============================================================
+  - id: cicd-ci-vs-cd-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [concepts, definitions]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "What is the difference between Continuous Integration, Continuous Delivery, and Continuous Deployment?"
+    back: "CI merges and tests code frequently. Continuous Delivery automatically builds and prepares releases but requires manual approval to deploy. Continuous Deployment automatically deploys every passing build to production."
+
+  - id: cicd-pipeline-stages-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [concepts, pipeline]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "Name the typical stages of a CI/CD pipeline in order."
+    back: "Source (checkout) -> Build (compile/package) -> Test (unit/integration) -> Deploy (staging/production). Some pipelines add Lint, Security Scan, and Approval gates."
+
+  - id: cicd-build-artifacts-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [concepts, artifacts]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "What is a build artifact in CI/CD?"
+    back: "A file or set of files produced by a build step (e.g., compiled binary, Docker image, test report) that can be passed to later pipeline stages or stored for deployment."
+
+  - id: cicd-test-strategy-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [concepts, testing]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "What is the testing pyramid in CI/CD?"
+    back: "A strategy with many fast unit tests at the base, fewer integration tests in the middle, and a small number of slow end-to-end tests at the top. This balances speed with coverage."
+
+  - id: cicd-branch-protection-001
+    type: command-fill
+    topic: cicd
+    tier: L1
+    tags: [concepts, branch-protection]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    prompt: "In GitHub, what branch protection rule ensures that a PR cannot be merged until the 'ci' status check passes?"
+    command: "Require status checks to pass before merging, with 'ci' added as a required check"
+    accept_partial: true
+
+  - id: cicd-merge-checks-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [concepts, merge]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "What are common merge checks enforced before merging a pull request?"
+    back: "Required status checks (CI passes), required reviews (at least N approvals), up-to-date branch requirement, and optionally signed commits or linear history."
+
+  # ============================================================
+  # L1 — Artifacts/Caching (5 cards)
+  # ============================================================
+  - id: cicd-cache-action-001
+    type: command-fill
+    topic: cicd
+    tier: L1
+    tags: [github-actions, caching]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    prompt: "Add a GitHub Actions step that caches the pip download directory using actions/cache@v4 with the path ~/.cache/pip and a key based on the OS and requirements.txt hash"
+    command: |
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+    accept_partial: true
+
+  - id: cicd-upload-artifact-001
+    type: command-fill
+    topic: cicd
+    tier: L1
+    tags: [github-actions, artifacts]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    prompt: "Add a GitHub Actions step to upload a test report directory as an artifact named 'test-results'"
+    command: |
+      - uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-report/
+    accept_partial: true
+
+  - id: cicd-dep-caching-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [caching, dependencies]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "Why is dependency caching important in CI pipelines?"
+    back: "Installing dependencies (npm install, pip install) is often the slowest step. Caching avoids re-downloading unchanged packages, cutting build times significantly."
+
+  - id: cicd-cache-key-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [github-actions, caching]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "What determines a cache hit vs miss in actions/cache?"
+    back: "The cache key. If the key matches an existing cache entry, it is a hit (restored). Keys typically include the OS, tool name, and a hash of the lock file so the cache invalidates when dependencies change."
+
+  - id: cicd-artifact-retention-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [github-actions, artifacts]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "How long does GitHub retain workflow artifacts by default?"
+    back: "90 days for public repositories. You can customize retention with retention-days in actions/upload-artifact. Repository settings can also set a maximum retention period."
+
+  # ============================================================
+  # L1 — Deployment Strategies (5 cards)
+  # ============================================================
+  - id: cicd-blue-green-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [deployment, strategies]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "What is a blue-green deployment?"
+    back: "Two identical production environments (blue and green). Traffic is routed to one (blue). The new version is deployed to green. After testing, traffic is switched to green. Blue becomes the standby for instant rollback."
+
+  - id: cicd-canary-deploy-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [deployment, strategies]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "What is a canary deployment?"
+    back: "A small percentage of traffic is routed to the new version first. If metrics look good, the rollout percentage gradually increases until 100% of traffic goes to the new version."
+
+  - id: cicd-rolling-update-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [deployment, strategies]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "How does a rolling update deployment work?"
+    back: "Instances are updated in batches. A few old instances are replaced with new ones at a time until all instances run the new version. At any point during the rollout, both old and new versions serve traffic."
+
+  - id: cicd-feature-flags-001
+    type: flashcard
+    topic: cicd
+    tier: L1
+    tags: [deployment, feature-flags]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    front: "How do feature flags relate to CI/CD?"
+    back: "Feature flags let you deploy code to production but keep new features disabled until toggled on. This decouples deployment from release, allowing continuous deployment without exposing unfinished features to users."
+
+  - id: cicd-env-approvals-001
+    type: command-fill
+    topic: cicd
+    tier: L1
+    tags: [github-actions, environments]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    prompt: "In a GitHub Actions workflow, reference a deployment environment called 'production' that requires manual approval before executing"
+    command: "environment: production"
+    accept_partial: true
+
+  # ============================================================
+  # L2 — GitHub Actions (2 cards)
+  # ============================================================
+  - id: cicd-gh-actions-act-debug-001
+    type: scenario
+    topic: cicd
+    tier: L2
+    tags: [github-actions, debugging, act]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    situation: "Your GitHub Actions workflow fails on the runner but you cannot reproduce the failure locally with a simple script. You need to test the workflow locally before pushing."
+    question: "How would you debug this workflow locally using the `act` CLI tool?"
+    answer: "Install act (brew install act or from GitHub releases). Run `act push` to simulate a push event locally. Use `act -l` to list all workflows and jobs. To run a specific job: `act -j build`. For secrets: `act --secret-file .secrets`. Check the Docker container output for the same errors as the runner."
+    explanation: "act runs GitHub Actions workflows in local Docker containers, mirroring the runner environment. It reduces the feedback loop from minutes (push-and-wait) to seconds."
+
+  - id: cicd-gh-actions-reusable-wf-001
+    type: explain-concept
+    topic: cicd
+    tier: L2
+    tags: [github-actions, reusable-workflows]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    concept: "Reusable workflows in GitHub Actions"
+    model_answer: "Reusable workflows are defined with `on: workflow_call` and invoked from other workflows using `uses: org/repo/.github/workflows/ci.yml@main`. They accept inputs and secrets, reducing duplication across repositories. Unlike composite actions, reusable workflows run as separate workflow runs and can contain multiple jobs."
+
+  # ============================================================
+  # L2 — Workflow Syntax (2 cards)
+  # ============================================================
+  - id: cicd-wf-matrix-debug-001
+    type: scenario
+    topic: cicd
+    tier: L2
+    tags: [github-actions, matrix, debugging]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    situation: "Your matrix build with os: [ubuntu-latest, windows-latest, macos-latest] and python: [3.10, 3.11, 3.12] fails only on the windows-latest/python-3.10 combination. All other 8 combinations pass."
+    question: "How do you diagnose and handle this single matrix failure?"
+    answer: "First, examine the failed job logs on the windows/3.10 run. Common causes: path separators, missing system libraries, or Python 3.10 Windows-specific bugs. Use matrix include/exclude to add OS-specific steps or exclude the broken combo. For debugging, use tmate or mxschmitt/action-tmate to SSH into the runner. Consider adding continue-on-error: true for non-critical combos."
+    explanation: "Matrix failures on a single combination almost always indicate platform-specific or version-specific edge cases. The include/exclude mechanism lets you customize behavior per combination without duplicating jobs."
+
+  - id: cicd-wf-conditional-job-001
+    type: command-fill
+    topic: cicd
+    tier: L2
+    tags: [github-actions, conditionals]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    prompt: "Write a GitHub Actions job-level condition so the 'deploy' job only runs when the event is a push to the main branch and the 'test' job succeeded"
+    command: |
+      deploy:
+        needs: test
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        runs-on: ubuntu-latest
+    accept_partial: true
+
+  # ============================================================
+  # L2 — CI Concepts (2 cards)
+  # ============================================================
+  - id: cicd-flaky-tests-001
+    type: scenario
+    topic: cicd
+    tier: L2
+    tags: [testing, flaky, reliability]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    situation: "Your CI pipeline has a test suite of 500 tests. About 3-5 tests fail randomly on different runs even though no code changed. Developers are losing trust in CI and ignoring red builds."
+    question: "What strategy would you implement to handle flaky tests without disabling them?"
+    answer: "1) Tag known flaky tests and run them with automatic retry (pytest-rerunfailures or flaky plugin). 2) Track flaky test frequency via CI logs or a test analytics tool. 3) Quarantine persistently flaky tests into a separate non-blocking job. 4) Set a team SLA to fix quarantined tests within N days. 5) Investigate root causes: timing issues, shared state, network calls. Replace flaky external calls with mocks."
+    explanation: "Flaky tests erode CI trust. The quarantine approach keeps the main pipeline reliable while giving a structured path to fix unreliable tests without simply deleting them."
+
+  - id: cicd-pipeline-speed-001
+    type: explain-concept
+    topic: cicd
+    tier: L2
+    tags: [pipeline, optimization]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    concept: "CI pipeline optimization for build speed"
+    model_answer: "Key techniques: 1) Cache dependencies aggressively (npm/pip/Docker layers). 2) Run independent jobs in parallel using needs: graph. 3) Use matrix builds to parallelize across versions. 4) Skip unnecessary work with path filters (paths: in on: push). 5) Use incremental builds and test-splitting tools (pytest-split, Jest shards). 6) Choose larger runners for CPU-bound tasks. 7) Avoid redundant checkout/install in every job by passing artifacts between jobs."
+
+  # ============================================================
+  # L2 — Artifacts/Caching (2 cards)
+  # ============================================================
+  - id: cicd-cache-invalidation-001
+    type: scenario
+    topic: cicd
+    tier: L2
+    tags: [caching, invalidation]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    situation: "Your CI pipeline caches node_modules using a key based on package-lock.json hash. A developer added a new dependency but the build still uses the old cached modules and fails with 'module not found'."
+    question: "What went wrong and how do you fix the cache invalidation?"
+    answer: "The cache key likely does not incorporate the lock file hash correctly, or the lock file was not committed. Verify the key expression: key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}. Ensure package-lock.json is committed. If the key is correct, the existing cache may be stale from a partial restore. Use restore-keys as a fallback prefix, but always run npm ci (not npm install) to guarantee the lock file is honored."
+    explanation: "Cache invalidation fails silently when the hash input does not change. Using npm ci instead of npm install ensures the installed tree matches the lock file exactly, catching mismatches even with a partial cache restore."
+
+  - id: cicd-artifact-size-001
+    type: command-fill
+    topic: cicd
+    tier: L2
+    tags: [github-actions, artifacts]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    prompt: "Upload only the coverage summary file (not the full lcov report) as a GitHub Actions artifact with a 7-day retention to save storage"
+    command: |
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-summary
+          path: coverage/coverage-summary.json
+          retention-days: 7
+    accept_partial: true
+
+  # ============================================================
+  # L2 — Deployment (2 cards)
+  # ============================================================
+  - id: cicd-rollback-strategy-001
+    type: scenario
+    topic: cicd
+    tier: L2
+    tags: [deployment, rollback]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    situation: "You deployed a new version of your API to production using a GitHub Actions workflow. Within 5 minutes, error rates spike to 15%. The deployment updated both the application Docker image and ran a database migration."
+    question: "What is your rollback strategy?"
+    answer: "1) Immediately route traffic back to the previous version (blue-green switch or revert ECS task to previous image tag). 2) Do NOT automatically roll back the database migration (it may be destructive). 3) Check if the migration is backward-compatible with the old code. If yes, just redeploy the old image. If no, write a reverse migration and deploy it. 4) Post-incident: add a health check gate that automatically rolls back before the window closes."
+    explanation: "Application rollbacks are fast (redeploy old image). Database rollbacks are dangerous (data loss risk). The key insight is to make migrations backward-compatible so the old code can run against the new schema."
+
+  - id: cicd-env-promotion-001
+    type: explain-concept
+    topic: cicd
+    tier: L2
+    tags: [deployment, environments]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    concept: "Environment promotion gates in CI/CD"
+    model_answer: "Promotion gates control when a build moves from one environment to the next (dev -> staging -> prod). Gates can be automatic (all tests pass) or manual (human approval required). GitHub Actions implements this with environment protection rules: required reviewers, wait timers, and branch restrictions. Each environment can have its own secrets. The pattern ensures progressively stricter validation as code approaches production."
+
+  # ============================================================
+  # L3 — Production Incident Scenarios (5 cards)
+  # ============================================================
+  - id: cicd-pipeline-timeout-L3-001
+    type: scenario
+    topic: cicd
+    tier: L3
+    tags: [pipeline, timeout, monorepo]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    situation: "Your monorepo CI pipeline takes 45 minutes and is hitting the 60-minute timeout. The pipeline runs lint, unit tests, integration tests, and builds Docker images for 4 services. Each PR triggers all checks regardless of which service changed."
+    question: "Design an optimization strategy to reduce pipeline time below 15 minutes."
+    answer: "1) Add path filters to each job so only affected services are built (paths: ['services/auth/**']). 2) Use dorny/paths-filter action to dynamically skip unchanged services. 3) Cache Docker layers using docker/build-push-action with cache-from/cache-to. 4) Split the test suite across parallel runners using test-splitting. 5) Run lint as a separate fast job that blocks nothing. 6) Use larger runners (4-core) for the build/test jobs. 7) Consider a merge queue to batch PRs and reduce redundant runs."
+    explanation: "Monorepo CI optimization is about eliminating unnecessary work. Path filtering alone can reduce most PR builds from 4 services to 1. Combined with Docker layer caching and test parallelization, build times drop dramatically."
+
+  - id: cicd-secret-leak-L3-001
+    type: scenario
+    topic: cicd
+    tier: L3
+    tags: [security, secrets, incident]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    situation: "A developer's PR added `echo ${{ secrets.AWS_SECRET_ACCESS_KEY }}` in a debugging step. The workflow ran, and the secret appeared in the public CI logs for 2 hours before anyone noticed."
+    question: "What are your immediate incident response steps and preventive measures?"
+    answer: "Immediate: 1) Rotate the exposed AWS credentials NOW via IAM console. 2) Delete the workflow run logs from GitHub (Settings > Actions > delete specific run). 3) Audit CloudTrail for any unauthorized usage of the old key during the exposure window. 4) Revoke any sessions created with the old key. Prevention: 1) Enable GitHub secret scanning and push protection. 2) Add a PR review rule requiring approval from security-aware reviewers for workflow file changes. 3) Use OIDC federation (aws-actions/configure-aws-credentials) instead of long-lived keys. 4) Add a CI linting step that scans workflow files for direct secret references in echo/print commands."
+    explanation: "GitHub automatically masks secrets in logs, but echo with the expression syntax bypasses masking in some contexts. OIDC federation eliminates long-lived secrets entirely, making this class of leak impossible."
+
+  - id: cicd-deploy-rollback-L3-001
+    type: scenario
+    topic: cicd
+    tier: L3
+    tags: [deployment, rollback, incident]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    situation: "Your production deployment of a containerized Python API is stuck mid-rollout. ECS shows 2 of 4 tasks running the new version and 2 running the old version. The new tasks are passing health checks but returning 500 errors on the /api/orders endpoint. The deployment is using a rolling update strategy with a minimum healthy percent of 50%."
+    question: "Walk through the steps to diagnose and recover from this failed mid-rollout deployment."
+    answer: "1) Stop the deployment: update the ECS service to force a new deployment with the OLD task definition revision. 2) While the rollback proceeds, investigate: check CloudWatch logs for the 500 errors on /api/orders. 3) Check if it is a database schema issue (new code expecting columns not yet migrated). 4) Check ECS task networking: are the new tasks in the same target group and getting traffic? 5) Check environment variables: did the new task definition miss a critical env var? 6) After rollback completes, verify all 4 tasks run the old version and /api/orders returns 200. 7) Post-incident: add a smoke test step to the deployment workflow that hits /api/orders after deploy and auto-rolls-back if it fails."
+    explanation: "Mid-rollout failures are dangerous because both versions serve traffic simultaneously. The 50% minimum healthy percent means ECS will keep at least 2 tasks running, but if the new tasks are unhealthy at the application level (passing TCP health checks but returning 500s), ECS considers the deployment successful. The fix is to use application-level health checks that verify endpoint correctness."
+
+  - id: cicd-matrix-debug-L3-001
+    type: scenario
+    topic: cicd
+    tier: L3
+    tags: [github-actions, matrix, debugging]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    situation: "Your matrix build tests a Python library across os: [ubuntu-latest, windows-latest] and python: [3.10, 3.11, 3.12]. The windows-latest/3.12 combination consistently fails with 'DLL load failed' when importing a C extension package. All other 5 combinations pass. You cannot reproduce on your local Windows machine."
+    question: "Describe your systematic diagnosis approach for this platform-specific matrix failure."
+    answer: "1) Read the full traceback in the failed job log to identify which DLL and which package fails. 2) Compare the installed package versions: run pip list in the passing vs failing job to see if a different binary wheel was installed. 3) Check if the package has a known issue with Python 3.12 on Windows (search their GitHub issues). 4) Try pinning the package version to the one that works on 3.11. 5) If the issue is a missing Visual C++ Redistributable, add a setup step: choco install vcredist140. 6) Use matrix exclude to skip this combination temporarily and matrix include to add a workaround step specifically for windows/3.12. 7) Open an issue with the package maintainers including the exact runner image and DLL error."
+    explanation: "Windows DLL errors in CI are almost always caused by binary wheel incompatibilities. The GitHub-hosted Windows runner may have a different Visual C++ runtime version than your local machine. Matrix include/exclude lets you customize individual combinations without branching the entire workflow."
+
+  - id: cicd-cache-corruption-L3-001
+    type: explain-concept
+    topic: cicd
+    tier: L3
+    tags: [caching, invalidation, strategy]
+    version_tag: gh-actions-v4
+    last_verified: "2026-01-01"
+    concept: "CI cache invalidation strategies and corruption recovery"
+    model_answer: "Cache invalidation strategies: 1) Content-hash keys: tie the cache key to hashFiles() of lock files so any dependency change busts the cache. 2) Prefix versioning: add a manual version prefix (v2-node-...) to force global cache invalidation when the cache format changes. 3) Restore-keys fallback: use restore-keys with progressively shorter prefixes so partial matches still save time. 4) TTL-based: GitHub caches expire after 7 days of no access. Corruption recovery: if a corrupted cache causes persistent build failures, change the key prefix (v2 -> v3) to force a fresh install. Never rely on a cache for correctness -- the build must succeed with an empty cache. Common corruption causes: interrupted cache upload, runner disk full during save, tool version changes making the cached format incompatible."
