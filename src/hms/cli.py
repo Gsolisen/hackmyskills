@@ -1,6 +1,7 @@
 """HackMySkills CLI entry point."""
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Optional
 
 import typer
@@ -209,6 +210,91 @@ def validate_content() -> None:
     if not result.ok:
         raise typer.Exit(1)
     console.print("[green]OK[/green] All content valid.")
+
+
+@app.command()
+def topics() -> None:
+    """List available topics with card counts and unlock status."""
+    from hms.init import ensure_initialized
+    ensure_initialized()
+
+    from rich.table import Table
+    from hms.gamification import get_unlocked_tiers_per_topic
+    from hms.models import Card
+
+    unlocked = get_unlocked_tiers_per_topic()
+    topics_list = sorted(unlocked.keys())
+
+    if not topics_list:
+        console.print("[dim]No topics found. Add YAML files to your content directory.[/dim]")
+        return
+
+    table = Table(show_header=True, header_style="bold", box=None, padding=(0, 1))
+    table.add_column("Topic")
+    table.add_column("Cards", justify="right")
+    table.add_column("Unlocked")
+
+    for topic in topics_list:
+        card_count = Card.select().where(Card.topic == topic).count()
+        highest_tier = unlocked[topic][-1] if unlocked[topic] else "L1"
+        table.add_row(topic, str(card_count), f"{highest_tier} unlocked")
+
+    console.print(table)
+
+
+@app.command("import")
+def import_file(
+    file: Path = typer.Argument(..., help="Path to a YAML question file"),
+) -> None:
+    """Validate and import a question file into the active bank."""
+    from hms.init import ensure_initialized
+    import hms.config as _cfg
+    ensure_initialized()
+
+    file = Path(file)
+    if not file.exists() or file.suffix != ".yaml":
+        console.print("[red]Error:[/red] File must be an existing .yaml file.")
+        raise typer.Exit(1)
+
+    # Step 1: Validate the file schema in isolation
+    from hms.loader import load_questions
+    try:
+        questions = load_questions(file)
+    except ValueError as exc:
+        console.print(f"[red]Validation failed:[/red] {exc}")
+        raise typer.Exit(1)
+
+    # Step 2: Copy to content dir
+    import shutil
+    content_dir = _cfg.HMS_HOME / "content"
+    dest = content_dir / file.name
+    if dest.exists():
+        console.print(f"[red]Error:[/red] {file.name} already exists in content directory.")
+        raise typer.Exit(1)
+
+    shutil.copy2(file, dest)
+
+    # Step 3: Full validation including cross-file duplicates
+    from hms.validation import validate_content_dir
+    result = validate_content_dir(content_dir)
+    if not result.ok:
+        dest.unlink()  # rollback
+        for err in result.errors:
+            console.print(f"  [red]X[/red] {err.file} :: {err.question_id} -- {err.message}")
+        for dup in result.duplicates:
+            if dup.reason == "exact_id":
+                console.print(f"  [yellow]![/yellow] ID '{dup.id_a}' appears in {dup.file_a} and {dup.file_b}")
+            else:
+                console.print(
+                    f"  [yellow]![/yellow] {dup.id_a} <-> {dup.id_b}: {dup.similarity:.0%} overlap"
+                )
+        raise typer.Exit(1)
+
+    # Step 4: Sync cards to DB
+    from hms.init import _sync_cards_from_yaml
+    _sync_cards_from_yaml(content_dir)
+
+    console.print(f"[green]OK[/green] Imported {len(questions)} questions from {file.name}.")
 
 
 daemon_app = typer.Typer(help="Manage the background interrupt daemon.")
