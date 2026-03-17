@@ -1,4 +1,8 @@
 questions:
+  # ============================================================
+  # ORIGINAL 6 QUESTIONS (preserved verbatim)
+  # ============================================================
+
   - id: tf-init-001
     type: flashcard
     topic: terraform
@@ -61,3 +65,529 @@ questions:
     last_verified: "2026-01-01"
     concept: "Terraform providers"
     model_answer: "Providers are plugins that implement resource types for a specific platform (AWS, Azure, GCP, etc.). Each provider authenticates with its platform's API and translates Terraform resource definitions into API calls."
+
+  # ============================================================
+  # L1 -- Core Workflow (3 new: 2 flashcard + 1 command-fill)
+  # ============================================================
+
+  - id: tf-validate-cmd-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [workflow, validation]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What does `terraform validate` check?"
+    back: "It checks the syntax and internal consistency of Terraform configuration files without accessing remote state or APIs."
+
+  - id: tf-fmt-purpose-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [workflow, formatting]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What does `terraform fmt` do and what flag checks formatting without modifying files?"
+    back: "`terraform fmt` rewrites .tf files to the canonical format. The `-check` flag returns a non-zero exit code if files need formatting, without modifying them."
+
+  - id: tf-plan-save-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L1
+    tags: [workflow, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "Generate a Terraform plan and save it to a binary file named 'tfplan' for later apply"
+    command: "terraform plan -out=tfplan"
+    accept_partial: false
+
+  # ============================================================
+  # L1 -- State Management (5: 3 flashcard + 2 command-fill)
+  # ============================================================
+
+  - id: tf-state-remote-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [state, remote]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "Why should Terraform state be stored remotely instead of locally?"
+    back: "Remote state enables team collaboration (shared access), state locking (prevents concurrent writes), and durability (backed by reliable storage like S3 or GCS)."
+
+  - id: tf-state-locking-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [state, locking]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "How does Terraform prevent two team members from modifying state simultaneously?"
+    back: "State locking. When using a backend that supports it (e.g., S3 with DynamoDB), Terraform acquires a lock before writing state and releases it when done."
+
+  - id: tf-state-sensitive-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [state, security]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "Why is the Terraform state file considered sensitive?"
+    back: "The state file contains all resource attributes including secrets like database passwords and API keys in plain text. It should be encrypted at rest and access-controlled."
+
+  - id: tf-state-list-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L1
+    tags: [state, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "List all resources currently tracked in the Terraform state"
+    command: "terraform state list"
+    accept_partial: false
+
+  - id: tf-state-show-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L1
+    tags: [state, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "Show the attributes of a specific resource 'aws_instance.web' in the Terraform state"
+    command: "terraform state show aws_instance.web"
+    accept_partial: false
+
+  # ============================================================
+  # L1 -- Variables/Outputs (3 flashcard + 2 command-fill)
+  # ============================================================
+
+  - id: tf-variable-types-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [variables, types]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What are the three ways to pass variable values to Terraform?"
+    back: "1) Command-line flags: -var 'name=value'. 2) Variable files: -var-file or auto-loaded .tfvars files. 3) Environment variables: TF_VAR_name."
+
+  - id: tf-locals-purpose-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [variables, locals]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What is the difference between variables and locals in Terraform?"
+    back: "Variables are input parameters set by the caller (user or module consumer). Locals are computed intermediate values defined within the module, not exposed as inputs."
+
+  - id: tf-output-sensitive-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [outputs, security]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What does the `sensitive = true` attribute do on a Terraform output?"
+    back: "It prevents the output value from being displayed in CLI output and logs. The value is still stored in the state file."
+
+  - id: tf-output-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L1
+    tags: [outputs, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "Display the value of a specific Terraform output named 'api_endpoint'"
+    command: "terraform output api_endpoint"
+    accept_partial: false
+
+  - id: tf-var-file-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L1
+    tags: [variables, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "Run terraform plan using a specific variable file named 'prod.tfvars'"
+    command: "terraform plan -var-file=prod.tfvars"
+    accept_partial: false
+
+  # ============================================================
+  # L1 -- Modules (3 flashcard + 2 command-fill)
+  # ============================================================
+
+  - id: tf-module-sources-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [modules, sources]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What are the main module source types Terraform supports?"
+    back: "Local paths (./modules/vpc), Terraform Registry (hashicorp/consul/aws), GitHub URLs (github.com/org/repo), S3 buckets, and GCS buckets."
+
+  - id: tf-module-versioning-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [modules, versioning]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "How do you pin a Terraform module to a specific version from the registry?"
+    back: "Use the `version` argument in the module block: `version = \"~> 3.0\"`. This accepts any 3.x version. Exact pinning: `version = \"3.2.1\"`."
+
+  - id: tf-module-variables-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [modules, variables]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "How are values passed into and out of a Terraform module?"
+    back: "Values are passed in via module arguments that map to the child module's variable declarations. Values come out via the child module's outputs, accessed as module.<name>.<output>."
+
+  - id: tf-module-init-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L1
+    tags: [modules, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "Download and update modules after changing a module source or version"
+    command: "terraform init -upgrade"
+    accept_partial: false
+
+  - id: tf-module-graph-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L1
+    tags: [modules, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "Generate a visual dependency graph of all Terraform resources and modules"
+    command: "terraform graph"
+    accept_partial: true
+
+  # ============================================================
+  # L1 -- Providers/Resources (3 flashcard + 2 command-fill)
+  # ============================================================
+
+  - id: tf-resource-lifecycle-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [resources, lifecycle]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What do the lifecycle arguments `create_before_destroy` and `prevent_destroy` do?"
+    back: "`create_before_destroy` creates the replacement resource before deleting the old one (reduces downtime). `prevent_destroy` causes Terraform to reject any plan that would destroy the resource."
+
+  - id: tf-count-foreach-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [resources, iteration]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What is the difference between `count` and `for_each` in Terraform resources?"
+    back: "`count` creates N identical resources indexed by number (count.index). `for_each` creates one resource per item in a map or set, indexed by key (each.key, each.value). `for_each` is preferred because removing an item does not shift indexes."
+
+  - id: tf-depends-on-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [resources, dependencies]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "When should you use `depends_on` in Terraform?"
+    back: "Only when Terraform cannot infer the dependency from resource references. Common case: a resource depends on a side effect (e.g., IAM policy attachment must complete before an ECS service starts)."
+
+  - id: tf-taint-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L1
+    tags: [resources, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "Mark an AWS EC2 instance named 'aws_instance.web' for replacement on the next apply"
+    command: "terraform taint aws_instance.web"
+    accept_partial: false
+
+  - id: tf-providers-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L1
+    tags: [providers, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "List all providers required by the current Terraform configuration"
+    command: "terraform providers"
+    accept_partial: true
+
+  # ============================================================
+  # L1 -- Backends/Workspaces (2 flashcard + 2 command-fill)
+  # ============================================================
+
+  - id: tf-s3-backend-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [backends, s3]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What AWS resources are needed for a Terraform S3 backend with state locking?"
+    back: "An S3 bucket for storing the state file and a DynamoDB table for state locking. The DynamoDB table must have a partition key named 'LockID' of type String."
+
+  - id: tf-workspace-purpose-001
+    type: flashcard
+    topic: terraform
+    tier: L1
+    tags: [workspaces]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    front: "What are Terraform workspaces and what is the default workspace?"
+    back: "Workspaces allow managing multiple distinct state files from the same configuration directory. The default workspace is named 'default' and cannot be deleted."
+
+  - id: tf-workspace-new-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L1
+    tags: [workspaces, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "Create a new Terraform workspace named 'staging' and switch to it"
+    command: "terraform workspace new staging"
+    accept_partial: false
+
+  - id: tf-workspace-select-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L1
+    tags: [workspaces, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "Switch to an existing Terraform workspace named 'production'"
+    command: "terraform workspace select production"
+    accept_partial: false
+
+  # ============================================================
+  # L2 -- Core Workflow (2: 1 scenario + 1 command-fill)
+  # ============================================================
+
+  - id: tf-plan-output-interpret-001
+    type: scenario
+    topic: terraform
+    tier: L2
+    tags: [workflow, debugging]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    situation: "Your terraform plan output shows '# aws_security_group.web must be replaced' with a tilde (~) on the `name` attribute and 'forces replacement' annotation. You only changed a tag."
+    question: "Why is Terraform planning to replace the resource instead of updating it in place?"
+    answer: "The resource attribute you changed (name) is marked as ForceNew in the AWS provider. Changing a ForceNew attribute requires destroying and recreating the resource. Check if the change is on a ForceNew attribute by reviewing the provider documentation or the plan's 'forces replacement' annotation."
+    explanation: "Some resource attributes cannot be updated in place due to API limitations. The provider marks these as ForceNew. Terraform detects the change requires replacement and plans accordingly. Always review plan output carefully before apply, especially for 'must be replaced' lines."
+
+  - id: tf-targeted-apply-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L2
+    tags: [workflow, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "Apply Terraform changes only to a specific module named 'module.vpc' without affecting other resources"
+    command: "terraform apply -target=module.vpc"
+    accept_partial: false
+
+  # ============================================================
+  # L2 -- State Management (2: 1 scenario + 1 command-fill)
+  # ============================================================
+
+  - id: tf-state-mv-scenario-001
+    type: scenario
+    topic: terraform
+    tier: L2
+    tags: [state, refactoring]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    situation: "You renamed a resource from 'aws_instance.web' to 'aws_instance.application' in your Terraform config. Running terraform plan shows it wants to destroy the old instance and create a new one."
+    question: "How do you rename the resource without destroying and recreating it?"
+    answer: "Use 'terraform state mv aws_instance.web aws_instance.application' to update the state file's resource address. After this, terraform plan should show no changes."
+    explanation: "Terraform identifies resources by their address in state. Renaming a resource in config without updating state makes Terraform think the old resource should be deleted and a new one created. The state mv command moves the resource to its new address without touching infrastructure."
+
+  - id: tf-import-cmd-001
+    type: command-fill
+    topic: terraform
+    tier: L2
+    tags: [state, import, commands]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    prompt: "Import an existing AWS S3 bucket named 'my-data-bucket' into Terraform state as 'aws_s3_bucket.data'"
+    command: "terraform import aws_s3_bucket.data my-data-bucket"
+    accept_partial: false
+
+  # ============================================================
+  # L2 -- Variables/Outputs (2: 1 scenario + 1 explain-concept)
+  # ============================================================
+
+  - id: tf-complex-vars-001
+    type: scenario
+    topic: terraform
+    tier: L2
+    tags: [variables, types]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    situation: "You need to define a variable that accepts a list of objects, each with 'name' (string), 'port' (number), and 'protocol' (string) fields, with protocol defaulting to 'tcp'."
+    question: "Write the variable declaration with type constraint and default."
+    answer: |
+      variable "services" {
+        type = list(object({
+          name     = string
+          port     = number
+          protocol = optional(string, "tcp")
+        }))
+      }
+    explanation: "Terraform supports complex type constraints including list(object({...})). The optional() function (Terraform 1.3+) allows fields with default values within object types, reducing boilerplate when callers only need to override some fields."
+
+  - id: tf-dynamic-blocks-concept-001
+    type: explain-concept
+    topic: terraform
+    tier: L2
+    tags: [resources, dynamic-blocks]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    concept: "Dynamic blocks in Terraform"
+    model_answer: "Dynamic blocks generate repeatable nested blocks inside a resource based on a collection variable. Instead of writing multiple identical ingress blocks in a security group, you use 'dynamic \"ingress\" { for_each = var.rules; content { ... } }'. The iterator exposes .key and .value for each item. Dynamic blocks reduce duplication but should be used sparingly as they decrease readability."
+
+  # ============================================================
+  # L2 -- Modules (2 scenarios)
+  # ============================================================
+
+  - id: tf-module-version-conflict-001
+    type: scenario
+    topic: terraform
+    tier: L2
+    tags: [modules, versioning, debugging]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    situation: "After running terraform init, you see: 'Error: Failed to query available provider packages. Could not retrieve the list of available versions for provider hashicorp/aws: locked provider registry.terraform.io/hashicorp/aws 4.67.0 does not match configured version constraint ~> 5.0.'"
+    question: "What caused this error and how do you resolve it?"
+    answer: "The .terraform.lock.hcl file locks the provider to version 4.67.0, but the module or root config now requires ~> 5.0. Run 'terraform init -upgrade' to update the lock file to the new version constraint. Review the provider changelog for breaking changes before upgrading."
+    explanation: "The dependency lock file (.terraform.lock.hcl) pins exact provider versions for reproducibility. When version constraints change (e.g., a module update requires a newer provider), the lock file must be explicitly updated with -upgrade. This prevents unintended provider upgrades."
+
+  - id: tf-module-output-chain-001
+    type: scenario
+    topic: terraform
+    tier: L2
+    tags: [modules, outputs]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    situation: "You have a VPC module that outputs subnet_ids and a separate ECS module that needs those subnet IDs as input. Both modules are called from the root module."
+    question: "How do you pass the VPC module's output to the ECS module?"
+    answer: |
+      In the root module, reference the VPC module output as an argument to the ECS module:
+      module "ecs" {
+        source     = "./modules/ecs"
+        subnet_ids = module.vpc.subnet_ids
+      }
+      Terraform automatically infers the dependency: ECS module waits for VPC module to complete.
+    explanation: "Module outputs are the only way to pass data between modules in Terraform. The root module acts as the wiring layer, connecting outputs of one module to inputs of another. Terraform builds an implicit dependency graph from these references."
+
+  # ============================================================
+  # L2 -- Backends (1 scenario)
+  # ============================================================
+
+  - id: tf-backend-migration-001
+    type: scenario
+    topic: terraform
+    tier: L2
+    tags: [backends, state, migration]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    situation: "Your team has been using local state and now needs to migrate to an S3 backend. You have added the backend block to the configuration."
+    question: "What steps complete the migration without losing existing state?"
+    answer: "Run 'terraform init'. Terraform detects the backend change and prompts to migrate existing state to the new backend. Confirm the migration. Verify state is accessible with 'terraform state list'. Optionally delete the local terraform.tfstate file after confirming the remote state is correct."
+    explanation: "Terraform's init command handles state migration between backends. It copies the full state to the new backend atomically. The local state file is kept as backup until you remove it. Always verify the remote state contains all expected resources before deleting local state."
+
+  # ============================================================
+  # L3 -- Production Incident Scenarios (4 scenario + 1 explain-concept)
+  # ============================================================
+
+  - id: tf-state-lock-L3-001
+    type: scenario
+    topic: terraform
+    tier: L3
+    tags: [incident, state, locking]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    situation: |
+      A teammate ran 'terraform apply' on the production workspace but their laptop crashed mid-apply.
+      Now every team member gets this error:
+        Error: Error acquiring the state lock
+        Lock Info:
+          ID:        a1b2c3d4-e5f6-7890-abcd-ef1234567890
+          Path:      s3://company-tf-state/prod/terraform.tfstate
+          Operation: OperationTypeApply
+          Who:       crashed-user@laptop
+          Created:   2026-01-15 14:30:22 UTC
+      The DynamoDB lock table shows the stale lock entry. Some resources may be in an inconsistent state.
+    question: "Walk through the complete recovery process."
+    answer: "1) Assess damage: run 'terraform plan' on a read-only basis (it will fail due to lock). Check AWS console for partially-created resources. 2) Force-unlock the state: 'terraform force-unlock a1b2c3d4-e5f6-7890-abcd-ef1234567890'. 3) After unlocking, run 'terraform plan' to see the current state vs config diff. 4) If resources are partially created, either import them or let Terraform recreate. 5) Run 'terraform apply' to converge state. 6) Prevention: use CI/CD pipeline for applies (not local laptops), enable state versioning on S3 for rollback."
+    explanation: "State locks are stored in DynamoDB with a unique ID. If the client crashes without releasing the lock, it becomes stale. Force-unlock should be used carefully as it does not check if another operation is actually running. S3 versioning allows recovering previous state versions if the state file itself was corrupted during the interrupted apply."
+
+  - id: tf-module-drift-L3-001
+    type: scenario
+    topic: terraform
+    tier: L3
+    tags: [incident, modules, drift]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    situation: |
+      Your team upgraded the VPC module from v2.x to v3.x in the registry.
+      After running 'terraform plan', the output shows:
+        # module.vpc.aws_subnet.private[0] must be replaced
+        # module.vpc.aws_subnet.private[1] must be replaced
+        # module.vpc.aws_nat_gateway.main must be replaced
+        Plan: 6 to add, 2 to change, 6 to destroy.
+      Production workloads depend on these subnets. Destroying them would cause a full outage.
+    question: "How do you handle this upgrade safely?"
+    answer: "1) Do NOT apply. The module v3.x likely changed resource addressing or naming. 2) Read the module's UPGRADE.md or changelog for migration steps. 3) Use 'terraform state mv' to map old resource addresses to new ones if the module renamed resources. 4) If the module restructured significantly, consider using 'moved' blocks in the config to declare renames. 5) Run 'terraform plan' after each state move until the plan shows minimal changes. 6) Test in a non-production workspace first. 7) If the migration is too risky, pin to v2.x and plan the upgrade during a maintenance window."
+    explanation: "Major module version bumps often change internal resource structure (renaming, splitting, or consolidating resources). Terraform interprets address changes as destroy+create. The 'moved' block (Terraform 1.1+) and 'terraform state mv' prevent unnecessary destruction by telling Terraform that a resource changed address but is the same physical resource."
+
+  - id: tf-import-legacy-L3-001
+    type: scenario
+    topic: terraform
+    tier: L3
+    tags: [incident, import, migration]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    situation: |
+      Your company has 50+ AWS resources created manually via the console that need to be brought under Terraform management. The resources include VPCs, subnets, security groups, EC2 instances, RDS databases, and S3 buckets.
+      The team asks: "Can we just write the Terraform config and import everything?"
+    question: "Outline a safe strategy for importing existing infrastructure at scale."
+    answer: "1) Inventory: use AWS CLI or tools like terraformer to list existing resources. 2) Write Terraform config for each resource type, starting with foundational resources (VPC, subnets) before dependent ones (EC2, RDS). 3) Import resources one type at a time: 'terraform import aws_vpc.main vpc-12345'. 4) After each import, run 'terraform plan' and adjust config until plan shows no changes. 5) Use import blocks (Terraform 1.5+) for declarative import: 'import { to = aws_vpc.main; id = \"vpc-12345\" }'. 6) Consider using 'terraform plan -generate-config-out=generated.tf' (1.5+) to auto-generate config from imported state. 7) Validate by running plan in a CI pipeline before merging."
+    explanation: "Importing at scale requires a bottom-up approach: network resources first, then compute and storage. Each import only updates state -- it does not modify infrastructure. The config must match the actual resource attributes exactly, or the next plan will show drift. Terraform 1.5+ import blocks make this more manageable by allowing imports as part of the normal plan/apply workflow."
+
+  - id: tf-workspace-migration-L3-001
+    type: scenario
+    topic: terraform
+    tier: L3
+    tags: [incident, workspaces, migration]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    situation: |
+      Your team uses a single Terraform workspace for all environments (dev, staging, prod) differentiated by variable files.
+      This has caused incidents: a developer accidentally applied prod.tfvars in the default workspace,
+      destroying and recreating a production database. Management wants environment isolation.
+    question: "Design a migration plan from single workspace to isolated workspaces or separate state files."
+    answer: "1) Choose strategy: separate directories per environment (recommended) or Terraform workspaces. Separate directories provide stronger isolation. 2) For directory-based: create envs/dev/, envs/staging/, envs/prod/ each with their own backend config pointing to different state paths. 3) Extract each environment's resources from current state using 'terraform state pull > full.tfstate', then 'terraform state mv -state=full.tfstate -state-out=prod.tfstate <resource> <resource>' for each prod resource. 4) Push extracted state to new backends: 'terraform state push prod.tfstate' after configuring each directory's backend. 5) Verify each environment with 'terraform plan' showing no changes. 6) Implement CI/CD guardrails: separate approval gates, branch-based environment targeting."
+    explanation: "Single-workspace multi-environment setups are a common anti-pattern. They provide no blast radius isolation -- any apply affects the one shared state. Directory-based separation (envs/dev, envs/prod) with separate state backends provides the strongest isolation. Workspaces are lighter-weight but still share the same backend bucket, just with different state file keys."
+
+  - id: tf-provider-upgrade-L3-001
+    type: explain-concept
+    topic: terraform
+    tier: L3
+    tags: [providers, versioning, strategy]
+    version_tag: tf-1.7
+    last_verified: "2026-01-01"
+    concept: "Terraform provider upgrade strategies and version pinning"
+    model_answer: "Provider version management is critical for infrastructure stability. Best practices: 1) Pin providers with exact or pessimistic constraints (version = \"~> 5.0\" allows 5.x but not 6.0). 2) Commit .terraform.lock.hcl to version control -- it records exact versions and checksums for reproducibility. 3) Upgrade providers deliberately: run 'terraform init -upgrade', review the changelog for breaking changes, then test in a non-production workspace. 4) Use required_providers blocks in the root module to set organization-wide version boundaries. 5) For major upgrades (e.g., AWS provider 4.x to 5.x), review the upgrade guide, test with 'terraform plan' to identify resource changes, and use 'terraform state replace-provider' if the provider namespace changed. 6) Never upgrade providers directly in production -- always test the plan output in a lower environment first."
