@@ -1,4 +1,8 @@
 questions:
+  # ============================================================
+  # ORIGINAL 6 QUESTIONS (preserved verbatim)
+  # ============================================================
+
   - id: k8s-pod-lifecycle-001
     type: flashcard
     topic: kubernetes
@@ -61,3 +65,560 @@ questions:
     last_verified: "2026-01-01"
     concept: "etcd in Kubernetes"
     model_answer: "etcd is a distributed key-value store that serves as Kubernetes' backing store for all cluster state. All API server writes go to etcd; only the API server communicates with etcd directly."
+
+  # ============================================================
+  # L1 -- Pods/Containers (5 new flashcard + 3 new command-fill)
+  # ============================================================
+
+  - id: k8s-pod-multicontainer-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, containers]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What are the three multi-container Pod design patterns?"
+    back: "Sidecar, Ambassador, and Adapter."
+
+  - id: k8s-pod-init-container-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, init-containers]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What is an init container and when does it run?"
+    back: "An init container runs before the main app containers start. It is used for setup tasks like fetching config or waiting for dependencies."
+
+  - id: k8s-pod-qos-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, qos]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What are the three Quality of Service (QoS) classes for Pods?"
+    back: "Guaranteed, Burstable, and BestEffort."
+
+  - id: k8s-pod-probe-types-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, probes]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What are the three types of health probes in Kubernetes?"
+    back: "Liveness probe (restarts unhealthy container), readiness probe (controls traffic routing), and startup probe (delays other probes until app starts)."
+
+  - id: k8s-pod-resource-limits-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, resources]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What is the difference between resource requests and limits in a Pod spec?"
+    back: "Requests are the minimum resources guaranteed to the container. Limits are the maximum resources the container can use before being throttled (CPU) or killed (memory)."
+
+  - id: k8s-pod-describe-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, pods]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "Show detailed information about a pod named 'web-app' in the default namespace"
+    command: "kubectl describe pod web-app"
+    accept_partial: true
+
+  - id: k8s-pod-logs-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, pods, logs]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "View logs from a specific container named 'nginx' inside pod 'web-app'"
+    command: "kubectl logs web-app -c nginx"
+    accept_partial: true
+
+  - id: k8s-pod-exec-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, pods]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "Open an interactive shell session inside a running pod named 'debug-pod'"
+    command: "kubectl exec -it debug-pod -- /bin/sh"
+    accept_partial: true
+
+  # ============================================================
+  # L1 -- Deployments/ReplicaSets (3 flashcard + 2 command-fill)
+  # ============================================================
+
+  - id: k8s-deploy-strategy-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [deployments, strategy]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What are the two deployment strategies in Kubernetes?"
+    back: "RollingUpdate (default) -- replaces pods gradually. Recreate -- terminates all old pods before creating new ones."
+
+  - id: k8s-replicaset-purpose-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [replicasets]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What is the purpose of a ReplicaSet?"
+    back: "A ReplicaSet ensures that a specified number of pod replicas are running at any given time. Deployments manage ReplicaSets automatically."
+
+  - id: k8s-deploy-maxsurge-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [deployments, rolling-update]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What do maxSurge and maxUnavailable control in a RollingUpdate strategy?"
+    back: "maxSurge sets the maximum number of extra pods created above the desired count. maxUnavailable sets the maximum number of pods that can be unavailable during the update."
+
+  - id: k8s-deploy-rollout-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, deployments]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "Check the rollout status of a deployment named 'api-server'"
+    command: "kubectl rollout status deployment/api-server"
+    accept_partial: true
+
+  - id: k8s-deploy-rollback-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, deployments]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "Roll back a deployment named 'api-server' to its previous revision"
+    command: "kubectl rollout undo deployment/api-server"
+    accept_partial: true
+
+  # ============================================================
+  # L1 -- Services/Networking (3 flashcard + 2 command-fill)
+  # ============================================================
+
+  - id: k8s-svc-types-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [services, networking]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What are the four Kubernetes Service types?"
+    back: "ClusterIP (default, internal only), NodePort (exposes on each node's IP at a static port), LoadBalancer (provisions external LB), ExternalName (maps to DNS CNAME)."
+
+  - id: k8s-ingress-purpose-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [ingress, networking]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What is the purpose of an Ingress resource?"
+    back: "An Ingress provides HTTP/HTTPS routing rules to expose multiple services under a single external IP, with support for host-based and path-based routing, and TLS termination."
+
+  - id: k8s-dns-svc-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [services, dns]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "How does Kubernetes DNS resolve service names?"
+    back: "CoreDNS creates DNS records for each Service. Pods can reach a service via <service-name>.<namespace>.svc.cluster.local or just <service-name> within the same namespace."
+
+  - id: k8s-svc-expose-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, services]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "Expose a deployment named 'frontend' as a NodePort service on port 80"
+    command: "kubectl expose deployment frontend --type=NodePort --port=80"
+    accept_partial: true
+
+  - id: k8s-svc-endpoints-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, services, endpoints]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "List the endpoint IP addresses backing a service named 'backend'"
+    command: "kubectl get endpoints backend"
+    accept_partial: true
+
+  # ============================================================
+  # L1 -- ConfigMaps/Secrets (2 flashcard + 2 command-fill)
+  # ============================================================
+
+  - id: k8s-configmap-purpose-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [configmaps, configuration]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What is a ConfigMap and how is it consumed by a Pod?"
+    back: "A ConfigMap stores non-confidential key-value configuration data. Pods consume it as environment variables, command-line arguments, or mounted files in a volume."
+
+  - id: k8s-secret-types-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [secrets, security]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What encoding does Kubernetes use for Secret data, and is this encryption?"
+    back: "Secrets are stored as base64-encoded values. Base64 is encoding, not encryption. Enable encryption at rest via EncryptionConfiguration for actual security."
+
+  - id: k8s-configmap-create-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, configmaps]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "Create a ConfigMap named 'app-config' from a literal key-value pair LOG_LEVEL=debug"
+    command: "kubectl create configmap app-config --from-literal=LOG_LEVEL=debug"
+    accept_partial: true
+
+  - id: k8s-secret-create-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, secrets]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "Create a generic Secret named 'db-creds' with username and password literals"
+    command: "kubectl create secret generic db-creds --from-literal=username=admin --from-literal=password=secret"
+    accept_partial: true
+
+  # ============================================================
+  # L1 -- Storage/PV/PVC (2 flashcard + 2 command-fill)
+  # ============================================================
+
+  - id: k8s-pv-pvc-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [storage, pv, pvc]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What is the relationship between PersistentVolume (PV) and PersistentVolumeClaim (PVC)?"
+    back: "A PV is a piece of storage provisioned by an admin or dynamically by a StorageClass. A PVC is a user request for storage that binds to a matching PV based on size, access mode, and storage class."
+
+  - id: k8s-access-modes-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [storage, access-modes]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What are the three PersistentVolume access modes?"
+    back: "ReadWriteOnce (RWO) -- single node read-write. ReadOnlyMany (ROX) -- many nodes read-only. ReadWriteMany (RWX) -- many nodes read-write."
+
+  - id: k8s-storageclass-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, storage]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "List all StorageClasses available in the cluster"
+    command: "kubectl get storageclasses"
+    accept_partial: true
+
+  - id: k8s-pvc-list-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, storage, pvc]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "List all PersistentVolumeClaims in all namespaces"
+    command: "kubectl get pvc --all-namespaces"
+    accept_partial: true
+
+  # ============================================================
+  # L1 -- RBAC/Security (2 flashcard + 2 command-fill)
+  # ============================================================
+
+  - id: k8s-rbac-objects-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [rbac, security]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What are the four main RBAC resources in Kubernetes?"
+    back: "Role (namespace-scoped permissions), ClusterRole (cluster-wide permissions), RoleBinding (binds a Role to subjects in a namespace), ClusterRoleBinding (binds a ClusterRole cluster-wide)."
+
+  - id: k8s-serviceaccount-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [rbac, serviceaccount]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    front: "What is a ServiceAccount and what is the default behavior?"
+    back: "A ServiceAccount provides an identity for Pods to interact with the API server. Every namespace has a 'default' ServiceAccount that is automatically mounted into Pods unless opted out."
+
+  - id: k8s-rbac-check-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, rbac]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "Check if the current user can create deployments in the 'staging' namespace"
+    command: "kubectl auth can-i create deployments -n staging"
+    accept_partial: true
+
+  - id: k8s-sa-create-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [kubectl, rbac, serviceaccount]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "Create a ServiceAccount named 'ci-deployer' in the 'cicd' namespace"
+    command: "kubectl create serviceaccount ci-deployer -n cicd"
+    accept_partial: true
+
+  # ============================================================
+  # L2 -- Pods (2 scenarios)
+  # ============================================================
+
+  - id: k8s-oomkilled-diag-001
+    type: scenario
+    topic: kubernetes
+    tier: L2
+    tags: [debugging, pods, oom]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    situation: "A Java application pod is restarting frequently. Running 'kubectl describe pod java-app' shows the last state as OOMKilled with exit code 137."
+    question: "How do you diagnose and resolve this issue?"
+    answer: "The container is exceeding its memory limit. Check the current memory limit with kubectl describe, then either increase the memory limit in the pod spec or tune JVM heap settings (e.g., -Xmx) to fit within the limit."
+    explanation: "Exit code 137 means the process was killed by SIGKILL, typically because the kernel OOM killer terminated it for exceeding the cgroup memory limit set by the container's resources.limits.memory."
+
+  - id: k8s-liveness-fail-001
+    type: scenario
+    topic: kubernetes
+    tier: L2
+    tags: [debugging, pods, probes]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    situation: "A web application pod keeps restarting every 90 seconds. The app logs show it takes 60 seconds to initialize, but the liveness probe is configured with initialDelaySeconds: 10 and periodSeconds: 10."
+    question: "What is causing the restarts and how do you fix it?"
+    answer: "The liveness probe starts checking after only 10 seconds, but the app needs 60 seconds to start. The probe fails 5 times before the app is ready, triggering a restart. Increase initialDelaySeconds to at least 70 seconds or add a startup probe with a longer timeout."
+    explanation: "Liveness probes determine if a container is alive. If the probe fails failureThreshold times (default 3), the kubelet restarts the container. A startup probe is preferred for slow-starting apps because it disables liveness probes until the app is ready."
+
+  # ============================================================
+  # L2 -- Deployments (2: 1 scenario + 1 command-fill)
+  # ============================================================
+
+  - id: k8s-rollout-stuck-001
+    type: scenario
+    topic: kubernetes
+    tier: L2
+    tags: [debugging, deployments, rollout]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    situation: "You updated a Deployment image tag but 'kubectl rollout status' shows it stuck at 'Waiting for deployment to finish: 1 old replicas are pending termination'. The new pods are in ImagePullBackOff."
+    question: "What steps do you take to diagnose and recover?"
+    answer: "The new image tag is likely wrong or the registry is unreachable. Run 'kubectl describe pod <new-pod>' to see the image pull error. Fix the image tag or registry credentials, then the rollout will proceed. If urgent, run 'kubectl rollout undo deployment/<name>' to revert."
+    explanation: "During a RollingUpdate, Kubernetes waits for new pods to become Ready before terminating old ones. If new pods cannot start (e.g., bad image), the rollout stalls. The old pods remain running, preserving availability until you fix or roll back."
+
+  - id: k8s-deploy-history-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L2
+    tags: [kubectl, deployments, rollout]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    prompt: "Roll back deployment 'payment-svc' to a specific revision number 3"
+    command: "kubectl rollout undo deployment/payment-svc --to-revision=3"
+    accept_partial: true
+
+  # ============================================================
+  # L2 -- Services/Networking (2 scenarios)
+  # ============================================================
+
+  - id: k8s-selector-mismatch-001
+    type: scenario
+    topic: kubernetes
+    tier: L2
+    tags: [debugging, services, selectors]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    situation: "You created a Service targeting app: frontend, but 'kubectl get endpoints frontend-svc' returns an empty ENDPOINTS list. The pods are running and healthy."
+    question: "What is the most likely cause and how do you verify?"
+    answer: "The Service selector labels do not match the Pod labels. Compare the Service's spec.selector with the Pod's metadata.labels using 'kubectl describe svc frontend-svc' and 'kubectl get pods --show-labels'. Fix the label mismatch."
+    explanation: "A Service discovers backend Pods via label selectors. If no Pod labels match the Service's selector, the Endpoints object is empty and no traffic is routed. This is the most common cause of 'service has no endpoints' issues."
+
+  - id: k8s-ingress-502-001
+    type: scenario
+    topic: kubernetes
+    tier: L2
+    tags: [debugging, ingress, networking]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    situation: "An Ingress resource returns 502 Bad Gateway for all requests. The backend pods are running, the Service has endpoints, and the Ingress controller logs show 'upstream connect error'."
+    question: "What should you investigate next?"
+    answer: "Check the Service port and targetPort configuration. The Ingress backend servicePort must match the Service's port, and the Service's targetPort must match the containerPort on which the app is listening. Also verify the Pods pass their readiness probe."
+    explanation: "502 Bad Gateway means the Ingress controller connected to the upstream but received an error. Common causes: wrong port mapping (Service targetPort does not match container's listening port), pods failing readiness probes (removed from endpoints briefly), or the app returning errors on the health check path."
+
+  # ============================================================
+  # L2 -- ConfigMaps/Secrets (1 scenario)
+  # ============================================================
+
+  - id: k8s-secret-rotation-001
+    type: scenario
+    topic: kubernetes
+    tier: L2
+    tags: [secrets, security, operations]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    situation: "Your team needs to rotate a database password stored in a Kubernetes Secret named 'db-credentials'. Multiple pods mount this secret as environment variables."
+    question: "What is the safest procedure to rotate the secret without downtime?"
+    answer: "Update the Secret with the new password using 'kubectl create secret generic db-credentials --from-literal=password=<new> --dry-run=client -o yaml | kubectl apply -f -'. Then perform a rolling restart of the affected deployments with 'kubectl rollout restart deployment/<name>' so pods pick up the new value."
+    explanation: "Secrets mounted as environment variables only update when the pod restarts. Unlike volume-mounted secrets (which kubelet refreshes periodically), env var secrets are injected once at pod creation. A rolling restart ensures all pods get the new value without downtime."
+
+  # ============================================================
+  # L2 -- RBAC (2: 1 scenario + 1 explain-concept)
+  # ============================================================
+
+  - id: k8s-rbac-misconfig-001
+    type: scenario
+    topic: kubernetes
+    tier: L2
+    tags: [debugging, rbac, security]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    situation: "A developer reports getting 'Error from server (Forbidden): pods is forbidden: User \"dev-user\" cannot list resource \"pods\" in API group \"\" in the namespace \"staging\"' when running kubectl get pods."
+    question: "What RBAC resources need to be created or fixed?"
+    answer: "Create a Role in the 'staging' namespace that grants the 'list' verb on the 'pods' resource, then create a RoleBinding that binds this Role to the user 'dev-user'. Alternatively, use an existing ClusterRole like 'view' and bind it with a RoleBinding in the staging namespace."
+    explanation: "Kubernetes RBAC denies by default. Accessing any resource requires an explicit Role (or ClusterRole) granting the verbs, plus a RoleBinding (or ClusterRoleBinding) associating the role with the user, group, or ServiceAccount."
+
+  - id: k8s-sa-token-concept-001
+    type: explain-concept
+    topic: kubernetes
+    tier: L2
+    tags: [rbac, serviceaccount, tokens]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    concept: "ServiceAccount token projection in Kubernetes 1.24+"
+    model_answer: "Starting in Kubernetes 1.24, auto-mounted ServiceAccount tokens are bound, time-limited, and audience-scoped (projected tokens) instead of the legacy non-expiring Secret-based tokens. The kubelet requests short-lived tokens from the TokenRequest API and mounts them at /var/run/secrets/kubernetes.io/serviceaccount/token. Legacy Secret-based tokens are no longer auto-created."
+
+  # ============================================================
+  # L3 -- Production Incident Scenarios (4 scenario + 1 explain-concept)
+  # ============================================================
+
+  - id: k8s-oom-incident-L3-001
+    type: scenario
+    topic: kubernetes
+    tier: L3
+    tags: [incident, pods, oom, debugging]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    situation: |
+      Production alert fires: 'Pod app-worker-7f8b4c-xz2q1 OOMKilled (3 restarts in 10 minutes)'.
+      kubectl describe pod shows:
+        Last State: Terminated, Reason: OOMKilled, Exit Code: 137
+        Limits: memory: 512Mi
+        Requests: memory: 256Mi
+      kubectl top pod shows current usage at 480Mi and climbing.
+      The application is a Node.js worker processing messages from a queue.
+    question: "Walk through your complete diagnostic and resolution process."
+    answer: "1) Confirm the memory pattern: check if usage is a gradual leak or spike (kubectl top pod over time or Prometheus metrics). 2) Check for memory leak: review application logs for growing data structures or unbounded caches. 3) Short-term fix: increase the memory limit to 1Gi and apply. 4) Long-term fix: profile the Node.js app with --inspect or heap snapshots to identify the leak source. 5) Set memory request closer to limit (e.g., 768Mi) to improve scheduling accuracy and prevent overcommit."
+    explanation: "OOMKilled with gradually climbing memory typically indicates a memory leak rather than insufficient baseline allocation. Simply increasing limits without investigating the leak will delay the problem but not fix it. The Node.js default heap is ~1.5GB, so the 512Mi container limit is hit before V8's GC pressure kicks in."
+
+  - id: k8s-deploy-rollback-L3-001
+    type: scenario
+    topic: kubernetes
+    tier: L3
+    tags: [incident, deployments, rollout, debugging]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    situation: |
+      After deploying v2.3.0 of the checkout service, 30% of requests return HTTP 500.
+      kubectl rollout status shows: 'deployment "checkout" successfully rolled out'.
+      kubectl get pods shows all pods running v2.3.0 with status Ready 1/1.
+      kubectl logs checkout-pod shows: 'Error: REDIS_URL environment variable not set'.
+      The v2.3.0 release added a new Redis caching feature that requires REDIS_URL.
+    question: "How do you resolve this incident and prevent recurrence?"
+    answer: "1) Immediate: roll back with 'kubectl rollout undo deployment/checkout' to restore v2.2.x. 2) Root cause: the deployment manifest for v2.3.0 is missing the REDIS_URL env var from the ConfigMap or Secret. 3) Fix: add REDIS_URL to the ConfigMap/Secret, update the Deployment spec to reference it, then redeploy v2.3.0. 4) Prevention: add a readiness probe that checks Redis connectivity; add a pre-deploy CI step that validates all required env vars are present in the manifest."
+    explanation: "The rollout appeared successful because the readiness probe only checked HTTP liveness, not dependency connectivity. The app started and passed probes but failed on the code path requiring Redis. This highlights the importance of deep health checks that verify downstream dependencies."
+
+  - id: k8s-network-policy-L3-001
+    type: scenario
+    topic: kubernetes
+    tier: L3
+    tags: [incident, networking, network-policy, debugging]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    situation: |
+      The 'payment' pod in the 'backend' namespace cannot reach the 'database' service in the 'data' namespace.
+      kubectl exec into the payment pod and running 'nc -zv database.data.svc.cluster.local 5432' times out.
+      Both pods are Running and healthy. DNS resolves correctly (nslookup succeeds).
+      A NetworkPolicy named 'restrict-data-ns' exists in the 'data' namespace:
+        spec:
+          podSelector:
+            matchLabels:
+              app: database
+          ingress:
+            - from:
+                - namespaceSelector:
+                    matchLabels:
+                      access: data-tier
+              ports:
+                - port: 5432
+    question: "Diagnose the connectivity failure and provide the fix."
+    answer: "The NetworkPolicy only allows ingress from namespaces labeled 'access: data-tier'. The 'backend' namespace is missing this label. Fix: 'kubectl label namespace backend access=data-tier'. Verify with 'kubectl get ns backend --show-labels' and retry the connectivity test."
+    explanation: "NetworkPolicies are additive. When any policy selects a pod, only traffic matching at least one policy's rules is allowed. The namespaceSelector requires the source namespace to carry a specific label, which is commonly missed when new namespaces are created without the organization's standard labels."
+
+  - id: k8s-pv-reclaim-L3-001
+    type: scenario
+    topic: kubernetes
+    tier: L3
+    tags: [incident, storage, pvc, debugging]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    situation: |
+      A PVC named 'data-vol' is stuck in 'Terminating' status for over an hour.
+      kubectl describe pvc data-vol shows:
+        Finalizers: [kubernetes.io/pvc-protection]
+        Used By: <none>
+      kubectl get pods --all-namespaces shows no pods referencing 'data-vol'.
+      The PV it was bound to has reclaimPolicy: Retain.
+    question: "Explain why the PVC is stuck and how to safely resolve it."
+    answer: "The PVC has the pvc-protection finalizer which prevents deletion if a Pod is using it. Since no pods reference it (confirmed by 'Used By: <none>'), there may be a stale reference or the controller has not reconciled. First, verify no pod mounts this PVC: 'kubectl get pods --all-namespaces -o json | grep data-vol'. If truly unused, remove the finalizer: 'kubectl patch pvc data-vol -p '{\"metadata\":{\"finalizers\":null}}'' to allow deletion. The PV will remain because reclaimPolicy is Retain, so you can manually reuse or clean up the underlying storage."
+    explanation: "The pvc-protection finalizer is a safety mechanism that prevents accidental data loss by blocking PVC deletion while pods reference it. Occasionally the controller does not remove the finalizer after all pods are gone, especially during rapid scale-down or node failures. Manually removing the finalizer is safe only after confirming no workload references the PVC."
+
+  - id: k8s-rbac-escalation-L3-001
+    type: explain-concept
+    topic: kubernetes
+    tier: L3
+    tags: [rbac, security, privilege-escalation]
+    version_tag: k8s-1.29
+    last_verified: "2026-01-01"
+    concept: "RBAC privilege escalation prevention in Kubernetes"
+    model_answer: "Kubernetes prevents RBAC privilege escalation by requiring that users can only create or modify Role/ClusterRole objects if they already possess all the permissions granted by that role. This 'escalate' verb was added in Kubernetes 1.12. Without it, a user with permission to create Roles could grant themselves cluster-admin. Similarly, the 'bind' verb controls who can create RoleBindings referencing a specific Role. Best practices: never grant wildcard verbs or resources, use audit logging to detect privilege escalation attempts, and apply the principle of least privilege by scoping Roles to specific namespaces and resources."
