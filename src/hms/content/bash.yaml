@@ -1,0 +1,524 @@
+questions:
+  # ============================================================
+  # L1 — Commands/Builtins (8 cards)
+  # ============================================================
+  - id: bash-chmod-permissions-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [permissions, chmod]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What does chmod 755 do to a file?"
+    back: "Sets permissions to rwxr-xr-x: owner gets read/write/execute, group and others get read/execute. The octal digits represent owner, group, others (7=rwx, 5=r-x)."
+
+  - id: bash-chown-syntax-001
+    type: command-fill
+    topic: bash
+    tier: L1
+    tags: [permissions, chown]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Change the owner of /var/log/app.log to user 'deploy' and group 'www-data' recursively"
+    command: "chown -R deploy:www-data /var/log/app.log"
+    accept_partial: true
+
+  - id: bash-find-name-001
+    type: command-fill
+    topic: bash
+    tier: L1
+    tags: [find, files]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Find all .log files in /var/log that were modified in the last 24 hours"
+    command: "find /var/log -name '*.log' -mtime -1"
+    accept_partial: true
+
+  - id: bash-which-type-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [builtins, commands]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What is the difference between `which` and `type` in Bash?"
+    back: "`which` searches PATH for an external executable and prints its path. `type` is a Bash builtin that also identifies shell builtins, aliases, and functions -- not just executables."
+
+  - id: bash-alias-create-001
+    type: command-fill
+    topic: bash
+    tier: L1
+    tags: [alias, shortcuts]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Create a Bash alias named 'll' that runs 'ls -alh'"
+    command: "alias ll='ls -alh'"
+    accept_partial: false
+
+  - id: bash-cp-mv-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [files, copy, move]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What flag makes `cp` copy directories recursively, and what flag makes it preserve attributes?"
+    back: "-r or -R for recursive copy. -p preserves mode, ownership, and timestamps. Combined: cp -rp source/ dest/"
+
+  - id: bash-rm-safe-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [files, removal]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "Why is `rm -rf /` dangerous and what safeguard does modern rm have?"
+    back: "It recursively force-deletes everything from the root filesystem. Modern GNU rm has --preserve-root enabled by default, which refuses to operate on /. You must explicitly pass --no-preserve-root to override."
+
+  - id: bash-cd-pushd-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [navigation, directory]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What is the difference between `cd` and `pushd` in Bash?"
+    back: "`cd` changes the working directory. `pushd` changes the directory AND pushes the previous directory onto a stack. Use `popd` to return to the previous directory. Use `dirs` to view the stack."
+
+  # ============================================================
+  # L1 — Redirection/Pipes (5 cards)
+  # ============================================================
+  - id: bash-redirect-stderr-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [redirection, stderr]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What do the file descriptors 0, 1, and 2 represent in Bash?"
+    back: "0 = stdin (standard input), 1 = stdout (standard output), 2 = stderr (standard error). By default, both stdout and stderr go to the terminal."
+
+  - id: bash-redirect-both-001
+    type: command-fill
+    topic: bash
+    tier: L1
+    tags: [redirection, stderr]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Redirect both stdout and stderr of a command to /dev/null"
+    command: "command > /dev/null 2>&1"
+    accept_partial: true
+
+  - id: bash-pipe-basics-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [pipes, basics]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What does the pipe operator (|) do in Bash?"
+    back: "Connects the stdout of the left command to the stdin of the right command, allowing data to flow through a chain of commands without intermediate files."
+
+  - id: bash-tee-usage-001
+    type: command-fill
+    topic: bash
+    tier: L1
+    tags: [redirection, tee]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Run a deploy script and send its output both to the terminal and to deploy.log"
+    command: "./deploy.sh | tee deploy.log"
+    accept_partial: true
+
+  - id: bash-append-redirect-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [redirection, append]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What is the difference between > and >> in Bash redirection?"
+    back: "> overwrites the file with new output. >> appends to the file, preserving existing content. Both create the file if it does not exist."
+
+  # ============================================================
+  # L1 — Text Processing (6 cards)
+  # ============================================================
+  - id: bash-grep-pattern-001
+    type: command-fill
+    topic: bash
+    tier: L1
+    tags: [grep, text-processing]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Search for lines containing 'ERROR' in all .log files under /var/log, showing line numbers"
+    command: "grep -rn 'ERROR' /var/log/*.log"
+    accept_partial: true
+
+  - id: bash-sed-replace-001
+    type: command-fill
+    topic: bash
+    tier: L1
+    tags: [sed, text-processing]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Replace all occurrences of 'http://' with 'https://' in config.txt in-place"
+    command: "sed -i 's|http://|https://|g' config.txt"
+    accept_partial: true
+
+  - id: bash-awk-print-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [awk, text-processing]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What does `awk '{print $2}'` do?"
+    back: "Prints the second whitespace-delimited field of each input line. awk splits each line into fields ($1, $2, ...) using whitespace as the default separator."
+
+  - id: bash-sort-uniq-001
+    type: command-fill
+    topic: bash
+    tier: L1
+    tags: [sort, uniq, text-processing]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Count the number of unique IP addresses in access.log (IPs are in the first field)"
+    command: "awk '{print $1}' access.log | sort | uniq | wc -l"
+    accept_partial: true
+
+  - id: bash-cut-fields-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [cut, text-processing]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "How do you extract the third field from a colon-delimited file (like /etc/passwd) using cut?"
+    back: "cut -d: -f3 /etc/passwd. The -d flag sets the delimiter and -f selects the field number."
+
+  - id: bash-wc-tr-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [wc, tr, text-processing]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What do `wc -l` and `tr` do in Bash?"
+    back: "`wc -l` counts the number of lines in input. `tr` translates or deletes characters -- e.g., `tr '[:upper:]' '[:lower:]'` converts uppercase to lowercase."
+
+  # ============================================================
+  # L1 — Scripting (6 cards)
+  # ============================================================
+  - id: bash-variable-assign-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [variables, scripting]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What is the correct syntax to assign and use a variable in Bash?"
+    back: "Assign: NAME=value (no spaces around =). Use: $NAME or ${NAME}. Quoting: \"$NAME\" prevents word splitting. Common mistake: spaces around = causes 'command not found'."
+
+  - id: bash-if-else-001
+    type: command-fill
+    topic: bash
+    tier: L1
+    tags: [conditionals, scripting]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Write a Bash if-else that checks if the file /tmp/lockfile exists and prints 'locked' or 'free'"
+    command: |
+      if [ -f /tmp/lockfile ]; then
+        echo "locked"
+      else
+        echo "free"
+      fi
+    accept_partial: true
+
+  - id: bash-for-loop-001
+    type: command-fill
+    topic: bash
+    tier: L1
+    tags: [loops, scripting]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Write a Bash for loop that iterates over all .yaml files in the current directory and prints each filename"
+    command: |
+      for f in *.yaml; do
+        echo "$f"
+      done
+    accept_partial: true
+
+  - id: bash-function-def-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [functions, scripting]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "How do you define and call a function in Bash, and how do you access its arguments?"
+    back: "Define: my_func() { echo \"$1\"; }. Call: my_func arg1 arg2. Arguments are accessed via $1, $2, etc. $# gives the argument count. $@ expands to all arguments."
+
+  - id: bash-exit-codes-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [exit-codes, scripting]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What does $? contain and what do exit codes 0 and non-zero mean?"
+    back: "$? holds the exit status of the last executed command. Exit code 0 means success. Any non-zero value (1-255) indicates failure. Convention: 1 = general error, 2 = misuse of shell command, 126 = permission denied, 127 = command not found."
+
+  - id: bash-set-e-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [scripting, error-handling]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What does `set -e` do in a Bash script and why is it recommended?"
+    back: "set -e causes the script to exit immediately if any command returns a non-zero exit code. It prevents silent failures where an error occurs but the script keeps running with stale data. Often combined with set -u (unset variable = error) and set -o pipefail (pipe fails if any command fails)."
+
+  # ============================================================
+  # L1 — Process Management (5 cards)
+  # ============================================================
+  - id: bash-ps-aux-001
+    type: command-fill
+    topic: bash
+    tier: L1
+    tags: [processes, monitoring]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "List all running processes with their CPU and memory usage, then filter for processes matching 'python'"
+    command: "ps aux | grep python"
+    accept_partial: true
+
+  - id: bash-kill-signals-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [signals, processes]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What is the difference between `kill`, `kill -9`, and `kill -15`?"
+    back: "kill (default) sends SIGTERM (15) -- a polite request to terminate that can be caught. kill -9 sends SIGKILL -- an unconditional kill that cannot be caught or ignored. kill -15 is identical to plain kill. Always try SIGTERM first to allow graceful shutdown."
+
+  - id: bash-bg-fg-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [job-control, processes]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "How do bg, fg, and & work for job control in Bash?"
+    back: "& at the end of a command runs it in the background. Ctrl+Z suspends a foreground process. bg resumes a suspended job in the background. fg brings a background/suspended job to the foreground. jobs lists all background jobs."
+
+  - id: bash-nohup-001
+    type: command-fill
+    topic: bash
+    tier: L1
+    tags: [processes, nohup]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Run a long-running backup script in the background so it survives after you close the SSH session, redirecting output to backup.log"
+    command: "nohup ./backup.sh > backup.log 2>&1 &"
+    accept_partial: true
+
+  - id: bash-top-basics-001
+    type: flashcard
+    topic: bash
+    tier: L1
+    tags: [monitoring, top]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    front: "What key information does the `top` command display?"
+    back: "Real-time view of system load (CPU, memory), uptime, task counts (running/sleeping/stopped/zombie), and a per-process table sorted by CPU usage. Press 'M' to sort by memory, 'q' to quit."
+
+  # ============================================================
+  # L2 — Commands (2 cards)
+  # ============================================================
+  - id: bash-find-exec-001
+    type: scenario
+    topic: bash
+    tier: L2
+    tags: [find, exec, files]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    situation: "You need to find all .tmp files older than 7 days under /data and delete them, but only after confirming the list looks correct."
+    question: "How would you safely preview and then execute this cleanup?"
+    answer: "Preview first: find /data -name '*.tmp' -mtime +7 -print. Review the output. Then execute: find /data -name '*.tmp' -mtime +7 -exec rm {} +. Using -exec with + is more efficient than \\; because it batches arguments like xargs. Alternatively: find /data -name '*.tmp' -mtime +7 -delete."
+    explanation: "Always preview find results before adding destructive actions. The + ending batches files into fewer rm invocations compared to \\; which runs rm once per file."
+
+  - id: bash-xargs-pipeline-001
+    type: command-fill
+    topic: bash
+    tier: L2
+    tags: [xargs, pipeline]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Find all Python files containing 'TODO' and pass them to wc -l to count total lines across those files"
+    command: "grep -rl 'TODO' --include='*.py' . | xargs wc -l"
+    accept_partial: true
+
+  # ============================================================
+  # L2 — Redirection (2 cards)
+  # ============================================================
+  - id: bash-pipeline-debug-001
+    type: scenario
+    topic: bash
+    tier: L2
+    tags: [pipes, debugging]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    situation: "You have a long pipeline: cat access.log | grep '500' | awk '{print $1}' | sort | uniq -c | sort -rn | head -10. The output is empty even though you know there are 500 errors in the log."
+    question: "How do you systematically debug this pipeline?"
+    answer: "Build up the pipeline step by step: 1) cat access.log | head (confirm the file has content). 2) cat access.log | grep '500' (confirm grep matches -- maybe the status code field format is '500 ' not '500'). 3) Add each subsequent step one at a time. Use tee between steps to save intermediate output: grep '500' | tee /tmp/step2.txt | awk ... Also check if the log uses a different status code field position than $1."
+    explanation: "Pipeline debugging is always done by building up from left to right. The most common failure is a grep pattern that does not match the actual data format. Using tee lets you inspect intermediate output without breaking the pipeline."
+
+  - id: bash-proc-substitution-001
+    type: explain-concept
+    topic: bash
+    tier: L2
+    tags: [redirection, process-substitution]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    concept: "Process substitution in Bash using <() and >()"
+    model_answer: "Process substitution lets you use a command's output as if it were a file. <(command) creates a file-like path from stdout. Example: diff <(sort file1) <(sort file2) compares two sorted files without creating temp files. >(command) feeds output to a command as a file. It works by creating a /dev/fd/* file descriptor. Useful when a tool requires a filename argument but your data comes from a pipeline."
+
+  # ============================================================
+  # L2 — Text Processing (2 cards)
+  # ============================================================
+  - id: bash-awk-multicolumn-001
+    type: command-fill
+    topic: bash
+    tier: L2
+    tags: [awk, text-processing]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Use awk to print the sum of the third column from a space-delimited file data.txt, only for rows where the second column equals 'prod'"
+    command: "awk '$2 == \"prod\" {sum += $3} END {print sum}' data.txt"
+    accept_partial: true
+
+  - id: bash-sed-inplace-backup-001
+    type: scenario
+    topic: bash
+    tier: L2
+    tags: [sed, editing]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    situation: "You need to replace all occurrences of an old API endpoint URL in 50+ configuration files across a project directory, but you want to be able to revert if something goes wrong."
+    question: "How do you safely perform this bulk replacement with a backup?"
+    answer: "Use find + sed with a backup extension: find . -name '*.conf' -exec sed -i.bak 's|https://old-api.example.com|https://new-api.example.com|g' {} +. This creates .bak files alongside each modified file. After verification, remove backups: find . -name '*.conf.bak' -delete. Alternatively, use git: commit first, then sed without backup, and git diff to review changes."
+    explanation: "sed -i.bak creates a backup copy before modifying. Using | as the sed delimiter avoids escaping forward slashes in URLs. Always verify changes with grep or diff before removing backups."
+
+  # ============================================================
+  # L2 — Scripting (2 cards)
+  # ============================================================
+  - id: bash-error-handling-001
+    type: scenario
+    topic: bash
+    tier: L2
+    tags: [scripting, error-handling]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    situation: "Your deployment script downloads a tarball, extracts it, runs migrations, and restarts the service. If the download fails, the script continues with the old tarball and runs migrations against the wrong version."
+    question: "How do you make the script fail safely on any error?"
+    answer: "Add `set -euo pipefail` at the top of the script. set -e exits on any non-zero exit code. set -u treats unset variables as errors. set -o pipefail fails the pipeline if any command fails (not just the last). For cleanup on failure, use a trap: trap 'echo Deploy failed; rollback' ERR. For commands that are allowed to fail, use: command || true."
+    explanation: "The set -euo pipefail trio is the standard Bash strict mode. Without it, scripts silently continue past failures. The trap ERR pattern enables automatic cleanup/rollback when any command fails."
+
+  - id: bash-trap-signals-001
+    type: command-fill
+    topic: bash
+    tier: L2
+    tags: [scripting, signals, trap]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    prompt: "Write a Bash trap that removes a temporary directory /tmp/build-$$ when the script exits (whether by success, error, or interrupt)"
+    command: "trap 'rm -rf /tmp/build-$$' EXIT"
+    accept_partial: true
+
+  # ============================================================
+  # L2 — Process Management (2 cards)
+  # ============================================================
+  - id: bash-zombie-diagnosis-001
+    type: scenario
+    topic: bash
+    tier: L2
+    tags: [processes, zombie, debugging]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    situation: "Running `top` shows 15 zombie processes (Z state). The system is not running out of PIDs yet but the count is growing."
+    question: "How do you identify the parent process and resolve the zombie accumulation?"
+    answer: "1) List zombies: ps aux | awk '$8 ~ /Z/'. 2) Find their parent PIDs: ps -o pid,ppid,stat,comm | grep Z. 3) The parent process is not calling wait() on its children. Send SIGCHLD to the parent: kill -SIGCHLD <ppid>. 4) If that does not work, investigate the parent process for a bug (missing waitpid call). 5) Killing the parent process will cause init/systemd to adopt and reap the zombies. 6) Zombies themselves cannot be killed since they are already dead."
+    explanation: "Zombies exist because the parent has not yet read the child's exit status. They use no resources except a PID table entry. The fix is always in the parent process, not the zombie itself."
+
+  - id: bash-resource-monitor-001
+    type: explain-concept
+    topic: bash
+    tier: L2
+    tags: [monitoring, resources]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    concept: "Monitoring system resources with Bash command-line tools"
+    model_answer: "Key tools: vmstat (CPU, memory, I/O summary), iostat (disk I/O per device), free -h (memory and swap in human-readable form), df -h (disk space per mount), du -sh (directory size), lsof (open files per process), ss -tlnp (listening TCP ports). For real-time monitoring: top/htop (processes), iotop (disk I/O per process), nethogs (network per process). Combine with watch for repeated polling: watch -n 5 'free -h' refreshes every 5 seconds."
+
+  # ============================================================
+  # L3 — Production Incident Scenarios (5 cards)
+  # ============================================================
+  - id: bash-log-analysis-L3-001
+    type: scenario
+    topic: bash
+    tier: L3
+    tags: [logs, analysis, pipeline]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    situation: "A production web server is returning intermittent 502 errors. You have access to a 2 GB nginx access log at /var/log/nginx/access.log. The log format is: IP - - [timestamp] \"METHOD /path HTTP/1.1\" status_code bytes. You need to quickly identify which endpoints are failing and which upstream is unhealthy."
+    question: "Write a Bash pipeline to extract the top 10 paths with the most 502 responses and the time distribution of those errors."
+    answer: "Top 10 failing paths: awk '$9 == 502 {print $7}' /var/log/nginx/access.log | sort | uniq -c | sort -rn | head -10. Time distribution (errors per hour): grep '\" 502 ' /var/log/nginx/access.log | awk -F'[' '{print $2}' | awk -F: '{print $1\":\"$2}' | sort | uniq -c | sort -rn | head -24. For upstream info, also check the error log: grep 'upstream' /var/log/nginx/error.log | tail -20."
+    explanation: "The key insight is using awk field selection ($9 for status code in the default nginx log format) rather than grep, which would match '502' anywhere in the line. Combining sort | uniq -c | sort -rn is the standard frequency-counting pipeline in Bash."
+
+  - id: bash-disk-full-L3-001
+    type: scenario
+    topic: bash
+    tier: L3
+    tags: [disk, emergency, cleanup]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    situation: "Your production server alerted: filesystem /var is 100% full. The application is writing to /var/log and /var/lib. Services are starting to fail because they cannot write to /var/run or /var/tmp. You need to free space immediately."
+    question: "Describe your step-by-step emergency recovery using only Bash commands."
+    answer: "1) Find largest files: du -ah /var | sort -rh | head -20. 2) Check for deleted-but-open files consuming space: lsof +L1 | grep /var (these files are deleted but still held open by a process). 3) Truncate large log files instead of deleting: > /var/log/app/huge.log (keeps the file open, releases space). 4) For lsof results: restart the holding process to release the file handle. 5) Find and remove old logs: find /var/log -name '*.gz' -mtime +30 -delete. 6) Check for core dumps: find /var -name 'core.*' -delete. 7) Check journald: journalctl --vacuum-size=100M. 8) After recovery, set up log rotation and monitoring alerts at 80%."
+    explanation: "The lsof +L1 trick is critical: deleting a file that a process still has open does not free the space until the process closes its file handle. Truncating (> file) is safer because it resets the file without changing the inode, so the process can keep writing."
+
+  - id: bash-script-debug-L3-001
+    type: scenario
+    topic: bash
+    tier: L3
+    tags: [scripting, debugging]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    situation: "A deployment script that ran successfully yesterday now silently fails. It exits with code 0 but the application is not updated. The script is 200 lines long, uses functions, and sources two configuration files. No error messages appear."
+    question: "How do you systematically debug this silent failure?"
+    answer: "1) Run with trace: bash -x deploy.sh 2>trace.log. The -x flag prints each command before execution, showing exactly where the script diverges. 2) Check the sourced config files for changes: diff /etc/deploy/config.sh /etc/deploy/config.sh.bak. 3) Add set -euo pipefail at the top to catch hidden failures. 4) Check if a conditional branch is wrong: search the trace for 'if' paths taken. 5) Check for a command returning success but doing nothing: some tools exit 0 even when they skip work (e.g., rsync with wrong path). 6) Check environment: env | diff - <(ssh prod env) to compare environments. 7) Add explicit logging: replace silent commands with logged ones: rsync ... && echo 'rsync done' || echo 'rsync failed'."
+    explanation: "Silent failures (exit 0 but wrong result) are the hardest to debug. bash -x is the most powerful tool because it shows the actual execution path. Combined with set -euo pipefail, it exposes commands that fail silently in pipelines or conditionals."
+
+  - id: bash-permission-L3-001
+    type: scenario
+    topic: bash
+    tier: L3
+    tags: [permissions, deployment, debugging]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    situation: "A CI/CD pipeline runs a deployment script as the 'deploy' user. The script works when run manually as root but fails with 'Permission denied' at multiple points when run by CI. The errors occur when writing to /opt/app/, reading from /etc/app/secrets.conf, and restarting systemd services."
+    question: "Diagnose the permission issues and design a secure fix."
+    answer: "1) Check file ownership: ls -la /opt/app/ /etc/app/secrets.conf. 2) The deploy user likely lacks write access to /opt/app and read access to secrets.conf. Fix: chown -R deploy:deploy /opt/app. For secrets: chgrp deploy /etc/app/secrets.conf && chmod 640 /etc/app/secrets.conf and add deploy to the group. 3) For systemd restart: add a sudoers rule: deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart app.service. This grants only the specific restart permission. 4) Verify: sudo -u deploy -i ./deploy.sh. 5) Never give the deploy user full sudo or root access. Each permission should be scoped to exactly what is needed."
+    explanation: "The root cause is that the manual test used root (unlimited permissions) while CI uses a restricted user. The fix follows least-privilege: grant only the specific file access and sudo commands needed, not broad permissions."
+
+  - id: bash-proc-leak-L3-001
+    type: explain-concept
+    topic: bash
+    tier: L3
+    tags: [processes, zombie, cleanup]
+    version_tag: bash-5.2
+    last_verified: "2026-01-01"
+    concept: "Identifying and cleaning up zombie and orphan processes in production"
+    model_answer: "Zombie processes are child processes that have terminated but whose parent has not called wait() to read their exit status. They appear as Z in ps output and consume a PID table entry but no CPU or memory. Orphan processes are running children whose parent has died; they are adopted by init (PID 1) which reaps them normally. Diagnosis: ps aux | awk '$8 ~ /Z/' lists zombies; ps -o pid,ppid,stat,args shows parent relationships. Fix: kill -SIGCHLD <parent_pid> prompts the parent to reap. If the parent is buggy and ignores SIGCHLD, killing the parent causes init to adopt and reap the zombies. Prevention: use wait in Bash scripts after background processes, trap SIGCHLD in long-running daemons, and use process supervisors (systemd, supervisord) that properly manage child lifecycles. Monitoring: alert on zombie count via check_procs or a Prometheus node_exporter metric."

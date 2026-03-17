@@ -1,0 +1,517 @@
+questions:
+  # ============================================================
+  # L1 — IAM (6 cards)
+  # ============================================================
+  - id: aws-iam-users-roles-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [iam, identity]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What is the difference between an IAM user and an IAM role in AWS?"
+    back: "An IAM user is a permanent identity with long-lived credentials (password, access keys). An IAM role is a temporary identity assumed by users, services, or accounts -- it provides short-lived credentials via STS and has no permanent password or access keys."
+
+  - id: aws-iam-policy-types-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [iam, policies]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "Name the three main types of IAM policies in AWS."
+    back: "1) Identity-based policies (attached to users/groups/roles). 2) Resource-based policies (attached to resources like S3 buckets, SQS queues). 3) Service control policies (SCPs, attached to AWS Organizations OUs to set permission guardrails)."
+
+  - id: aws-iam-trust-policy-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [iam, roles, trust]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What is a trust policy on an IAM role?"
+    back: "A trust policy defines which principals (users, accounts, services) are allowed to assume the role. It is a JSON policy document attached to the role's trust relationship, separate from the role's permissions policy."
+
+  - id: aws-iam-mfa-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [iam, mfa, security]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "Why should MFA be enforced for IAM users, especially the root account?"
+    back: "MFA adds a second authentication factor beyond the password. The root account has unrestricted access to all resources and cannot be limited by IAM policies. A compromised root password without MFA gives full account control. Best practice: enable MFA on root, create IAM users for daily work."
+
+  - id: aws-iam-access-keys-001
+    type: command-fill
+    topic: aws
+    tier: L1
+    tags: [iam, access-keys, cli]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    prompt: "Use the AWS CLI to list all access keys for IAM user 'deploy-bot' and check their last used date"
+    command: "aws iam list-access-keys --user-name deploy-bot && aws iam get-access-key-last-used --access-key-id AKIA..."
+    accept_partial: true
+
+  - id: aws-iam-sts-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [iam, sts, assume-role]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What does AWS STS (Security Token Service) do?"
+    back: "STS provides temporary, limited-privilege security credentials. The most common operation is AssumeRole, which returns temporary access key, secret key, and session token. Used for cross-account access, federation, and service-to-service authentication."
+
+  # ============================================================
+  # L1 — EC2/VPC (5 cards)
+  # ============================================================
+  - id: aws-ec2-instance-types-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [ec2, compute]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What do the EC2 instance type families t3, m6i, c6i, and r6i optimize for?"
+    back: "t3 = burstable general purpose (credit-based CPU). m6i = general purpose (balanced CPU/memory). c6i = compute optimized (high CPU-to-memory ratio). r6i = memory optimized (high memory-to-CPU ratio). The number indicates generation, letter indicates processor."
+
+  - id: aws-sg-basics-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [vpc, security-groups]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "How do AWS security groups differ from NACLs (network ACLs)?"
+    back: "Security groups are stateful (return traffic is automatically allowed), operate at the instance/ENI level, and only allow rules (no deny). NACLs are stateless (must allow both inbound and outbound), operate at the subnet level, and support both allow and deny rules with numbered priority."
+
+  - id: aws-subnet-types-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [vpc, subnets]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What makes a subnet public vs private in a VPC?"
+    back: "A public subnet has a route table entry pointing 0.0.0.0/0 to an Internet Gateway (IGW). A private subnet routes 0.0.0.0/0 through a NAT Gateway (for outbound-only internet) or has no internet route at all."
+
+  - id: aws-nat-gw-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [vpc, nat, networking]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What is the purpose of a NAT Gateway in a VPC?"
+    back: "A NAT Gateway allows instances in private subnets to initiate outbound connections to the internet (e.g., downloading updates) while preventing inbound connections from the internet. It is placed in a public subnet and referenced in the private subnet's route table."
+
+  - id: aws-eip-001
+    type: command-fill
+    topic: aws
+    tier: L1
+    tags: [ec2, networking, cli]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    prompt: "Allocate an Elastic IP and associate it with EC2 instance i-0abc123def456"
+    command: "aws ec2 allocate-address --domain vpc && aws ec2 associate-address --instance-id i-0abc123def456 --allocation-id eipalloc-..."
+    accept_partial: true
+
+  # ============================================================
+  # L1 — S3 (5 cards)
+  # ============================================================
+  - id: aws-s3-bucket-policy-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [s3, policies]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What is the difference between an S3 bucket policy and an IAM policy for S3 access?"
+    back: "A bucket policy is a resource-based policy attached to the bucket itself -- it can grant access to any principal including other AWS accounts. An IAM policy is attached to a user/role and only controls what that identity can do. When both exist, the effective permission is the union, unless an explicit deny overrides."
+
+  - id: aws-s3-storage-classes-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [s3, storage]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "Name four S3 storage classes and when to use each."
+    back: "S3 Standard: frequently accessed data. S3 Standard-IA (Infrequent Access): less frequent but rapid access needed. S3 Glacier Instant Retrieval: archive with millisecond access. S3 Glacier Deep Archive: cheapest, 12-48 hour retrieval. Use lifecycle rules to transition objects automatically."
+
+  - id: aws-s3-versioning-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [s3, versioning]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What does enabling versioning on an S3 bucket do?"
+    back: "Every overwrite or delete creates a new version instead of replacing the object. Deleted objects get a delete marker (the object is still recoverable). Versioning protects against accidental deletes and overwrites. Once enabled, it can be suspended but not disabled."
+
+  - id: aws-s3-lifecycle-001
+    type: command-fill
+    topic: aws
+    tier: L1
+    tags: [s3, lifecycle, cli]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    prompt: "Use the AWS CLI to list the lifecycle configuration of bucket 'my-logs-bucket'"
+    command: "aws s3api get-bucket-lifecycle-configuration --bucket my-logs-bucket"
+    accept_partial: true
+
+  - id: aws-s3-encryption-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [s3, encryption, security]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What are the three server-side encryption options for S3?"
+    back: "1) SSE-S3: Amazon manages keys automatically. 2) SSE-KMS: Uses AWS KMS keys with audit trail and key rotation. 3) SSE-C: Customer provides the encryption key with each request. Default encryption can be set at the bucket level."
+
+  # ============================================================
+  # L1 — ECS/ECR (5 cards)
+  # ============================================================
+  - id: aws-ecs-task-def-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [ecs, containers]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What is an ECS task definition?"
+    back: "A JSON blueprint that describes one or more containers: image URI, CPU/memory limits, port mappings, environment variables, log configuration, and IAM task role. It is versioned -- each update creates a new revision."
+
+  - id: aws-ecs-service-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [ecs, services]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What does an ECS service do?"
+    back: "An ECS service maintains a desired count of running tasks from a task definition. It handles task placement, replacement of failed tasks, integration with load balancers, and rolling deployments when the task definition is updated."
+
+  - id: aws-ecs-fargate-ec2-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [ecs, fargate, compute]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What is the difference between ECS Fargate and ECS EC2 launch types?"
+    back: "Fargate is serverless -- AWS manages the underlying compute; you only specify CPU/memory per task. EC2 launch type runs tasks on your own EC2 instances that you manage (patching, scaling, capacity). Fargate is simpler but more expensive per unit; EC2 gives more control."
+
+  - id: aws-ecr-push-001
+    type: command-fill
+    topic: aws
+    tier: L1
+    tags: [ecr, docker, cli]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    prompt: "Authenticate Docker to an ECR registry in us-east-1, then push a local image tagged 'myapp:latest'"
+    command: "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 123456789.dkr.ecr.us-east-1.amazonaws.com && docker tag myapp:latest 123456789.dkr.ecr.us-east-1.amazonaws.com/myapp:latest && docker push 123456789.dkr.ecr.us-east-1.amazonaws.com/myapp:latest"
+    accept_partial: true
+
+  - id: aws-ecs-container-def-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [ecs, containers, configuration]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What are the essential fields in an ECS container definition?"
+    back: "name (container name), image (ECR URI or Docker Hub image), cpu and memory (resource limits), portMappings (host-to-container port), essential (if true, task fails when this container stops), logConfiguration (CloudWatch driver settings)."
+
+  # ============================================================
+  # L1 — CloudFormation/CloudWatch (5 cards)
+  # ============================================================
+  - id: aws-cfn-stack-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [cloudformation, iac]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What is a CloudFormation stack?"
+    back: "A stack is a collection of AWS resources created and managed as a single unit from a CloudFormation template. Creating a stack provisions all resources defined in the template. Deleting the stack removes all its resources."
+
+  - id: aws-cfn-template-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [cloudformation, templates]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What are the main sections of a CloudFormation template?"
+    back: "AWSTemplateFormatVersion, Description, Parameters (input values), Mappings (key-value lookups), Resources (required, defines AWS resources), Outputs (values to return/export), and Conditions (conditional resource creation)."
+
+  - id: aws-cfn-changeset-001
+    type: command-fill
+    topic: aws
+    tier: L1
+    tags: [cloudformation, cli]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    prompt: "Create a CloudFormation change set named 'update-v2' for stack 'my-stack' using template.yaml"
+    command: "aws cloudformation create-change-set --stack-name my-stack --change-set-name update-v2 --template-body file://template.yaml"
+    accept_partial: true
+
+  - id: aws-cw-alarms-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [cloudwatch, monitoring]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What are the three states of a CloudWatch alarm?"
+    back: "OK (metric is within the threshold), ALARM (metric breached the threshold), and INSUFFICIENT_DATA (not enough data points to evaluate). Alarms can trigger SNS notifications, Auto Scaling actions, or EC2 actions."
+
+  - id: aws-cw-logs-001
+    type: command-fill
+    topic: aws
+    tier: L1
+    tags: [cloudwatch, logs, cli]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    prompt: "Use the AWS CLI to tail the most recent log events from CloudWatch log group '/ecs/my-service'"
+    command: "aws logs tail /ecs/my-service --follow"
+    accept_partial: true
+
+  # ============================================================
+  # L1 — Route53/ELB (4 cards)
+  # ============================================================
+  - id: aws-r53-record-types-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [route53, dns]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What are the common DNS record types used in Route 53?"
+    back: "A (maps domain to IPv4 address), AAAA (IPv6), CNAME (alias to another domain, cannot be at zone apex), Alias (AWS-specific, points to AWS resources like ALB/S3/CloudFront at zone apex), MX (mail), TXT (text/verification)."
+
+  - id: aws-r53-hosted-zone-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [route53, dns]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What is a Route 53 hosted zone?"
+    back: "A container for DNS records for a single domain. A public hosted zone serves DNS queries from the internet. A private hosted zone resolves DNS only within associated VPCs. Each hosted zone has NS and SOA records created automatically."
+
+  - id: aws-alb-nlb-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [elb, load-balancing]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What is the difference between an ALB and an NLB?"
+    back: "ALB (Application Load Balancer) operates at Layer 7 (HTTP/HTTPS), supports path-based and host-based routing, and integrates with WAF. NLB (Network Load Balancer) operates at Layer 4 (TCP/UDP), handles millions of requests with ultra-low latency, and preserves the source IP."
+
+  - id: aws-tg-health-001
+    type: flashcard
+    topic: aws
+    tier: L1
+    tags: [elb, target-groups]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    front: "What is a target group and how do health checks work?"
+    back: "A target group routes requests to registered targets (EC2 instances, ECS tasks, IPs, Lambda). Health checks periodically ping each target (configurable path, port, threshold). Unhealthy targets stop receiving traffic until they pass the health check again."
+
+  # ============================================================
+  # L2 — IAM (2 cards)
+  # ============================================================
+  - id: aws-iam-least-privilege-001
+    type: scenario
+    topic: aws
+    tier: L2
+    tags: [iam, security, least-privilege]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    situation: "A developer asks for AdministratorAccess to deploy a Lambda function that reads from DynamoDB and writes to S3. They argue it is faster than requesting specific permissions."
+    question: "How do you design a least-privilege IAM policy for this Lambda?"
+    answer: "Create a policy with three statements: 1) Allow lambda:CreateFunction, lambda:UpdateFunctionCode, lambda:InvokeFunction on the specific function ARN. 2) Allow dynamodb:GetItem, dynamodb:Query on the specific table ARN. 3) Allow s3:PutObject on the specific bucket/prefix ARN. Attach this policy to a deployment role. Use IAM Access Analyzer to verify no excessive permissions. Never grant AdministratorAccess for a single workload."
+    explanation: "Least privilege means granting only the actions on the specific resources needed. AdministratorAccess is an anti-pattern because a compromised Lambda could access any AWS resource in the account."
+
+  - id: aws-iam-cross-account-001
+    type: explain-concept
+    topic: aws
+    tier: L2
+    tags: [iam, cross-account, sts]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    concept: "Cross-account IAM role assumption in AWS"
+    model_answer: "Cross-account access uses AssumeRole via STS. Setup: 1) In the target account, create an IAM role with a trust policy allowing the source account's principal. 2) In the source account, grant the user/role permission to call sts:AssumeRole on the target role ARN. 3) The source principal calls AssumeRole and receives temporary credentials scoped to the target role's permissions. This pattern is used for centralized CI/CD (one account deploys to many), shared services, and audit access. The external ID parameter adds protection against confused deputy attacks in third-party integrations."
+
+  # ============================================================
+  # L2 — EC2/VPC (2 cards)
+  # ============================================================
+  - id: aws-sg-debug-001
+    type: scenario
+    topic: aws
+    tier: L2
+    tags: [vpc, security-groups, debugging]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    situation: "An EC2 instance in a private subnet cannot reach an RDS PostgreSQL database in the same VPC. The application logs show connection timeout on port 5432. Both resources are in the same VPC."
+    question: "Walk through the networking layers to diagnose this connectivity issue."
+    answer: "1) Check the RDS security group: does it allow inbound TCP 5432 from the EC2 instance's security group or CIDR? 2) Check the EC2 security group: does it allow outbound to port 5432? (Outbound is usually Allow All, but verify.) 3) Check the subnet NACL: are there deny rules for port 5432 in either direction? NACLs are stateless so both inbound and outbound rules must allow. 4) Check that the EC2 and RDS are in subnets that can route to each other (same VPC, route tables). 5) Verify the RDS endpoint resolves: nslookup mydb.xxxxx.us-east-1.rds.amazonaws.com from the EC2. 6) Test connectivity: nc -zv <rds-endpoint> 5432."
+    explanation: "VPC connectivity issues are diagnosed layer by layer: security groups first (most common), then NACLs, then route tables, then DNS resolution. Since both are in the same VPC, routing is usually fine -- the issue is almost always a security group rule."
+
+  - id: aws-vpc-peering-001
+    type: command-fill
+    topic: aws
+    tier: L2
+    tags: [vpc, peering, cli]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    prompt: "Create a VPC peering connection between VPC vpc-aaa (requester) and VPC vpc-bbb (accepter) in the same region using the AWS CLI"
+    command: "aws ec2 create-vpc-peering-connection --vpc-id vpc-aaa --peer-vpc-id vpc-bbb"
+    accept_partial: true
+
+  # ============================================================
+  # L2 — S3 (2 cards)
+  # ============================================================
+  - id: aws-s3-policy-conflict-001
+    type: scenario
+    topic: aws
+    tier: L2
+    tags: [s3, iam, policies]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    situation: "A developer has an IAM policy allowing s3:GetObject on bucket 'data-lake'. But the bucket policy has an explicit Deny for all principals except a specific VPC endpoint. The developer can list objects but cannot download them."
+    question: "Explain why the download fails and how to fix it."
+    answer: "An explicit Deny in any policy always overrides an Allow. The bucket policy denies all GetObject requests not coming from the VPC endpoint. The IAM Allow does not override this. Fix options: 1) Route the developer's requests through the VPC endpoint. 2) Modify the bucket policy to also allow the developer's IAM role ARN. 3) Add a Condition to the bucket Deny that excludes the developer's role. The key principle: Deny > Allow in AWS policy evaluation."
+    explanation: "AWS policy evaluation: if any applicable policy has an explicit Deny, the request is denied regardless of any Allows. This is the most common source of S3 access confusion when bucket policies and IAM policies conflict."
+
+  - id: aws-s3-crr-001
+    type: explain-concept
+    topic: aws
+    tier: L2
+    tags: [s3, replication]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    concept: "S3 Cross-Region Replication (CRR) setup and considerations"
+    model_answer: "CRR automatically copies objects from a source bucket to a destination bucket in a different AWS Region. Requirements: versioning must be enabled on both buckets, an IAM role with s3:ReplicateObject permission, and a replication configuration on the source bucket. Key considerations: CRR does not replicate existing objects (use S3 Batch Replication for that), delete markers can optionally be replicated, and storage class can be changed during replication. Use cases: compliance (data residency), latency reduction, and disaster recovery."
+
+  # ============================================================
+  # L2 — ECS (1 card)
+  # ============================================================
+  - id: aws-ecs-cpu-mem-001
+    type: scenario
+    topic: aws
+    tier: L2
+    tags: [ecs, fargate, tuning]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    situation: "Your ECS Fargate task definition specifies 256 CPU units and 512 MiB memory for a Python API container. Under load, the container gets OOMKilled. CloudWatch shows memory usage spikes to 490 MiB during peak requests."
+    question: "How do you right-size the task definition?"
+    answer: "1) Increase memory to 1024 MiB (next Fargate-supported value) to give headroom above the 490 MiB peak. 2) Check if CPU is also a bottleneck: if the container is CPU-throttled (CloudWatch CPUUtilization near 100%), increase CPU units to 512. 3) Fargate has fixed CPU/memory combinations; 512 CPU / 1024 MiB is the next step up. 4) Profile the application to find the memory spike source (large request payloads, connection pools, or caching). 5) Set a container-level memoryReservation (soft limit) and memory (hard limit) if running multiple containers in one task."
+    explanation: "Fargate OOMKill happens when the container exceeds its hard memory limit. Right-sizing means setting memory above peak usage with margin. Fargate supports specific CPU/memory combinations -- you cannot set arbitrary values."
+
+  # ============================================================
+  # L2 — CloudFormation (2 cards)
+  # ============================================================
+  - id: aws-cfn-rollback-debug-001
+    type: scenario
+    topic: aws
+    tier: L2
+    tags: [cloudformation, rollback, debugging]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    situation: "A CloudFormation stack update failed and rolled back to the previous state. The console shows CREATE_FAILED for a new Lambda function resource with the message 'Resource handler returned message: Function already exists'."
+    question: "How do you diagnose and recover from this failed stack update?"
+    answer: "1) The Lambda function exists outside of CloudFormation (created manually or by another stack). CloudFormation cannot create a resource it does not own. 2) Options: a) Import the existing Lambda into the stack using resource import (cloudformation import). b) Delete the manually-created Lambda and re-run the stack update. c) Rename the Lambda function in the template to avoid the conflict. 3) Check for drift: aws cloudformation detect-stack-drift --stack-name my-stack. 4) After fixing, disable rollback for debugging: use --disable-rollback on the next update to inspect the failed state."
+    explanation: "CloudFormation stack failures are often caused by resource name collisions with out-of-band resources. The resource import feature (added 2019) lets you bring existing resources under CloudFormation management without recreating them."
+
+  - id: aws-cfn-drift-001
+    type: command-fill
+    topic: aws
+    tier: L2
+    tags: [cloudformation, drift, cli]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    prompt: "Detect drift on CloudFormation stack 'prod-vpc' and then view the drift results using the AWS CLI"
+    command: "aws cloudformation detect-stack-drift --stack-name prod-vpc && aws cloudformation describe-stack-drift-detection-status --stack-drift-detection-id <id> && aws cloudformation describe-stack-resource-drifts --stack-name prod-vpc"
+    accept_partial: true
+
+  # ============================================================
+  # L2 — Route53/ELB (1 card)
+  # ============================================================
+  - id: aws-alb-health-debug-001
+    type: scenario
+    topic: aws
+    tier: L2
+    tags: [elb, health-checks, debugging]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    situation: "An ALB target group shows all 3 ECS tasks as 'unhealthy'. The application works when you curl it directly from within the VPC. The health check is configured as HTTP GET /health on port 8080."
+    question: "What are the most likely causes and how do you diagnose?"
+    answer: "1) Check the health check configuration: the ALB health check uses the target group port. If the container listens on port 8000 but the health check targets 8080, it will fail. 2) Verify the container's port mapping matches the target group port. 3) Check the security group on the ECS tasks: it must allow inbound traffic from the ALB's security group on the health check port. 4) Check the health check path: /health must return HTTP 200. If it returns 301 (redirect) or 404, the health check fails. 5) Check health check thresholds: HealthyThresholdCount and interval may be too aggressive for a slow-starting application. 6) Use aws elbv2 describe-target-health --target-group-arn <arn> to see the specific failure reason."
+    explanation: "The most common cause of all-unhealthy targets is a port mismatch between the container, the target group, and the health check configuration. Direct curl works because it hits the correct port, but the ALB checks a different one."
+
+  # ============================================================
+  # L3 — Production Incident Scenarios (5 cards)
+  # ============================================================
+  - id: aws-iam-breach-L3-001
+    type: scenario
+    topic: aws
+    tier: L3
+    tags: [iam, security, incident-response]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    situation: "Your security team receives an alert: an IAM access key for the 'ci-deploy' user is being used from an IP address in a region you do not operate in. CloudTrail shows ec2:RunInstances and iam:CreateUser API calls from this key in the last 30 minutes."
+    question: "Walk through your incident response steps in order of priority."
+    answer: "1) IMMEDIATELY: Disable the compromised access key: aws iam update-access-key --access-key-id AKIA... --status Inactive --user-name ci-deploy. 2) Revoke all active sessions for any roles the key could assume: attach an inline deny-all policy with a condition: aws:TokenIssueTime < now. 3) Audit: query CloudTrail for all actions by this key in the last 48 hours. Filter for iam:Create*, ec2:RunInstances, lambda:CreateFunction (attacker persistence patterns). 4) Terminate any unauthorized EC2 instances and delete any IAM users/roles created by the attacker. 5) Check for data exfiltration: S3 access logs, RDS snapshots shared externally. 6) Rotate ALL credentials for the ci-deploy user. 7) Post-incident: replace long-lived access keys with OIDC federation for CI/CD."
+    explanation: "The response priority is: contain (disable key) > revoke sessions > audit > remediate > harden. Long-lived access keys are the most common initial compromise vector. OIDC federation eliminates them entirely for CI/CD pipelines."
+
+  - id: aws-ec2-unreachable-L3-001
+    type: scenario
+    topic: aws
+    tier: L3
+    tags: [ec2, networking, debugging]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    situation: "An EC2 instance running a critical API became unreachable 10 minutes ago. The instance shows 'running' in the console. You cannot SSH into it. The application load balancer marks it as unhealthy. No recent deployments occurred."
+    question: "Systematically diagnose why the instance is unreachable, checking all networking layers."
+    answer: "1) Check instance status checks: aws ec2 describe-instance-status. If system status check fails, it is a host-level issue (stop/start the instance to move to new hardware). 2) Check security group: verify inbound rules for SSH (22) and app port still exist (a team member may have modified them). 3) Check NACL on the instance's subnet: look for recently added deny rules. 4) Check route table: verify the subnet still has a route to the IGW or NAT GW. 5) Check if the instance's public IP was released (it loses the public IP on stop/start without an Elastic IP). 6) Use VPC Flow Logs to see if traffic is being rejected. 7) Use EC2 Serial Console to access the instance without SSH and check for OS-level issues (disk full, kernel panic, iptables). 8) Check CloudWatch metrics: CPUUtilization spike to 100% suggests the instance is overloaded."
+    explanation: "Unreachable instances require systematic layer-by-layer diagnosis: instance health > security groups > NACLs > routing > OS level. The EC2 Serial Console (2021 feature) is the last resort to access an instance with broken networking."
+
+  - id: aws-s3-public-L3-001
+    type: scenario
+    topic: aws
+    tier: L3
+    tags: [s3, security, incident-response]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    situation: "Your security scanner detects that the S3 bucket 'customer-data-prod' is publicly accessible. The bucket contains PII (personally identifiable information). S3 access logs show 15 GetObject requests from external IP addresses in the last 6 hours."
+    question: "Walk through remediation steps and determine the blast radius."
+    answer: "1) IMMEDIATELY block public access: aws s3api put-public-access-block --bucket customer-data-prod --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true. 2) Review the bucket policy: aws s3api get-bucket-policy. Remove any Principal: * statements. 3) Check ACLs: aws s3api get-bucket-acl. Remove any grants to AllUsers or AuthenticatedUsers. 4) Analyze S3 access logs and CloudTrail S3 data events to identify which objects were accessed by external IPs. 5) Determine if the 15 requests downloaded PII (check the object keys). 6) If PII was exposed: trigger your data breach notification process per compliance requirements (GDPR 72-hour rule). 7) Prevention: enable S3 Block Public Access at the AWS account level (not just bucket), add an SCP to prevent removing it, and use AWS Config rule s3-bucket-public-read-prohibited for continuous monitoring."
+    explanation: "S3 public bucket incidents are among the most common AWS security events. The Block Public Access feature at the account level is the strongest prevention because it overrides any bucket-level policy. The blast radius assessment (step 4-5) determines whether this is a security finding or a data breach with regulatory implications."
+
+  - id: aws-ecs-oom-L3-001
+    type: scenario
+    topic: aws
+    tier: L3
+    tags: [ecs, fargate, oom, debugging]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    situation: "Your ECS Fargate service running a Java API keeps getting OOMKilled. The task definition allocates 2048 MiB memory. CloudWatch Container Insights shows memory usage climbing steadily from 1200 MiB at startup to 2048 MiB over 4 hours, then the task is killed and replaced. This pattern repeats every 4 hours."
+    question: "Diagnose whether this is a memory leak or misconfiguration, and design a fix."
+    answer: "1) The steady climb pattern (not spiky) strongly suggests a memory leak -- the JVM heap or off-heap memory is not being freed. 2) Check JVM settings: if -Xmx is not set, the JVM uses 1/4 of container memory by default (512 MiB), so the remaining 1536 MiB goes to off-heap, thread stacks, and native memory. 3) Enable JVM native memory tracking: -XX:NativeMemoryTracking=summary and check with jcmd <pid> VM.native_memory. 4) Check for common Java leaks: unclosed database connections, growing caches, ThreadLocal not cleaned up, or class loader leaks. 5) Short-term fix: increase memory to 4096 MiB and set -Xmx1536m -Xms1536m to cap heap usage. 6) Long-term fix: profile with a heap dump (jmap -dump:live,format=b,file=heap.hprof) and analyze with Eclipse MAT. 7) Add a CloudWatch alarm on MemoryUtilization > 80% to get early warning before OOMKill."
+    explanation: "OOMKill in ECS Fargate happens when the task's total memory (all containers) exceeds the task-level memory limit. For Java applications, the JVM heap is only part of memory usage -- native memory, metaspace, and thread stacks also count against the container limit. Setting explicit -Xmx prevents unbounded heap growth."
+
+  - id: aws-cfn-rollback-L3-001
+    type: explain-concept
+    topic: aws
+    tier: L3
+    tags: [cloudformation, rollback, strategies]
+    version_tag: aws-2024
+    last_verified: "2026-01-01"
+    concept: "CloudFormation rollback triggers, causes, and recovery strategies"
+    model_answer: "CloudFormation rolls back when any resource in a stack update fails to create or update. Rollback triggers: 1) Resource creation error (name collision, invalid parameter, permission denied). 2) Timeout (resource does not stabilize within the timeout period). 3) Custom rollback triggers (CloudWatch alarms that fire during update). 4) WaitCondition timeout (EC2 user data script did not signal success). Causes of stuck rollbacks: a resource cannot be deleted during rollback (e.g., non-empty S3 bucket, RDS with deletion protection). Recovery strategies: 1) Use --disable-rollback on updates to debug the failed state without automatic rollback. 2) For stuck UPDATE_ROLLBACK_FAILED: use continue-update-rollback with --resources-to-skip to skip the problematic resource. 3) For nested stacks: the parent rolls back if any child fails. 4) Prevention: use change sets to preview changes, enable termination protection on critical stacks, and test templates in a sandbox account first. 5) For critical production stacks: use stack policies to prevent accidental updates to key resources."
