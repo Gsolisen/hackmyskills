@@ -115,12 +115,12 @@ Plans:
   2. Dropping a valid YAML file into `~/.hackmyskills/content/` and running `hms` makes its questions available immediately without any code change
   3. `hms import <file.yaml>` validates the file against the question schema and adds passing questions to the active bank, reporting any validation errors
   4. `config.toml` contains inline comments explaining every setting and is human-readable without consulting documentation
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 06-01: Curated question bank — Kubernetes and Terraform (L1/L2/L3)
-- [ ] 06-02: Curated question bank — CI/CD, bash, and AWS fundamentals (L1/L2/L3)
-- [ ] 06-03: `hms import` command, `hms topics` command, and config.toml documentation
+- [ ] 06-01-PLAN.md — Expand kubernetes.yaml and terraform.yaml to 45+ questions each (Wave 1)
+- [ ] 06-02-PLAN.md — Create cicd.yaml, bash.yaml, and aws.yaml with 45+ questions each (Wave 1, parallel with 06-01)
+- [ ] 06-03-PLAN.md — hms topics command, hms import command, config.toml documentation, and tests (Wave 2)
 
 ## Progress
 
