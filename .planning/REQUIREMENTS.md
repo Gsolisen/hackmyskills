@@ -65,13 +65,13 @@
 - [x] **CONT-02**: Each topic has at least 10 L2 (application) cards
 - [x] **CONT-03**: Each topic has at least 5 L3 (scenario) cards
 - [x] **CONT-04**: All curated questions have version_tag and last_verified date
-- [ ] **CONT-05**: `hms topics` lists available topics with card counts and unlock status
+- [x] **CONT-05**: `hms topics` lists available topics with card counts and unlock status
 
 ### Extensibility
 
-- [ ] **EXT-01**: New topics added by dropping a YAML file into the content directory — no code changes needed
-- [ ] **EXT-02**: Config file (`config.toml`) is human-readable and documented inline
-- [ ] **EXT-03**: `hms import <file.yaml>` validates and imports a question file into the active bank
+- [x] **EXT-01**: New topics added by dropping a YAML file into the content directory — no code changes needed
+- [x] **EXT-02**: Config file (`config.toml`) is human-readable and documented inline
+- [x] **EXT-03**: `hms import <file.yaml>` validates and imports a question file into the active bank
 
 ## v2 Requirements
 
@@ -142,10 +142,10 @@
 | CONT-02 | Phase 6: Content Bank + Polish | Complete |
 | CONT-03 | Phase 6: Content Bank + Polish | Complete |
 | CONT-04 | Phase 6: Content Bank + Polish | Complete |
-| CONT-05 | Phase 6: Content Bank + Polish | Pending |
-| EXT-01 | Phase 6: Content Bank + Polish | Pending |
-| EXT-02 | Phase 6: Content Bank + Polish | Pending |
-| EXT-03 | Phase 6: Content Bank + Polish | Pending |
+| CONT-05 | Phase 6: Content Bank + Polish | Complete |
+| EXT-01 | Phase 6: Content Bank + Polish | Complete |
+| EXT-02 | Phase 6: Content Bank + Polish | Complete |
+| EXT-03 | Phase 6: Content Bank + Polish | Complete |
 
 **Coverage:**
 - v1 requirements: 43 total
