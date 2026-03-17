@@ -106,3 +106,11 @@ None.
 ---
 *Phase: 02-core-quiz*
 *Completed: 2026-03-15*
+
+## Self-Check: PASSED
+
+- FOUND: src/hms/quiz.py
+- FOUND: tests/test_quiz.py
+- FOUND: .planning/phases/02-core-quiz/02-01-SUMMARY.md
+- Commits 55a6cf5, 9fe8c15 verified in git log
+- pytest tests/test_quiz.py exits green (6 passed, 5 xfail)
