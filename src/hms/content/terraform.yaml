@@ -512,7 +512,7 @@ questions:
   # L3 -- Production Incident Scenarios (4 scenario + 1 explain-concept)
   # ============================================================
 
-  - id: tf-state-lock-L3-001
+  - id: tf-state-lock-l3-001
     type: scenario
     topic: terraform
     tier: L3
@@ -534,7 +534,7 @@ questions:
     answer: "1) Assess damage: run 'terraform plan' on a read-only basis (it will fail due to lock). Check AWS console for partially-created resources. 2) Force-unlock the state: 'terraform force-unlock a1b2c3d4-e5f6-7890-abcd-ef1234567890'. 3) After unlocking, run 'terraform plan' to see the current state vs config diff. 4) If resources are partially created, either import them or let Terraform recreate. 5) Run 'terraform apply' to converge state. 6) Prevention: use CI/CD pipeline for applies (not local laptops), enable state versioning on S3 for rollback."
     explanation: "State locks are stored in DynamoDB with a unique ID. If the client crashes without releasing the lock, it becomes stale. Force-unlock should be used carefully as it does not check if another operation is actually running. S3 versioning allows recovering previous state versions if the state file itself was corrupted during the interrupted apply."
 
-  - id: tf-module-drift-L3-001
+  - id: tf-module-drift-l3-001
     type: scenario
     topic: terraform
     tier: L3
@@ -553,7 +553,7 @@ questions:
     answer: "1) Do NOT apply. The module v3.x likely changed resource addressing or naming. 2) Read the module's UPGRADE.md or changelog for migration steps. 3) Use 'terraform state mv' to map old resource addresses to new ones if the module renamed resources. 4) If the module restructured significantly, consider using 'moved' blocks in the config to declare renames. 5) Run 'terraform plan' after each state move until the plan shows minimal changes. 6) Test in a non-production workspace first. 7) If the migration is too risky, pin to v2.x and plan the upgrade during a maintenance window."
     explanation: "Major module version bumps often change internal resource structure (renaming, splitting, or consolidating resources). Terraform interprets address changes as destroy+create. The 'moved' block (Terraform 1.1+) and 'terraform state mv' prevent unnecessary destruction by telling Terraform that a resource changed address but is the same physical resource."
 
-  - id: tf-import-legacy-L3-001
+  - id: tf-import-legacy-l3-001
     type: scenario
     topic: terraform
     tier: L3
@@ -567,7 +567,7 @@ questions:
     answer: "1) Inventory: use AWS CLI or tools like terraformer to list existing resources. 2) Write Terraform config for each resource type, starting with foundational resources (VPC, subnets) before dependent ones (EC2, RDS). 3) Import resources one type at a time: 'terraform import aws_vpc.main vpc-12345'. 4) After each import, run 'terraform plan' and adjust config until plan shows no changes. 5) Use import blocks (Terraform 1.5+) for declarative import: 'import { to = aws_vpc.main; id = \"vpc-12345\" }'. 6) Consider using 'terraform plan -generate-config-out=generated.tf' (1.5+) to auto-generate config from imported state. 7) Validate by running plan in a CI pipeline before merging."
     explanation: "Importing at scale requires a bottom-up approach: network resources first, then compute and storage. Each import only updates state -- it does not modify infrastructure. The config must match the actual resource attributes exactly, or the next plan will show drift. Terraform 1.5+ import blocks make this more manageable by allowing imports as part of the normal plan/apply workflow."
 
-  - id: tf-workspace-migration-L3-001
+  - id: tf-workspace-migration-l3-001
     type: scenario
     topic: terraform
     tier: L3
@@ -582,7 +582,7 @@ questions:
     answer: "1) Choose strategy: separate directories per environment (recommended) or Terraform workspaces. Separate directories provide stronger isolation. 2) For directory-based: create envs/dev/, envs/staging/, envs/prod/ each with their own backend config pointing to different state paths. 3) Extract each environment's resources from current state using 'terraform state pull > full.tfstate', then 'terraform state mv -state=full.tfstate -state-out=prod.tfstate <resource> <resource>' for each prod resource. 4) Push extracted state to new backends: 'terraform state push prod.tfstate' after configuring each directory's backend. 5) Verify each environment with 'terraform plan' showing no changes. 6) Implement CI/CD guardrails: separate approval gates, branch-based environment targeting."
     explanation: "Single-workspace multi-environment setups are a common anti-pattern. They provide no blast radius isolation -- any apply affects the one shared state. Directory-based separation (envs/dev, envs/prod) with separate state backends provides the strongest isolation. Workspaces are lighter-weight but still share the same backend bucket, just with different state file keys."
 
-  - id: tf-provider-upgrade-L3-001
+  - id: tf-provider-upgrade-l3-001
     type: explain-concept
     topic: terraform
     tier: L3

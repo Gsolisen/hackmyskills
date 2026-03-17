@@ -15,15 +15,47 @@ from hms.db import db, initialize_db
 from hms.models import Card, ReviewHistory, UserStat
 
 _DEFAULT_CONFIG_TOML = """\
-# HackMySkills configuration
-# Daily card cap: maximum cards reviewed per day
+# HackMySkills Configuration
+# Edit these settings to customize your learning experience.
+# Lines starting with # are comments and are ignored.
+
+# How many new cards per day. Higher = faster progress but more tiring.
+# Default: 25
 daily_cap = 25
-# Notification interval in minutes (used by daemon)
+
+# Notification interval in minutes (legacy, prefer [daemon] section below).
+# Default: 90
 interval_minutes = 90
+
 [quiet_hours]
-# No notifications before start or after end
+# Time window when the daemon will NOT send notifications.
+# Use 24-hour format ("HH:MM").
+
+# No notifications before this time. Default: "09:00"
 start = "09:00"
+
+# No notifications after this time. Default: "21:00"
 end = "21:00"
+
+[daemon]
+# Background daemon settings for interrupt-mode notifications.
+
+# Minutes between interrupt notifications during work hours.
+# Default: 90
+interval_minutes = 90
+
+# Work hours window -- daemon only sends notifications during this time.
+# Use 24-hour format ("HH:MM").
+# Default: "09:00"
+work_hours_start = "09:00"
+
+# Default: "21:00"
+work_hours_end = "21:00"
+
+# Separate daily cap for interrupt-mode mini-sessions.
+# Typically lower than the general daily_cap since each interrupt is 1 card.
+# Default: 10
+daily_cap = 10
 """
 
 

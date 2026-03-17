@@ -465,7 +465,7 @@ questions:
   # ============================================================
   # L3 — Production Incident Scenarios (5 cards)
   # ============================================================
-  - id: bash-log-analysis-L3-001
+  - id: bash-log-analysis-l3-001
     type: scenario
     topic: bash
     tier: L3
@@ -477,7 +477,7 @@ questions:
     answer: "Top 10 failing paths: awk '$9 == 502 {print $7}' /var/log/nginx/access.log | sort | uniq -c | sort -rn | head -10. Time distribution (errors per hour): grep '\" 502 ' /var/log/nginx/access.log | awk -F'[' '{print $2}' | awk -F: '{print $1\":\"$2}' | sort | uniq -c | sort -rn | head -24. For upstream info, also check the error log: grep 'upstream' /var/log/nginx/error.log | tail -20."
     explanation: "The key insight is using awk field selection ($9 for status code in the default nginx log format) rather than grep, which would match '502' anywhere in the line. Combining sort | uniq -c | sort -rn is the standard frequency-counting pipeline in Bash."
 
-  - id: bash-disk-full-L3-001
+  - id: bash-disk-full-l3-001
     type: scenario
     topic: bash
     tier: L3
@@ -489,7 +489,7 @@ questions:
     answer: "1) Find largest files: du -ah /var | sort -rh | head -20. 2) Check for deleted-but-open files consuming space: lsof +L1 | grep /var (these files are deleted but still held open by a process). 3) Truncate large log files instead of deleting: > /var/log/app/huge.log (keeps the file open, releases space). 4) For lsof results: restart the holding process to release the file handle. 5) Find and remove old logs: find /var/log -name '*.gz' -mtime +30 -delete. 6) Check for core dumps: find /var -name 'core.*' -delete. 7) Check journald: journalctl --vacuum-size=100M. 8) After recovery, set up log rotation and monitoring alerts at 80%."
     explanation: "The lsof +L1 trick is critical: deleting a file that a process still has open does not free the space until the process closes its file handle. Truncating (> file) is safer because it resets the file without changing the inode, so the process can keep writing."
 
-  - id: bash-script-debug-L3-001
+  - id: bash-script-debug-l3-001
     type: scenario
     topic: bash
     tier: L3
@@ -501,7 +501,7 @@ questions:
     answer: "1) Run with trace: bash -x deploy.sh 2>trace.log. The -x flag prints each command before execution, showing exactly where the script diverges. 2) Check the sourced config files for changes: diff /etc/deploy/config.sh /etc/deploy/config.sh.bak. 3) Add set -euo pipefail at the top to catch hidden failures. 4) Check if a conditional branch is wrong: search the trace for 'if' paths taken. 5) Check for a command returning success but doing nothing: some tools exit 0 even when they skip work (e.g., rsync with wrong path). 6) Check environment: env | diff - <(ssh prod env) to compare environments. 7) Add explicit logging: replace silent commands with logged ones: rsync ... && echo 'rsync done' || echo 'rsync failed'."
     explanation: "Silent failures (exit 0 but wrong result) are the hardest to debug. bash -x is the most powerful tool because it shows the actual execution path. Combined with set -euo pipefail, it exposes commands that fail silently in pipelines or conditionals."
 
-  - id: bash-permission-L3-001
+  - id: bash-permission-l3-001
     type: scenario
     topic: bash
     tier: L3
@@ -513,7 +513,7 @@ questions:
     answer: "1) Check file ownership: ls -la /opt/app/ /etc/app/secrets.conf. 2) The deploy user likely lacks write access to /opt/app and read access to secrets.conf. Fix: chown -R deploy:deploy /opt/app. For secrets: chgrp deploy /etc/app/secrets.conf && chmod 640 /etc/app/secrets.conf and add deploy to the group. 3) For systemd restart: add a sudoers rule: deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart app.service. This grants only the specific restart permission. 4) Verify: sudo -u deploy -i ./deploy.sh. 5) Never give the deploy user full sudo or root access. Each permission should be scoped to exactly what is needed."
     explanation: "The root cause is that the manual test used root (unlimited permissions) while CI uses a restricted user. The fix follows least-privilege: grant only the specific file access and sudo commands needed, not broad permissions."
 
-  - id: bash-proc-leak-L3-001
+  - id: bash-proc-leak-l3-001
     type: explain-concept
     topic: bash
     tier: L3

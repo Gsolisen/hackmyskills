@@ -106,3 +106,125 @@ def test_generate_command_removed():
     """The generate stub no longer appears in CLI."""
     result = runner.invoke(app, ["--help"])
     assert "generate" not in result.output.lower() or "validate-content" in result.output
+
+
+def test_topics_command(hms_home):
+    """CONT-05: hms topics lists topics with card counts and unlock status."""
+    from hms.init import ensure_initialized
+    ensure_initialized()
+    result = runner.invoke(app, ["topics"])
+    assert result.exit_code == 0
+    assert "kubernetes" in result.output
+    assert "terraform" in result.output
+    assert "unlocked" in result.output.lower()
+
+
+def test_topics_shows_all_discovered(hms_home):
+    """hms topics shows user-added topics automatically."""
+    from hms.init import ensure_initialized
+    ensure_initialized()
+    custom = hms_home / "content" / "mycustom.yaml"
+    custom.write_text(
+        'questions:\n'
+        '  - id: mycustom-001\n'
+        '    type: flashcard\n'
+        '    topic: mycustom\n'
+        '    tier: L1\n'
+        '    tags: [test]\n'
+        '    version_tag: v1\n'
+        '    last_verified: "2026-01-01"\n'
+        '    front: "Q"\n'
+        '    back: "A"\n'
+    )
+    from hms.init import _sync_cards_from_yaml
+    _sync_cards_from_yaml(hms_home / "content")
+    result = runner.invoke(app, ["topics"])
+    assert result.exit_code == 0
+    assert "mycustom" in result.output
+
+
+def test_import_command(hms_home):
+    """EXT-03: hms import validates and imports a question file."""
+    from hms.init import ensure_initialized
+    ensure_initialized()
+    import_file = hms_home / "to_import.yaml"
+    import_file.write_text(
+        'questions:\n'
+        '  - id: imported-test-001\n'
+        '    type: flashcard\n'
+        '    topic: imported\n'
+        '    tier: L1\n'
+        '    tags: [test]\n'
+        '    version_tag: v1\n'
+        '    last_verified: "2026-01-01"\n'
+        '    front: "Imported Q"\n'
+        '    back: "Imported A"\n'
+    )
+    result = runner.invoke(app, ["import", str(import_file)])
+    assert result.exit_code == 0
+    assert "Imported 1 questions" in result.output
+    assert (hms_home / "content" / "to_import.yaml").exists()
+
+
+def test_import_rejects_invalid(hms_home):
+    """EXT-03: hms import rejects files with schema errors."""
+    from hms.init import ensure_initialized
+    ensure_initialized()
+    bad_file = hms_home / "bad.yaml"
+    bad_file.write_text(
+        'questions:\n'
+        '  - id: bad-001\n'
+        '    type: flashcard\n'
+        '    topic: bad\n'
+    )
+    result = runner.invoke(app, ["import", str(bad_file)])
+    assert result.exit_code == 1
+    assert "Validation failed" in result.output
+    assert not (hms_home / "content" / "bad.yaml").exists()
+
+
+def test_import_rejects_duplicates(hms_home):
+    """EXT-03: hms import blocks files with duplicate IDs."""
+    from hms.init import ensure_initialized
+    ensure_initialized()
+    # Import a file that duplicates an existing bundled question ID
+    dup_file = hms_home / "dup.yaml"
+    dup_file.write_text(
+        'questions:\n'
+        '  - id: k8s-pod-lifecycle-001\n'
+        '    type: flashcard\n'
+        '    topic: kubernetes\n'
+        '    tier: L1\n'
+        '    tags: [test]\n'
+        '    version_tag: k8s-1.29\n'
+        '    last_verified: "2026-01-01"\n'
+        '    front: "Duplicate question"\n'
+        '    back: "Duplicate answer"\n'
+    )
+    result = runner.invoke(app, ["import", str(dup_file)])
+    assert result.exit_code == 1
+    # Rollback: file should not remain in content dir
+    assert not (hms_home / "content" / "dup.yaml").exists()
+
+
+def test_import_filename_collision(hms_home):
+    """hms import rejects if filename already exists in content dir."""
+    from hms.init import ensure_initialized
+    ensure_initialized()
+    # kubernetes.yaml already exists in content dir (copied by ensure_initialized)
+    collision_file = hms_home / "kubernetes.yaml"
+    collision_file.write_text(
+        'questions:\n'
+        '  - id: collision-001\n'
+        '    type: flashcard\n'
+        '    topic: kubernetes\n'
+        '    tier: L1\n'
+        '    tags: [test]\n'
+        '    version_tag: v1\n'
+        '    last_verified: "2026-01-01"\n'
+        '    front: "Q"\n'
+        '    back: "A"\n'
+    )
+    result = runner.invoke(app, ["import", str(collision_file)])
+    assert result.exit_code == 1
+    assert "already exists" in result.output

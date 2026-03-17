@@ -458,7 +458,7 @@ questions:
   # ============================================================
   # L3 — Production Incident Scenarios (5 cards)
   # ============================================================
-  - id: aws-iam-breach-L3-001
+  - id: aws-iam-breach-l3-001
     type: scenario
     topic: aws
     tier: L3
@@ -470,7 +470,7 @@ questions:
     answer: "1) IMMEDIATELY: Disable the compromised access key: aws iam update-access-key --access-key-id AKIA... --status Inactive --user-name ci-deploy. 2) Revoke all active sessions for any roles the key could assume: attach an inline deny-all policy with a condition: aws:TokenIssueTime < now. 3) Audit: query CloudTrail for all actions by this key in the last 48 hours. Filter for iam:Create*, ec2:RunInstances, lambda:CreateFunction (attacker persistence patterns). 4) Terminate any unauthorized EC2 instances and delete any IAM users/roles created by the attacker. 5) Check for data exfiltration: S3 access logs, RDS snapshots shared externally. 6) Rotate ALL credentials for the ci-deploy user. 7) Post-incident: replace long-lived access keys with OIDC federation for CI/CD."
     explanation: "The response priority is: contain (disable key) > revoke sessions > audit > remediate > harden. Long-lived access keys are the most common initial compromise vector. OIDC federation eliminates them entirely for CI/CD pipelines."
 
-  - id: aws-ec2-unreachable-L3-001
+  - id: aws-ec2-unreachable-l3-001
     type: scenario
     topic: aws
     tier: L3
@@ -482,7 +482,7 @@ questions:
     answer: "1) Check instance status checks: aws ec2 describe-instance-status. If system status check fails, it is a host-level issue (stop/start the instance to move to new hardware). 2) Check security group: verify inbound rules for SSH (22) and app port still exist (a team member may have modified them). 3) Check NACL on the instance's subnet: look for recently added deny rules. 4) Check route table: verify the subnet still has a route to the IGW or NAT GW. 5) Check if the instance's public IP was released (it loses the public IP on stop/start without an Elastic IP). 6) Use VPC Flow Logs to see if traffic is being rejected. 7) Use EC2 Serial Console to access the instance without SSH and check for OS-level issues (disk full, kernel panic, iptables). 8) Check CloudWatch metrics: CPUUtilization spike to 100% suggests the instance is overloaded."
     explanation: "Unreachable instances require systematic layer-by-layer diagnosis: instance health > security groups > NACLs > routing > OS level. The EC2 Serial Console (2021 feature) is the last resort to access an instance with broken networking."
 
-  - id: aws-s3-public-L3-001
+  - id: aws-s3-public-l3-001
     type: scenario
     topic: aws
     tier: L3
@@ -494,7 +494,7 @@ questions:
     answer: "1) IMMEDIATELY block public access: aws s3api put-public-access-block --bucket customer-data-prod --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true. 2) Review the bucket policy: aws s3api get-bucket-policy. Remove any Principal: * statements. 3) Check ACLs: aws s3api get-bucket-acl. Remove any grants to AllUsers or AuthenticatedUsers. 4) Analyze S3 access logs and CloudTrail S3 data events to identify which objects were accessed by external IPs. 5) Determine if the 15 requests downloaded PII (check the object keys). 6) If PII was exposed: trigger your data breach notification process per compliance requirements (GDPR 72-hour rule). 7) Prevention: enable S3 Block Public Access at the AWS account level (not just bucket), add an SCP to prevent removing it, and use AWS Config rule s3-bucket-public-read-prohibited for continuous monitoring."
     explanation: "S3 public bucket incidents are among the most common AWS security events. The Block Public Access feature at the account level is the strongest prevention because it overrides any bucket-level policy. The blast radius assessment (step 4-5) determines whether this is a security finding or a data breach with regulatory implications."
 
-  - id: aws-ecs-oom-L3-001
+  - id: aws-ecs-oom-l3-001
     type: scenario
     topic: aws
     tier: L3
@@ -506,7 +506,7 @@ questions:
     answer: "1) The steady climb pattern (not spiky) strongly suggests a memory leak -- the JVM heap or off-heap memory is not being freed. 2) Check JVM settings: if -Xmx is not set, the JVM uses 1/4 of container memory by default (512 MiB), so the remaining 1536 MiB goes to off-heap, thread stacks, and native memory. 3) Enable JVM native memory tracking: -XX:NativeMemoryTracking=summary and check with jcmd <pid> VM.native_memory. 4) Check for common Java leaks: unclosed database connections, growing caches, ThreadLocal not cleaned up, or class loader leaks. 5) Short-term fix: increase memory to 4096 MiB and set -Xmx1536m -Xms1536m to cap heap usage. 6) Long-term fix: profile with a heap dump (jmap -dump:live,format=b,file=heap.hprof) and analyze with Eclipse MAT. 7) Add a CloudWatch alarm on MemoryUtilization > 80% to get early warning before OOMKill."
     explanation: "OOMKill in ECS Fargate happens when the task's total memory (all containers) exceeds the task-level memory limit. For Java applications, the JVM heap is only part of memory usage -- native memory, metaspace, and thread stacks also count against the container limit. Setting explicit -Xmx prevents unbounded heap growth."
 
-  - id: aws-cfn-rollback-L3-001
+  - id: aws-cfn-rollback-l3-001
     type: explain-concept
     topic: aws
     tier: L3

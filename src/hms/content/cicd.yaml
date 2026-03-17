@@ -482,7 +482,7 @@ questions:
   # ============================================================
   # L3 — Production Incident Scenarios (5 cards)
   # ============================================================
-  - id: cicd-pipeline-timeout-L3-001
+  - id: cicd-pipeline-timeout-l3-001
     type: scenario
     topic: cicd
     tier: L3
@@ -494,7 +494,7 @@ questions:
     answer: "1) Add path filters to each job so only affected services are built (paths: ['services/auth/**']). 2) Use dorny/paths-filter action to dynamically skip unchanged services. 3) Cache Docker layers using docker/build-push-action with cache-from/cache-to. 4) Split the test suite across parallel runners using test-splitting. 5) Run lint as a separate fast job that blocks nothing. 6) Use larger runners (4-core) for the build/test jobs. 7) Consider a merge queue to batch PRs and reduce redundant runs."
     explanation: "Monorepo CI optimization is about eliminating unnecessary work. Path filtering alone can reduce most PR builds from 4 services to 1. Combined with Docker layer caching and test parallelization, build times drop dramatically."
 
-  - id: cicd-secret-leak-L3-001
+  - id: cicd-secret-leak-l3-001
     type: scenario
     topic: cicd
     tier: L3
@@ -506,7 +506,7 @@ questions:
     answer: "Immediate: 1) Rotate the exposed AWS credentials NOW via IAM console. 2) Delete the workflow run logs from GitHub (Settings > Actions > delete specific run). 3) Audit CloudTrail for any unauthorized usage of the old key during the exposure window. 4) Revoke any sessions created with the old key. Prevention: 1) Enable GitHub secret scanning and push protection. 2) Add a PR review rule requiring approval from security-aware reviewers for workflow file changes. 3) Use OIDC federation (aws-actions/configure-aws-credentials) instead of long-lived keys. 4) Add a CI linting step that scans workflow files for direct secret references in echo/print commands."
     explanation: "GitHub automatically masks secrets in logs, but echo with the expression syntax bypasses masking in some contexts. OIDC federation eliminates long-lived secrets entirely, making this class of leak impossible."
 
-  - id: cicd-deploy-rollback-L3-001
+  - id: cicd-deploy-rollback-l3-001
     type: scenario
     topic: cicd
     tier: L3
@@ -518,7 +518,7 @@ questions:
     answer: "1) Stop the deployment: update the ECS service to force a new deployment with the OLD task definition revision. 2) While the rollback proceeds, investigate: check CloudWatch logs for the 500 errors on /api/orders. 3) Check if it is a database schema issue (new code expecting columns not yet migrated). 4) Check ECS task networking: are the new tasks in the same target group and getting traffic? 5) Check environment variables: did the new task definition miss a critical env var? 6) After rollback completes, verify all 4 tasks run the old version and /api/orders returns 200. 7) Post-incident: add a smoke test step to the deployment workflow that hits /api/orders after deploy and auto-rolls-back if it fails."
     explanation: "Mid-rollout failures are dangerous because both versions serve traffic simultaneously. The 50% minimum healthy percent means ECS will keep at least 2 tasks running, but if the new tasks are unhealthy at the application level (passing TCP health checks but returning 500s), ECS considers the deployment successful. The fix is to use application-level health checks that verify endpoint correctness."
 
-  - id: cicd-matrix-debug-L3-001
+  - id: cicd-matrix-debug-l3-001
     type: scenario
     topic: cicd
     tier: L3
@@ -530,7 +530,7 @@ questions:
     answer: "1) Read the full traceback in the failed job log to identify which DLL and which package fails. 2) Compare the installed package versions: run pip list in the passing vs failing job to see if a different binary wheel was installed. 3) Check if the package has a known issue with Python 3.12 on Windows (search their GitHub issues). 4) Try pinning the package version to the one that works on 3.11. 5) If the issue is a missing Visual C++ Redistributable, add a setup step: choco install vcredist140. 6) Use matrix exclude to skip this combination temporarily and matrix include to add a workaround step specifically for windows/3.12. 7) Open an issue with the package maintainers including the exact runner image and DLL error."
     explanation: "Windows DLL errors in CI are almost always caused by binary wheel incompatibilities. The GitHub-hosted Windows runner may have a different Visual C++ runtime version than your local machine. Matrix include/exclude lets you customize individual combinations without branching the entire workflow."
 
-  - id: cicd-cache-corruption-L3-001
+  - id: cicd-cache-corruption-l3-001
     type: explain-concept
     topic: cicd
     tier: L3

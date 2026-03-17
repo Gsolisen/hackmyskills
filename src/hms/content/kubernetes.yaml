@@ -532,7 +532,7 @@ questions:
   # L3 -- Production Incident Scenarios (4 scenario + 1 explain-concept)
   # ============================================================
 
-  - id: k8s-oom-incident-L3-001
+  - id: k8s-oom-incident-l3-001
     type: scenario
     topic: kubernetes
     tier: L3
@@ -551,7 +551,7 @@ questions:
     answer: "1) Confirm the memory pattern: check if usage is a gradual leak or spike (kubectl top pod over time or Prometheus metrics). 2) Check for memory leak: review application logs for growing data structures or unbounded caches. 3) Short-term fix: increase the memory limit to 1Gi and apply. 4) Long-term fix: profile the Node.js app with --inspect or heap snapshots to identify the leak source. 5) Set memory request closer to limit (e.g., 768Mi) to improve scheduling accuracy and prevent overcommit."
     explanation: "OOMKilled with gradually climbing memory typically indicates a memory leak rather than insufficient baseline allocation. Simply increasing limits without investigating the leak will delay the problem but not fix it. The Node.js default heap is ~1.5GB, so the 512Mi container limit is hit before V8's GC pressure kicks in."
 
-  - id: k8s-deploy-rollback-L3-001
+  - id: k8s-deploy-rollback-l3-001
     type: scenario
     topic: kubernetes
     tier: L3
@@ -568,7 +568,7 @@ questions:
     answer: "1) Immediate: roll back with 'kubectl rollout undo deployment/checkout' to restore v2.2.x. 2) Root cause: the deployment manifest for v2.3.0 is missing the REDIS_URL env var from the ConfigMap or Secret. 3) Fix: add REDIS_URL to the ConfigMap/Secret, update the Deployment spec to reference it, then redeploy v2.3.0. 4) Prevention: add a readiness probe that checks Redis connectivity; add a pre-deploy CI step that validates all required env vars are present in the manifest."
     explanation: "The rollout appeared successful because the readiness probe only checked HTTP liveness, not dependency connectivity. The app started and passed probes but failed on the code path requiring Redis. This highlights the importance of deep health checks that verify downstream dependencies."
 
-  - id: k8s-network-policy-L3-001
+  - id: k8s-network-policy-l3-001
     type: scenario
     topic: kubernetes
     tier: L3
@@ -595,7 +595,7 @@ questions:
     answer: "The NetworkPolicy only allows ingress from namespaces labeled 'access: data-tier'. The 'backend' namespace is missing this label. Fix: 'kubectl label namespace backend access=data-tier'. Verify with 'kubectl get ns backend --show-labels' and retry the connectivity test."
     explanation: "NetworkPolicies are additive. When any policy selects a pod, only traffic matching at least one policy's rules is allowed. The namespaceSelector requires the source namespace to carry a specific label, which is commonly missed when new namespaces are created without the organization's standard labels."
 
-  - id: k8s-pv-reclaim-L3-001
+  - id: k8s-pv-reclaim-l3-001
     type: scenario
     topic: kubernetes
     tier: L3
@@ -613,7 +613,7 @@ questions:
     answer: "The PVC has the pvc-protection finalizer which prevents deletion if a Pod is using it. Since no pods reference it (confirmed by 'Used By: <none>'), there may be a stale reference or the controller has not reconciled. First, verify no pod mounts this PVC: 'kubectl get pods --all-namespaces -o json | grep data-vol'. If truly unused, remove the finalizer: 'kubectl patch pvc data-vol -p '{\"metadata\":{\"finalizers\":null}}'' to allow deletion. The PV will remain because reclaimPolicy is Retain, so you can manually reuse or clean up the underlying storage."
     explanation: "The pvc-protection finalizer is a safety mechanism that prevents accidental data loss by blocking PVC deletion while pods reference it. Occasionally the controller does not remove the finalizer after all pods are gone, especially during rapid scale-down or node failures. Manually removing the finalizer is safe only after confirming no workload references the PVC."
 
-  - id: k8s-rbac-escalation-L3-001
+  - id: k8s-rbac-escalation-l3-001
     type: explain-concept
     topic: kubernetes
     tier: L3
