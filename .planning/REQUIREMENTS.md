@@ -61,10 +61,10 @@
 
 ### Content Bank
 
-- [ ] **CONT-01**: Curated question bank ships with ≥30 L1 cards per topic for: Kubernetes, Terraform, CI/CD, bash, AWS fundamentals
-- [ ] **CONT-02**: Each topic has at least 10 L2 (application) cards
-- [ ] **CONT-03**: Each topic has at least 5 L3 (scenario) cards
-- [ ] **CONT-04**: All curated questions have version_tag and last_verified date
+- [x] **CONT-01**: Curated question bank ships with ≥30 L1 cards per topic for: Kubernetes, Terraform, CI/CD, bash, AWS fundamentals
+- [x] **CONT-02**: Each topic has at least 10 L2 (application) cards
+- [x] **CONT-03**: Each topic has at least 5 L3 (scenario) cards
+- [x] **CONT-04**: All curated questions have version_tag and last_verified date
 - [ ] **CONT-05**: `hms topics` lists available topics with card counts and unlock status
 
 ### Extensibility
@@ -138,10 +138,10 @@
 | AI-03 | Phase 5: AI Content Generation | Complete |
 | AI-04 | Phase 5: AI Content Generation | Pending |
 | AI-05 | Phase 5: AI Content Generation | Pending |
-| CONT-01 | Phase 6: Content Bank + Polish | Pending |
-| CONT-02 | Phase 6: Content Bank + Polish | Pending |
-| CONT-03 | Phase 6: Content Bank + Polish | Pending |
-| CONT-04 | Phase 6: Content Bank + Polish | Pending |
+| CONT-01 | Phase 6: Content Bank + Polish | Complete |
+| CONT-02 | Phase 6: Content Bank + Polish | Complete |
+| CONT-03 | Phase 6: Content Bank + Polish | Complete |
+| CONT-04 | Phase 6: Content Bank + Polish | Complete |
 | CONT-05 | Phase 6: Content Bank + Polish | Pending |
 | EXT-01 | Phase 6: Content Bank + Polish | Pending |
 | EXT-02 | Phase 6: Content Bank + Polish | Pending |
