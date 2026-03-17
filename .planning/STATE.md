@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-01-PLAN.md
-last_updated: "2026-03-17T03:16:03.881Z"
-last_activity: 2026-03-17 -- Completed 06-01 content bank expansion; kubernetes.yaml 50 cards, terraform.yaml 47 cards
+stopped_at: Completed 06-02-PLAN.md
+last_updated: "2026-03-17T03:18:47.946Z"
+last_activity: 2026-03-17 -- Completed 06-02 content bank new topics; cicd.yaml, bash.yaml, aws.yaml (135 new questions)
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 19
-  completed_plans: 17
-  percent: 89
+  completed_plans: 19
+  percent: 95
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-13)
 ## Current Position
 
 Phase: 6 of 6 (Content Bank + Polish)
-Plan: 1 of 3 complete (06-01 done)
+Plan: 2 of 3 complete (06-01 done, 06-02 done)
 Status: Executing Phase 6
-Last activity: 2026-03-17 -- Completed 06-01 content bank expansion; kubernetes.yaml 50 cards, terraform.yaml 47 cards
+Last activity: 2026-03-17 -- Completed 06-02 content bank new topics; cicd.yaml, bash.yaml, aws.yaml (135 new questions)
 
-Progress: [█████████░] 89%
+Progress: [██████████] 95%
 
 ## Performance Metrics
 
@@ -67,6 +67,7 @@ Progress: [█████████░] 89%
 | Phase 05-ai-content-generation P01 | 15 | 3 tasks | 6 files |
 | Phase 05-ai-content-generation P02 | 5 | 2 tasks | 3 files |
 | Phase 06-content-bank-polish P01 | 7 | 2 tasks | 2 files |
+| Phase 06-content-bank-polish P02 | 10 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,9 @@ Recent decisions affecting current work:
 - [Phase 05-ai-content-generation]: CLI validate-content uses ASCII symbols for cross-platform compatibility
 - [Phase 06-content-bank-polish]: L1 cards use 60/40 flashcard/command-fill mix; L3 scenarios include embedded kubectl/terraform output for production incident realism
 - [Phase 06-content-bank-polish]: Version tags pinned to k8s-1.29 and tf-1.7; all questions verified at 2026-01-01
+- [Phase 06-content-bank-polish]: CI/CD content emphasizes GitHub Actions as primary tool per user decision
+- [Phase 06-content-bank-polish]: AWS content covers both core services (IAM, EC2, S3) and DevOps services (ECS, ECR, CloudFormation) per user decision
+- [Phase 06-content-bank-polish]: L3 scenarios modeled as real production incidents with step-by-step diagnosis and recovery
 
 ### Pending Todos
 
@@ -128,6 +132,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-17T03:16:03.879Z
-Stopped at: Completed 06-01-PLAN.md
+Last session: 2026-03-17T03:18:47.943Z
+Stopped at: Completed 06-02-PLAN.md
 Resume file: None
