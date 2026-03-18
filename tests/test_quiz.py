@@ -311,8 +311,8 @@ def test_command_fill_incorrect(hms_home):
 # Handler tests: scenario flow
 # ---------------------------------------------------------------------------
 
-def test_scenario_flow_correct(hms_home):
-    """Scenario: correct A/B/C/D keypress is rated Good, reps incremented."""
+def test_scenario_flow_correct(hms_home, monkeypatch):
+    """Scenario: user types answer, self-rates Good, reps incremented."""
     from hms.models import Card
     import hms.quiz as quiz_mod
 
@@ -334,8 +334,8 @@ def test_scenario_flow_correct(hms_home):
     }
     session = SessionResult()
 
-    # Sequence: 'b' selects correct answer, then any key to continue
-    keys = iter([" ", "3"])
+    monkeypatch.setattr("builtins.input", lambda _prompt="": "terraform force-unlock")
+    keys = iter(["3"])
 
     def mock_readkey():
         return next(keys)
@@ -354,8 +354,8 @@ def test_scenario_flow_correct(hms_home):
     assert session.correct == 1  # Good (rating 3) >= 3
 
 
-def test_scenario_flow_wrong(hms_home):
-    """Scenario: wrong keypress is rated Again, lapses incremented."""
+def test_scenario_flow_wrong(hms_home, monkeypatch):
+    """Scenario: user types answer, self-rates Again, lapses incremented."""
     from hms.models import Card
     import hms.quiz as quiz_mod
 
@@ -377,8 +377,8 @@ def test_scenario_flow_wrong(hms_home):
     }
     session = SessionResult()
 
-    # Sequence: 'a' selects wrong answer, then any key to continue
-    keys = iter([" ", "1"])
+    monkeypatch.setattr("builtins.input", lambda _prompt="": "wrong answer")
+    keys = iter(["1"])
 
     def mock_readkey():
         return next(keys)

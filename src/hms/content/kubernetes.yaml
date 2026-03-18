@@ -622,3 +622,157 @@ questions:
     last_verified: "2026-01-01"
     concept: "RBAC privilege escalation prevention in Kubernetes"
     model_answer: "Kubernetes prevents RBAC privilege escalation by requiring that users can only create or modify Role/ClusterRole objects if they already possess all the permissions granted by that role. This 'escalate' verb was added in Kubernetes 1.12. Without it, a user with permission to create Roles could grant themselves cluster-admin. Similarly, the 'bind' verb controls who can create RoleBindings referencing a specific Role. Best practices: never grant wildcard verbs or resources, use audit logging to detect privilege escalation attempts, and apply the principle of least privilege by scoping Roles to specific namespaces and resources."
+
+  # ============================================================
+  # POD YAML ANATOMY (from kubernetes-pod-yml reference)
+  # ============================================================
+
+  # --- L1: Recall ---
+
+  - id: k8s-pod-yaml-apiversion-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, yaml, basics]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    front: "What are the four top-level required fields in a Kubernetes Pod YAML manifest?"
+    back: "apiVersion, kind, metadata, and spec"
+
+  - id: k8s-pod-labels-purpose-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, labels, selectors]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    front: "What is the purpose of labels in a Pod's metadata section?"
+    back: "Labels are key-value pairs used to organize and select Pods. Services, Deployments, and other resources use label selectors to target specific Pods."
+
+  - id: k8s-restart-policy-values-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, restart-policy]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    front: "What are the three valid values for a Pod's restartPolicy, and which is the default?"
+    back: "Always (default), OnFailure, and Never"
+
+  - id: k8s-initcontainers-purpose-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, init-containers]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    front: "What are initContainers and when do they run?"
+    back: "initContainers are specialized containers that run before the main containers in a Pod. They run to completion sequentially and must all succeed before the main containers start."
+
+  - id: k8s-volumemounts-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, volumes]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    front: "What is the relationship between 'volumes' and 'volumeMounts' in a Pod spec?"
+    back: "'volumes' defines the storage sources available to the Pod (e.g., ConfigMap, emptyDir, PVC). 'volumeMounts' inside a container references a volume by name and specifies the mountPath inside the container."
+
+  - id: k8s-pod-env-cmd-001
+    type: command-fill
+    topic: kubernetes
+    tier: L1
+    tags: [pods, env, yaml]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    prompt: "In a Pod YAML, how do you set an environment variable named ENV with value 'production' inside a container spec?"
+    command: "env:\n- name: ENV\n  value: production"
+    accept_partial: true
+
+  - id: k8s-nodeselector-purpose-001
+    type: flashcard
+    topic: kubernetes
+    tier: L1
+    tags: [pods, scheduling, node-selector]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    front: "What does nodeSelector do in a Pod spec?"
+    back: "nodeSelector constrains the Pod to only schedule on nodes that have matching labels. For example, 'disktype: ssd' schedules the Pod only on nodes labeled with disktype=ssd."
+
+  # --- L2: Application ---
+
+  - id: k8s-toleration-fields-001
+    type: command-fill
+    topic: kubernetes
+    tier: L2
+    tags: [pods, tolerations, scheduling]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    prompt: "Write a toleration that matches a taint with key 'special-taint', value 'true', and effect 'NoExecute' using the Equal operator."
+    command: "tolerations:\n- key: \"special-taint\"\n  operator: \"Equal\"\n  value: \"true\"\n  effect: \"NoExecute\""
+    accept_partial: true
+
+  - id: k8s-securitycontext-001
+    type: scenario
+    topic: kubernetes
+    tier: L2
+    tags: [pods, security, security-context]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    situation: "Your security team requires that all containers run as non-root user ID 1000, group ID 3000, and mounted volumes must be owned by group 2000."
+    question: "What securityContext fields do you add to the Pod spec to meet these requirements?"
+    answer: "securityContext:\n  runAsUser: 1000\n  runAsGroup: 3000\n  fsGroup: 2000"
+    explanation: "runAsUser sets the UID for container processes, runAsGroup sets the primary GID, and fsGroup sets the group ownership for any volumes mounted into the Pod. This ensures containers never run as root and volume permissions are predictable."
+
+  - id: k8s-configmap-volume-001
+    type: scenario
+    topic: kubernetes
+    tier: L2
+    tags: [pods, configmap, volumes]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    situation: "You have a ConfigMap named 'techops-config' and need to mount it into a container at /usr/share/nginx/html."
+    question: "Write the volumes and volumeMounts sections of the Pod YAML to accomplish this."
+    answer: "volumes:\n- name: config-volume\n  configMap:\n    name: techops-config\n\nvolumeMounts:\n- name: config-volume\n  mountPath: /usr/share/nginx/html"
+    explanation: "The volumes section defines the source (a ConfigMap named 'techops-config') with a reference name ('config-volume'). The container's volumeMounts section references that name and specifies where to mount it inside the container filesystem."
+
+  - id: k8s-initcontainer-write-001
+    type: command-fill
+    topic: kubernetes
+    tier: L2
+    tags: [pods, init-containers]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    prompt: "Write an initContainer named 'init-techops' using the busybox image that runs the command: echo Init; sleep 5"
+    command: "initContainers:\n- name: init-techops\n  image: busybox\n  command: [\"sh\", \"-c\", \"echo Init; sleep 5\"]"
+    accept_partial: true
+
+  - id: k8s-taint-effect-explain-001
+    type: explain-concept
+    topic: kubernetes
+    tier: L2
+    tags: [pods, taints, tolerations, scheduling]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    concept: "Explain the difference between NoSchedule and NoExecute taint effects"
+    model_answer: "NoSchedule prevents new pods from being scheduled on the tainted node unless they have a matching toleration, but existing pods already running on the node are not affected. NoExecute is stricter — it evicts existing pods that do not tolerate the taint and prevents new pods without a matching toleration from scheduling. NoExecute can optionally include a tolerationSeconds field that allows a pod to remain on the node for a limited time before eviction."
+
+  # --- L3: Scenario ---
+
+  - id: k8s-pod-yaml-debug-l3-001
+    type: scenario
+    topic: kubernetes
+    tier: L3
+    tags: [incident, pods, yaml, debugging, scheduling]
+    version_tag: k8s-1.29
+    last_verified: "2026-03-18"
+    situation: |
+      A pod named 'techops-pod' is stuck in Pending state. kubectl describe pod shows:
+        Events:
+          Warning  FailedScheduling  0/5 nodes are available: 2 node(s) had taint {special-taint: true}, 3 node(s) didn't match Pod's node affinity/selector.
+      The pod spec has nodeSelector: {disktype: ssd} and no tolerations.
+      Node inventory: 3 nodes without SSD labels, 2 nodes with disktype=ssd but also tainted with 'special-taint=true:NoSchedule'.
+    question: "Diagnose why the pod cannot schedule and provide the minimal fix."
+    answer: "The pod requires nodes with label disktype=ssd (nodeSelector), but the only 2 nodes with that label have a taint 'special-taint=true:NoSchedule'. Since the pod has no tolerations, it cannot schedule on any node. Fix: add a toleration to the pod spec — tolerations: [{key: 'special-taint', operator: 'Equal', value: 'true', effect: 'NoSchedule'}]. Alternatively, label an untainted node with disktype=ssd."
+    explanation: "Scheduling requires BOTH nodeSelector labels to match AND all node taints to be tolerated. When nodes matching the selector are tainted, the pod needs tolerations for those taints. This is a common issue when dedicated node pools (e.g., SSD nodes) are also tainted to restrict general workloads."

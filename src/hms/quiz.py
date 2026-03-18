@@ -292,16 +292,15 @@ def _handle_command_fill(card: Card, q_data: dict, session: SessionResult, _read
 
 
 def _handle_scenario(card: Card, q_data: dict, session: SessionResult, _readkey=None) -> None:
-    """Display a scenario question, accept A/B/C/D keypress, show result and explanation.
+    """Display a scenario question, accept typed answer, then reveal correct answer.
 
-    Shows the situation in a blue Panel, lists the four choices, waits for a
-    single keypress in {a,b,c,d,A,B,C,D}, immediately renders correct/incorrect
-    feedback, shows the explanation panel, waits for any key to continue, then
-    persists the FSRS rating and records to the session.
+    Shows the situation and question in a blue Panel, accepts free-text via
+    input(), then reveals the correct answer and explanation. User self-rates
+    1-4 after comparing their answer to the model answer.
 
     Args:
         card: ORM Card whose FSRS state will be updated.
-        q_data: Question dict with keys: situation, choices, correct, explanation.
+        q_data: Question dict with keys: situation, question, answer, explanation.
         session: Accumulates per-session statistics.
         _readkey: Injectable key-reader for testing (defaults to readchar.readkey).
     """
@@ -315,11 +314,10 @@ def _handle_scenario(card: Card, q_data: dict, session: SessionResult, _readkey=
     console.print(f"[dim][{card.topic} · {card.tier}][/dim]")
     console.print(Panel(q_data["situation"], border_style="blue", title="[dim]Scenario[/dim]"))
     console.print(f"\n[bold]{q_data['question']}[/bold]\n")
-    console.print("[dim]Press any key to reveal answer...[/dim]")
-    _wait_for_key(_readkey=_readkey)
+    input("Your answer: ")  # user thinks and types before seeing the answer
     console.print(Panel(q_data["answer"], border_style="green", title="[dim]Answer[/dim]"))
     console.print(Panel(q_data["explanation"], border_style="dim", title="[dim]Explanation[/dim]"))
-    console.print("[dim]Rate your recall:  1=Again  2=Hard  3=Good  4=Easy[/dim]")
+    console.print("[dim]How close was your answer?  1=Again  2=Hard  3=Good  4=Easy[/dim]")
     key = _wait_for_key(valid_keys={"1", "2", "3", "4"}, _readkey=_readkey)
     rating = rating_map[key]
     persist_rating(card, rating)
