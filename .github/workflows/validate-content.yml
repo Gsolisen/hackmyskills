@@ -22,7 +22,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install -e .
+        run: pip install -e ".[dev]"
 
       - name: Validate content
         run: hms validate-content
